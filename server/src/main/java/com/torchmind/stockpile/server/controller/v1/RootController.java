@@ -16,6 +16,7 @@
  */
 package com.torchmind.stockpile.server.controller.v1;
 
+import com.torchmind.stockpile.data.v1.ServerInformation;
 import com.torchmind.stockpile.data.v1.Version;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,17 +34,24 @@ import javax.annotation.Nonnull;
 @RestController
 @RequestMapping("/v1")
 public class RootController {
+        public static final Version VERSION = new Version(1, Version.State.DEVELOPMENT);
 
         /**
          * <code>/v1/</code>
          *
          * Returns version information on this specific API endpoint.
          *
-         * @return a version.
+         * @return a version information representation.
          */
         @Nonnull
         @RequestMapping(method = RequestMethod.GET)
-        public Version get() {
-                return new Version(1, Version.State.DEVELOPMENT);
+        public ServerInformation get() {
+                Package p = this.getClass().getPackage();
+
+                if (p != null) {
+                        return new ServerInformation(p, VERSION);
+                }
+
+                return new ServerInformation(VERSION);
         }
 }
