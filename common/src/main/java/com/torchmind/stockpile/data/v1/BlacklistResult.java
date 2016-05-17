@@ -19,6 +19,7 @@ package com.torchmind.stockpile.data.v1;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Objects;
 
 /**
  * <strong>Blacklist Result</strong>
@@ -59,5 +60,25 @@ public class BlacklistResult {
          */
         public boolean isBlacklisted() {
                 return blacklisted;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || this.getClass() != o.getClass()) return false;
+
+                BlacklistResult that = (BlacklistResult) o;
+                return this.blacklisted == that.blacklisted && Objects.equals(this.hostname, that.hostname);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int hashCode() {
+                return Objects.hash(this.blacklisted, this.hostname);
         }
 }
