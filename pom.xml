@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+        <!-- Artifact Information -->
+        <groupId>com.torchmind.stockpile</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <packaging>pom</packaging>
+
+        <prerequisites>
+                <maven>3.3</maven>
+        </prerequisites>
+
+        <properties>
+                <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </properties>
+
+        <licenses>
+                <license>
+                        <name>Apache License 2.0</name>
+                        <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+                </license>
+        </licenses>
+
+        <!-- Artifact Metadata -->
+        <name>Stockpile</name>
+        <description>Provides a profile caching service for the Mojang Profile API.</description>
+        <url>https://github.com/LordAkkarin/Stockpile</url>
+        <inceptionYear>2016</inceptionYear>
+
+        <organization>
+                <name>Torchmind</name>
+                <url>https://www.torchmind.com</url>
+        </organization>
+
+        <developers>
+                <developer>
+                        <name>Johannes Donath</name>
+                        <timezone>Europe/Berlin</timezone>
+                        <email>johannesd@torchmind.com</email>
+                        <url>https://www.johannes-donath.com</url>
+
+                        <organization>Torchmind</organization>
+                        <organizationUrl>https://www.torchmind.com</organizationUrl>
+                </developer>
+        </developers>
+
+        <scm>
+                <tag>master</tag>
+                <url>https://github.com/LordAkkarin/Stockpile</url>
+                <connection>scm:git:git@github.com:/LordAkkarin/Stockpile.git</connection>
+                <developerConnection>scm:git:git@github.com:/LordAkkarin/Stockpile.git</developerConnection>
+        </scm>
+
+        <issueManagement>
+                <system>GitHub</system>
+                <url>https://github.com/LordAkkarin/Stockpile/issues</url>
+        </issueManagement>
+
+        <distributionManagement>
+                <snapshotRepository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                        <id>ossrh</id>
+                        <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+        </distributionManagement>
+
+        <!-- Dependencies -->
+        <dependencyManagement>
+                <dependencies>
+                        <!-- Modules -->
+
+                        <!-- Spring -->
+                        <dependency>
+                                <groupId>io.spring.platform</groupId>
+                                <artifactId>platform-bom</artifactId>
+                                <version>2.0.4.RELEASE</version>
+                                <type>pom</type>
+                                <scope>import</scope>
+                        </dependency>
+
+                        <!-- Java -->
+                        <dependency>
+                                <groupId>com.google.code.findbugs</groupId>
+                                <artifactId>jsr305</artifactId>
+                                <version>3.0.1</version>
+                                <scope>provided</scope>
+                        </dependency>
+
+                        <!-- Test Dependencies -->
+                        <dependency>
+                                <groupId>junit</groupId>
+                                <artifactId>junit</artifactId>
+                                <version>4.12</version>
+                                <scope>test</scope>
+                        </dependency>
+                        <dependency>
+                                <groupId>org.mockito</groupId>
+                                <artifactId>mockito-core</artifactId>
+                                <version>2.0.41-beta</version>
+                                <scope>test</scope>
+                        </dependency>
+                </dependencies>
+        </dependencyManagement>
+
+        <!-- Build Settings -->
+        <build>
+                <finalName>${project.groupId}.${project.artifactId}-${project.version}</finalName>
+                <defaultGoal>clean install</defaultGoal>
+
+                <pluginManagement>
+                        <plugins>
+                                <!-- Java Compiler -->
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-compiler-plugin</artifactId>
+                                        <version>3.5</version>
+
+                                        <configuration>
+                                                <source>1.8</source>
+                                                <target>1.8</target>
+                                        </configuration>
+                                </plugin>
+
+                                <!-- Manifest Generation -->
+                                <plugin>
+                                        <groupId>org.apache.felix</groupId>
+                                        <artifactId>maven-bundle-plugin</artifactId>
+                                        <version>3.0.1</version>
+
+                                        <executions>
+                                                <execution>
+                                                        <id>bundle-manifest</id>
+                                                        <phase>process-classes</phase>
+
+                                                        <goals>
+                                                                <goal>manifest</goal>
+                                                        </goals>
+                                                </execution>
+                                        </executions>
+                                </plugin>
+
+                                <!-- Jar Creation -->
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-jar-plugin</artifactId>
+                                        <version>2.6</version>
+
+                                        <configuration>
+                                                <archive>
+                                                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+
+                                                        <addMavenDescriptor>true</addMavenDescriptor>
+                                                        <compress>true</compress>
+                                                        <index>true</index>
+                                                </archive>
+                                        </configuration>
+                                </plugin>
+
+                                <!-- Attach Sources -->
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-source-plugin</artifactId>
+                                        <version>2.4</version>
+
+                                        <executions>
+                                                <execution>
+                                                        <id>attach-sources</id>
+
+                                                        <goals>
+                                                                <goal>jar-no-fork</goal>
+                                                        </goals>
+                                                </execution>
+                                        </executions>
+                                </plugin>
+
+                                <!-- Attach JavaDoc -->
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-javadoc-plugin</artifactId>
+                                        <version>2.10.3</version>
+
+                                        <executions>
+                                                <execution>
+                                                        <id>attach-javadocs</id>
+
+                                                        <goals>
+                                                                <goal>jar</goal>
+                                                        </goals>
+                                                </execution>
+                                        </executions>
+                                </plugin>
+
+                                <!-- GPG Signatures -->
+                                <plugin>
+                                        <groupId>org.apache.maven.plugins</groupId>
+                                        <artifactId>maven-gpg-plugin</artifactId>
+                                        <version>1.5</version>
+
+                                        <executions>
+                                                <execution>
+                                                        <id>sign-artifacts</id>
+                                                        <phase>verify</phase>
+
+                                                        <goals>
+                                                                <goal>sign</goal>
+                                                        </goals>
+                                                </execution>
+                                        </executions>
+
+                                        <configuration>
+                                                <keyname>35578E37</keyname>
+                                        </configuration>
+                                </plugin>
+                        </plugins>
+                </pluginManagement>
+        </build>
+
+        <modules>
+        </modules>
+
+        <!-- Deployment Profiles -->
+        <profiles>
+                <profile>
+                        <id>deployment</id>
+
+                        <build>
+                                <plugins>
+                                        <plugin>
+                                                <groupId>org.apache.maven.plugins</groupId>
+                                                <artifactId>maven-gpg-plugin</artifactId>
+                                        </plugin>
+                                </plugins>
+                        </build>
+                </profile>
+        </profiles>
+</project>
