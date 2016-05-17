@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+        <!-- Parent Artifact Information -->
+        <parent>
+                <artifactId>parent</artifactId>
+                <groupId>com.torchmind.stockpile</groupId>
+                <version>1.0-SNAPSHOT</version>
+        </parent>
+
+        <!-- Artifact Information -->
+        <artifactId>common</artifactId>
+        <packaging>jar</packaging>
+
+        <!-- Artifact Metadata -->
+        <name>Stockpile Common</name>
+        <description>Provides common representations for both Stockpile clients and servers.</description>
+
+        <!-- Dependencies -->
+        <dependencies>
+                <!-- Java -->
+                <dependency>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                </dependency>
+
+                <!-- Test Dependencies -->
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                </dependency>
+                <dependency>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-core</artifactId>
+                </dependency>
+        </dependencies>
+
+        <!-- Build Settings -->
+        <build>
+                <plugins>
+                        <!-- Java Compiler -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Manifest Generation -->
+                        <plugin>
+                                <groupId>org.apache.felix</groupId>
+                                <artifactId>maven-bundle-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Jar Creation -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jar-plugin</artifactId>
+
+                                <configuration>
+                                        <archive>
+                                                <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                                        </archive>
+                                </configuration>
+                        </plugin>
+
+                        <!-- Attach Sources -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-source-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Attach JavaDoc -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                        </plugin>
+                </plugins>
+        </build>
+</project>

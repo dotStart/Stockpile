@@ -152,8 +152,6 @@
 
                                         <configuration>
                                                 <archive>
-                                                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-
                                                         <addMavenDescriptor>true</addMavenDescriptor>
                                                         <compress>true</compress>
                                                         <index>true</index>
@@ -221,6 +219,7 @@
         </build>
 
         <modules>
+                <module>common</module>
         </modules>
 
         <!-- Deployment Profiles -->
