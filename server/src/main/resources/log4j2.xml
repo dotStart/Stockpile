@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Torchmind Confidential
+  ~ ======================
+  ~ Copyright (C) 2016 Torchmind, All Rights Reserved.
+  ~
+  ~ Notice: All information contained herein is, and remains the property of
+  ~ Torchmind. The intellectual and technical concepts contained herein are
+  ~ proprietary to Torchmind and may be covered by European and Foreign Patents,
+  ~ patents in process, and are protected by trade secret or copyright law.
+  ~ Dissemination of this information or reproduction of this material is strictly
+  ~ forbidden unless prior written permission is obtained from Torchmind. Access to
+  ~ the source code contained herein is hereby forbidden to anyone except current
+  ~ Torchmind employees, managers, contracts or customers who have executed
+  ~ Confidentiality and Non-disclosure agreements explicitly covering such access.
+  ~
+  ~ The copyright notice above does not evidence any actual or intended publication
+  ~ or disclosure of this source code, which includes information that is
+  ~ confidential and/or proprietary, and is a trade secret, of Torchmind.
+  ~ ANY REPRODUCTION, MODIFICATION, DISTRIBUTION, PUBLIC PERFORMANCE OR PUBLIC
+  ~ DISPLAY OF OR THROUGH USE OF THIS SOURCE CODE WITHOUT THE EXPRESS WRITTEN
+  ~ CONSENT OF TORCHMIND IS STRICTLY PROHIBITED, AND IS IN VIOLATION OF APPLICABLE
+  ~ LAWS AND INTERNATIONAL TREATIES. THE RECEIPT OR POSSESSION OF THIS SOURCE CODE
+  ~ AND/OR RELATED INFORMATION DOES NOT CONVEY OR IMPLY ANY RIGHTS TO REPRODUCE,
+  ~ DISCLOSE OR DISTRIBUTE ITS CONTENTS, OR TO MANUFACTURE, USE, OR SELL ANYTHING
+  ~ THAT IT MAY DESCRIBE, IN WHOLE OR IN PART.
+  -->
+<Configuration status="WARN">
+        <Properties>
+                <Property name="PID">????</Property>
+                <Property name="LOG_PATTERN">[%d{yyyy-MM-dd HH:mm:ss.SSS}] log4j2%X{context} - ${sys:PID} %5p [%t] --- %c{1}: %m%n</Property>
+        </Properties>
+        <Appenders>
+                <Console name="Console" target="SYSTEM_OUT" follow="true">
+                        <PatternLayout pattern="${LOG_PATTERN}" />
+                </Console>
+                <RollingFile name="RollingFile" fileName="logs/stockpile.log" filePattern="stockpile-%d{yyyy-MM-dd}-%i.log.gz">
+                        <PatternLayout pattern="${LOG_PATTERN}" />
+                        <Policies>
+                                <TimeBasedTriggeringPolicy />
+                                <SizeBasedTriggeringPolicy size="250 MB" />
+                        </Policies>
+                        <DefaultRolloverStrategy max="10" />
+                </RollingFile>
+        </Appenders>
+        <Loggers>
+                <Logger name="org.hibernate.validator.internal.util.Version" level="warn" />
+                <Logger name="org.apache.coyote.http11.Http11NioProtocol" level="warn" />
+                <Logger name="org.apache.tomcat.util.net.NioSelectorPool" level="warn" />
+                <Logger name="org.apache.catalina.startup.DigesterFactory" level="error" />
+
+                <Root level="info">
+                        <AppenderRef ref="Console" />
+                        <AppenderRef ref="RollingFile" />
+                </Root>
+        </Loggers>
+</Configuration>
