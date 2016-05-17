@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.torchmind.stockpile.data;
+package com.torchmind.stockpile.data.v1;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;

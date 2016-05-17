@@ -16,7 +16,7 @@
  */
 package com.torchmind.stockpile.server.controller.v1;
 
-import com.torchmind.stockpile.data.Version;
+import com.torchmind.stockpile.data.v1.Version;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
