@@ -35,6 +35,15 @@ import java.util.UUID;
 public interface DisplayNameRepository extends PagingAndSortingRepository<DisplayName, UUID> {
 
         /**
+         * Searches for a display name.
+         *
+         * @param name a display name.
+         * @return a display name or, if no record was found, an empty optional.
+         */
+        @Nonnull
+        Optional<DisplayName> findOneByName(@Nonnull String name);
+
+        /**
          * Searches for a display name in a specific profile.
          *
          * @param name    a display name.
