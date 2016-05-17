@@ -176,6 +176,10 @@
                                                         <addMavenDescriptor>true</addMavenDescriptor>
                                                         <compress>true</compress>
                                                         <index>true</index>
+
+                                                        <manifest>
+                                                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                                        </manifest>
                                                 </archive>
                                         </configuration>
                                 </plugin>
