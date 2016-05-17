@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        <modelVersion>4.0.0</modelVersion>
+
+        <!-- Parent Artifact Information -->
+        <parent>
+                <artifactId>parent</artifactId>
+                <groupId>com.torchmind.stockpile</groupId>
+                <version>1.0-SNAPSHOT</version>
+        </parent>
+
+        <!-- Artifact Information -->
+        <artifactId>server</artifactId>
+        <packaging>jar</packaging>
+
+        <!-- Artifact Metadata -->
+        <name>Stockpile Server</name>
+        <description>Provides a Stockpile server implementation which acts as a caching service for Mojang APIs.</description>
+
+        <!-- Dependencies -->
+        <dependencies>
+                <!-- Java -->
+                <dependency>
+                        <groupId>com.google.code.findbugs</groupId>
+                        <artifactId>jsr305</artifactId>
+                </dependency>
+
+                <!-- Test Dependencies -->
+                <dependency>
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                </dependency>
+                <dependency>
+                        <groupId>org.mockito</groupId>
+                        <artifactId>mockito-core</artifactId>
+                </dependency>
+        </dependencies>
+
+        <!-- Build Settings -->
+        <build>
+                <plugins>
+                        <!-- Java Compiler -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-compiler-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Jar Creation -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-jar-plugin</artifactId>
+
+                                <configuration>
+                                        <archive>
+                                                <manifest>
+                                                        <addClasspath>true</addClasspath>
+                                                        <classpathPrefix>lib/</classpathPrefix>
+                                                        <classpathLayoutType>repository</classpathLayoutType>
+                                                </manifest>
+                                        </archive>
+                                </configuration>
+                        </plugin>
+
+                        <!-- Copy Dependencies -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-dependency-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Attach Sources -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-source-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Attach JavaDoc -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-javadoc-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Install -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-install-plugin</artifactId>
+
+                                <configuration>
+                                        <skip>true</skip>
+                                </configuration>
+                        </plugin>
+
+                        <!-- Deployment -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-deploy-plugin</artifactId>
+
+                                <configuration>
+                                        <skip>true</skip>
+                                </configuration>
+                        </plugin>
+                </plugins>
+        </build>
+</project>
