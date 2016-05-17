@@ -31,10 +31,10 @@ import java.time.Instant;
 @Entity
 @Table(name = "profile_display_name")
 public class DisplayName extends BaseEntity {
-        @Column(nullable = false, updatable = false)
-        private final String name;
         @Column(nullable = false)
         private Instant lastSeen;
+        @Column(nullable = false, updatable = false)
+        private final String name;
         @ManyToOne(optional = false)
         private final Profile profile;
 
@@ -50,17 +50,21 @@ public class DisplayName extends BaseEntity {
         }
 
         @Nonnull
-        public String getName() {
-                return this.name;
-        }
-
-        @Nonnull
         public Instant getLastSeen() {
                 return this.lastSeen;
         }
 
         @Nonnull
+        public String getName() {
+                return this.name;
+        }
+
+        @Nonnull
         public Profile getProfile() {
                 return this.profile;
+        }
+
+        public void setLastSeen(@Nonnull Instant lastSeen) {
+                this.lastSeen = lastSeen;
         }
 }
