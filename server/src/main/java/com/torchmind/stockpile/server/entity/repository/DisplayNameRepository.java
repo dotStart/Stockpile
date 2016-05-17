@@ -17,8 +17,11 @@
 package com.torchmind.stockpile.server.entity.repository;
 
 import com.torchmind.stockpile.server.entity.DisplayName;
+import com.torchmind.stockpile.server.entity.Profile;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -30,4 +33,14 @@ import java.util.UUID;
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public interface DisplayNameRepository extends PagingAndSortingRepository<DisplayName, UUID> {
+
+        /**
+         * Searches for a display name in a specific profile.
+         *
+         * @param name    a display name.
+         * @param profile a profile.
+         * @return a display name or, if no record was found, an empty optional.
+         */
+        @Nonnull
+        Optional<DisplayName> findOneByNameAndProfile(@Nonnull String name, @Nonnull Profile profile);
 }

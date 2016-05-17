@@ -16,9 +16,12 @@
  */
 package com.torchmind.stockpile.server.entity.repository;
 
+import com.torchmind.stockpile.server.entity.Profile;
 import com.torchmind.stockpile.server.entity.ProfileProperty;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import javax.annotation.Nonnull;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -30,4 +33,14 @@ import java.util.UUID;
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public interface ProfilePropertyRepository extends PagingAndSortingRepository<ProfileProperty, UUID> {
+
+        /**
+         * Searches for a profile property with the specified name and profile.
+         *
+         * @param name    a property name.
+         * @param profile a profile.
+         * @return a profile property or, if no property within the specified profile was found, an empty optional.
+         */
+        @Nonnull
+        Optional<ProfileProperty> findByNameAndProfile(@Nonnull String name, @Nonnull Profile profile);
 }
