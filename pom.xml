@@ -112,6 +112,13 @@
                                 <scope>provided</scope>
                         </dependency>
 
+                        <!-- Utilities -->
+                        <dependency>
+                                <groupId>com.google.guava</groupId>
+                                <artifactId>guava</artifactId>
+                                <version>19.0</version>
+                        </dependency>
+
                         <!-- Test Dependencies -->
                         <dependency>
                                 <groupId>junit</groupId>
