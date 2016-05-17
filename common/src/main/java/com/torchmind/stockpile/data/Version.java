@@ -30,6 +30,11 @@ public class Version {
         private final State state;
         private final int version;
 
+        private Version() {
+                this.state = State.DEPRECATED;
+                this.version = 0;
+        }
+
         public Version(int version, State state) {
                 this.version = version;
                 this.state = state;
