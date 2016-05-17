@@ -35,6 +35,12 @@
 
         <!-- Dependencies -->
         <dependencies>
+                <!-- Modules -->
+                <dependency>
+                        <groupId>com.torchmind.stockpile</groupId>
+                        <artifactId>common</artifactId>
+                </dependency>
+
                 <!-- Database Drivers -->
                 <dependency>
                         <groupId>com.h2database</groupId>
