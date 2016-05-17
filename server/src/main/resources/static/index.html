@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+                <meta charset="UTF-8" />
+                <meta http-equiv="x-ua-compatible" content="ie=edge" />
+
+                <title>Stockpile v${project.version}</title>
+                <meta name="robots" content="noindex,follow" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+                <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.1.1/normalize.min.css" />
+                <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,300" />
+                <style type="text/css">
+                        html, body {
+                                margin: 0;
+                                padding: 0;
+                                height: 100%;
+                        }
+
+                        body {
+                                font-family: 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+                                font-size: 14px;
+                                font-weight: 400;
+                                color: #161616;
+
+                                display: flex;
+                                flex-direction: column;
+                                justify-content: center;
+                        }
+
+                        #page-wrapper {
+                                margin: 0 auto;
+                                width: 980px;
+                        }
+
+                        #page-header {
+                                display: flex;
+                                flex-direction: row;
+                                align-items: center;
+                                margin-bottom: 20px;
+                        }
+
+                        #page-title > h1,
+                        #page-title > h2 {
+                                margin: 0;
+                                padding: 0;
+                        }
+
+                        #page-title > h1 {
+                                font-size: 4em;
+                        }
+
+                        #page-title > h2 {
+                                color: #CCCCCC;
+                                font-size: 1.2em;
+                                font-weight: 300;
+                        }
+
+                        #page-logo {
+                                width: 128px;
+                                height: 128px;
+                                float: left;
+                                margin-right: 20px;
+                        }
+
+                        #page-footer {
+                                border-top: 1px solid #CCCCCC;
+                                margin-top: 20px;
+                        }
+
+                        #page-footer .copyright {
+                                color: #BBBBBB;
+                        }
+
+                        #page-footer .copyright a {
+                                color: #ffc099;
+                        }
+
+                        #page-footer .copyright a:hover {
+                                color: #ff6600;
+                        }
+
+                        a {
+                                color: #ff6600;
+                                text-decoration: none;
+                                transition: color 250ms ease;
+                        }
+
+                        a:hover {
+                                color: #ff9000;
+                        }
+
+                        a:active {
+                                color: #ff914d;
+                        }
+
+                        .page-navigation {
+                                list-style-type: none;
+                                width: 500px;
+                                margin: 40px auto 40px;
+                                padding: 0;
+                                display: flex;
+                                flex-direction: row;
+                                justify-content: space-around;
+                        }
+
+                        .page-navigation > .item {
+                                margin: 0 10px;
+                        }
+
+                        .page-navigation > .item > a {
+                                font-size: 1.2em;
+                                padding: 6px 12px;
+                                background-color: #ff6600;
+                                color: #ffffff;
+                        }
+                </style>
+        </head>
+        <body>
+                <section id="page-wrapper">
+                        <header id="page-header">
+                                <img id="page-logo" src="logo.svg" alt="Stockpile Logo" />
+
+                                <header id="page-title">
+                                        <h1>Stockpile</h1>
+                                        <h2>Version ${project.version}</h2>
+                                </header>
+                        </header>
+                        <main id="page-main">
+                                <p><strong>Hey there!</strong></p>
+                                <p>Thank you for choosing Stockpile! We work hard on this project and aim to provide the best quality possible to improve your daily life as a developer.<br />This application does not have an interface and thus we recommend that you use one of our <a href="https://github.com/LordAkkarin/Stockpile/wiki/Client-Implementations">Client Implementations</a>.</p>
+                                <p>For your convenience we have collected a set of resources to get you started quicker:</p>
+
+                                <menu class="page-navigation">
+                                        <li class="item">
+                                                <a href="https://github.com/LordAkkarin/Stockpile/releases">Releases</a>
+                                        </li>
+                                        <li class="item">
+                                                <a href="https://github.com/LordAkkarin/Stockpile/wiki">Documentation</a>
+                                        </li>
+                                        <li class="item">
+                                                <a href="https://github.com/LordAkkarin/Stockpile">Source Code</a>
+                                        </li>
+                                </menu>
+
+                                <p>Oh, and don't forget to check out the <a href="https://github.com/LordAkkarin/Stockpile/wiki/Configuration-Guide">Configuration Guide</a> to get the most out of your Stockpile installation!</p>
+                                <p>
+                                        Happy coding!<br />
+                                        <i>The Stockpile Team</i>
+                                </p>
+                        </main>
+                        <footer id="page-footer">
+                                <p class="copyright">
+                                        Copyright &copy; 2016 Torchmind and other contributors<br />
+                                        Licensed under the terms of the <a href="https://www.apache.org/licenses/LICENSE-2.0.txt">Apache License, Version 2.0</a>
+                                </p>
+                        </footer>
+                </section>
+        </body>
+</html>

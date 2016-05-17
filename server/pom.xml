@@ -109,6 +109,32 @@
 
         <!-- Build Settings -->
         <build>
+                <resources>
+                        <!-- Configuration -->
+                        <resource>
+                                <directory>${project.basedir}/src/main/resources</directory>
+                                <targetPath>.</targetPath>
+                                <filtering>false</filtering>
+
+                                <includes>
+                                        <include>favicon.ico</include>
+                                        <include>log4j2.xml</include>
+                                </includes>
+                        </resource>
+
+                        <!-- Static Resources -->
+                        <resource>
+                                <directory>${project.basedir}/src/main/resources/static</directory>
+                                <targetPath>./static/</targetPath>
+                                <filtering>true</filtering>
+
+                                <includes>
+                                        <include>index.html</include>
+                                        <include>logo.svg</include>
+                                </includes>
+                        </resource>
+                </resources>
+
                 <plugins>
                         <!-- Java Compiler -->
                         <plugin>
