@@ -53,7 +53,7 @@ public class BlacklistController {
         private final List<String> hashes = new CopyOnWriteArrayList<>();
 
         /**
-         * <code>POST /blacklist/</code>
+         * <code>POST /v1/blacklist/</code>
          *
          * Checks any hostname supplied as a form parameter in the post body against the server blacklist.
          *
@@ -101,7 +101,7 @@ public class BlacklistController {
         }
 
         /**
-         * <code>POST /blacklist/</code>
+         * <code>POST /v1/blacklist/</code>
          *
          * Checks any hostname supplied in the post body against the server blacklist.
          *
