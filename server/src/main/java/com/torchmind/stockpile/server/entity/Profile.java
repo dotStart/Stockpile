@@ -23,6 +23,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <strong>Profile</strong>
@@ -40,6 +41,13 @@ public class Profile extends BaseEntity {
         private final List<ProfileProperty> properties;
 
         public Profile() {
+                this.names = new ArrayList<>();
+                this.properties = new ArrayList<>();
+        }
+
+        public Profile(@Nonnull UUID identifier) {
+                super(identifier);
+
                 this.names = new ArrayList<>();
                 this.properties = new ArrayList<>();
         }

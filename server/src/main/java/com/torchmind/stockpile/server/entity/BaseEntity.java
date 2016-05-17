@@ -18,6 +18,7 @@ package com.torchmind.stockpile.server.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.annotation.Nonnull;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
@@ -40,6 +41,10 @@ public class BaseEntity {
 
         protected BaseEntity() {
                 this.identifier = null;
+        }
+
+        protected BaseEntity(@Nonnull UUID identifier) {
+                this.identifier = identifier;
         }
 
         /**
