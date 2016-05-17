@@ -17,9 +17,11 @@
 package com.torchmind.stockpile.server.entity;
 
 import javax.annotation.Nonnull;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +37,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "profile")
 public class Profile extends BaseEntity {
+        @Column
+        private Instant lastSeen;
         @OneToMany(orphanRemoval = true, mappedBy = "profile")
         private final List<DisplayName> names;
         @OneToMany(orphanRemoval = true, mappedBy = "profile")
@@ -43,6 +47,7 @@ public class Profile extends BaseEntity {
         public Profile() {
                 this.names = new ArrayList<>();
                 this.properties = new ArrayList<>();
+                this.lastSeen = Instant.now();
         }
 
         public Profile(@Nonnull UUID identifier) {
@@ -50,10 +55,17 @@ public class Profile extends BaseEntity {
 
                 this.names = new ArrayList<>();
                 this.properties = new ArrayList<>();
+                this.lastSeen = Instant.now();
+        }
+
+        @Nonnull
+        public Instant getLastSeen() {
+                return lastSeen;
         }
 
         /**
          * Retrieves a list of associated names.
+         *
          * @return a list of names.
          */
         @Nonnull
@@ -63,10 +75,15 @@ public class Profile extends BaseEntity {
 
         /**
          * Retrieves a list of associated properties.
+         *
          * @return a list of properties.
          */
         @Nonnull
         public List<ProfileProperty> getProperties() {
                 return Collections.unmodifiableList(this.properties);
+        }
+
+        public void setLastSeen(@Nonnull Instant lastSeen) {
+                this.lastSeen = lastSeen;
         }
 }

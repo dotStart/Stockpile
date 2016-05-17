@@ -21,6 +21,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.Instant;
 
 /**
  * <strong>Profile Property</strong>
@@ -32,18 +33,21 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "profile_property")
 public class ProfileProperty extends BaseEntity {
+        @Column
+        private Instant lastSeen;
         @Column(nullable = false, updatable = false)
         private final String name;
-        @Column(nullable = false)
-        private String value;
-        @Column
-        private String signature;
         @ManyToOne(optional = false)
         private final Profile profile;
+        @Column
+        private String signature;
+        @Column(nullable = false)
+        private String value;
 
         private ProfileProperty() {
                 this.name = null;
                 this.profile = null;
+                this.lastSeen = Instant.now();
         }
 
         public ProfileProperty(@Nonnull Profile profile, @Nonnull String name, @Nonnull String value, @Nonnull String signature) {
@@ -52,6 +56,12 @@ public class ProfileProperty extends BaseEntity {
                 this.name = name;
                 this.value = value;
                 this.signature = signature;
+                this.lastSeen = Instant.now();
+        }
+
+        @Nonnull
+        public Instant getLastSeen() {
+                return lastSeen;
         }
 
         @Nonnull
@@ -60,12 +70,8 @@ public class ProfileProperty extends BaseEntity {
         }
 
         @Nonnull
-        public String getValue() {
-                return this.value;
-        }
-
-        public void setValue(@Nonnull String value) {
-                this.value = value;
+        public Profile getProfile() {
+                return this.profile;
         }
 
         @Nonnull
@@ -73,12 +79,20 @@ public class ProfileProperty extends BaseEntity {
                 return this.signature;
         }
 
+        @Nonnull
+        public String getValue() {
+                return this.value;
+        }
+
+        public void setLastSeen(@Nonnull Instant lastSeen) {
+                this.lastSeen = lastSeen;
+        }
+
         public void setSignature(@Nonnull String signature) {
                 this.signature = signature;
         }
 
-        @Nonnull
-        public Profile getProfile() {
-                return this.profile;
+        public void setValue(@Nonnull String value) {
+                this.value = value;
         }
 }
