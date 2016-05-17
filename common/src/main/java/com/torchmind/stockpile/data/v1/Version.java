@@ -17,6 +17,8 @@
 package com.torchmind.stockpile.data.v1;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Objects;
 
 /**
@@ -26,6 +28,8 @@ import java.util.Objects;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
+@Immutable
+@ThreadSafe
 public class Version {
         private final State state;
         private final int version;

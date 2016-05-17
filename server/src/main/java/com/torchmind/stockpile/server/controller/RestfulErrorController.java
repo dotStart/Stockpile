@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -36,6 +37,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
+@ThreadSafe
 @RestController
 @RequestMapping("/error")
 public class RestfulErrorController extends AbstractErrorController {

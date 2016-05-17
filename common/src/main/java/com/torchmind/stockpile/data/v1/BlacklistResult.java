@@ -17,6 +17,8 @@
 package com.torchmind.stockpile.data.v1;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * <strong>Blacklist Result</strong>
@@ -25,6 +27,8 @@ import javax.annotation.Nonnull;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
+@Immutable
+@ThreadSafe
 public class BlacklistResult {
         private final boolean blacklisted;
         private final String hostname;

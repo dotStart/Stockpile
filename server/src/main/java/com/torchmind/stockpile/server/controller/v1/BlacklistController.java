@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +44,7 @@ import java.util.regex.Pattern;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
+@ThreadSafe
 @RestController
 @RequestMapping("/v1/blacklist")
 public class BlacklistController {
