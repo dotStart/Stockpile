@@ -21,8 +21,10 @@ import com.torchmind.stockpile.server.entity.Profile;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.annotation.Nonnull;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * <strong>Display Name Repository</strong>
@@ -33,6 +35,15 @@ import java.util.UUID;
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public interface DisplayNameRepository extends PagingAndSortingRepository<DisplayName, UUID> {
+
+        /**
+         * Searches for a set of display names that were last seen before the supplied timestamp occurred.
+         *
+         * @param lastSeen a timestamp.
+         * @return a stream of names.
+         */
+        @Nonnull
+        Stream<DisplayName> findByLastSeenLessThanOrderByLastSeenDesc(@Nonnull Instant lastSeen);
 
         /**
          * Searches for a display name.
