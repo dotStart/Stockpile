@@ -17,9 +17,7 @@
 package com.torchmind.stockpile.server;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.annotation.Nonnull;
@@ -31,10 +29,8 @@ import javax.annotation.Nonnull;
  *
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
-@Configuration
-@ComponentScan
 @EnableScheduling
-@EnableAutoConfiguration
+@SpringBootApplication
 public class StockpileServer {
 
         /**
