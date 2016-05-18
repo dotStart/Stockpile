@@ -18,6 +18,9 @@ package com.torchmind.stockpile.server.controller.v1;
 
 import com.torchmind.stockpile.data.v1.ServerInformation;
 import com.torchmind.stockpile.data.v1.Version;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +40,12 @@ import javax.annotation.concurrent.ThreadSafe;
 @RequestMapping("/v1")
 public class ApplicationController {
         public static final Version VERSION = new Version(1, Version.State.DEVELOPMENT);
+        private final ApplicationContext applicationContext;
+
+        @Autowired
+        public ApplicationController(@Nonnull ApplicationContext applicationContext) {
+                this.applicationContext = applicationContext;
+        }
 
         /**
          * <code>/v1/</code>
@@ -55,5 +64,31 @@ public class ApplicationController {
                 }
 
                 return new ServerInformation(VERSION);
+        }
+
+        /**
+         * <code>/v1/shutdown</code>
+         *
+         * Shuts down the server.
+         */
+        @RequestMapping(path = "/shutdown", method = RequestMethod.POST)
+        public void shutdown() {
+                if (!(this.applicationContext instanceof ConfigurableApplicationContext)) {
+                        throw new IllegalStateException("Cannot shut down context: Unknown implementation");
+                }
+
+                (new Thread() {
+                        @Override
+                        public void run() {
+                                // wait a bit to ensure the request has finished before we shut down
+                                try {
+                                        Thread.sleep(500L);
+                                } catch (InterruptedException ignore) {
+                                }
+
+                                // actually instruct the context to shut down
+                                ((ConfigurableApplicationContext) applicationContext).close();
+                        }
+                }).start();
         }
 }
