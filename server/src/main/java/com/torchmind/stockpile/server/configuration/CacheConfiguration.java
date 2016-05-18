@@ -71,7 +71,15 @@ public class CacheConfiguration {
                  * Ensures all objects are cached for the longest possible time. Only push updates will alter the set of
                  * local records.
                  */
-                HIGH
+                HIGH,
+
+                /**
+                 * <strong>Unknown</strong>
+                 *
+                 * This is a placeholder annotation for cases in which unknown or default values are required.
+                 * Do not use this in your configuration!
+                 */
+                UNKNOWN
         }
 
         /**
