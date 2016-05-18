@@ -34,7 +34,7 @@
                 <Console name="Console" target="SYSTEM_OUT" follow="true">
                         <PatternLayout pattern="${LOG_PATTERN}" />
                 </Console>
-                <RollingFile name="RollingFile" fileName="logs/stockpile.log" filePattern="stockpile-%d{yyyy-MM-dd}-%i.log.gz">
+                <RollingFile name="RollingFile" fileName="logs/stockpile.log" filePattern="logs/stockpile-%d{yyyy-MM-dd}-%i.log.gz">
                         <PatternLayout pattern="${LOG_PATTERN}" />
                         <Policies>
                                 <TimeBasedTriggeringPolicy />
