@@ -96,7 +96,7 @@ public interface StorageCleanupService {
         @Service
         @ConditionalOnCacheAggressiveness(CacheConfiguration.Aggressiveness.HIGH)
         class HighAggressivenessCleanupService extends AbstractCleanupService {
-                public static final Duration NAME_EXPIRATION_DURATION = Duration.ofDays(30).minusMinutes(6); // 6 Minutes less than actual timeout to work around issues with the scheduler
+                public static final Duration NAME_EXPIRATION_DURATION = Duration.ofDays(37).minusMinutes(6); // 6 Minutes less than actual timeout to work around issues with the scheduler
                 private final DisplayNameRepository displayNameRepository;
 
                 @Autowired
@@ -239,13 +239,13 @@ public interface StorageCleanupService {
                  */
                 @Override
                 protected void setup() {
-                        if (this.cacheConfiguration.getTtl().getName() > Duration.ofDays(30).getSeconds()) {
+                        if (this.cacheConfiguration.getTtl().getName() > Duration.ofDays(37).getSeconds()) {
                                 logger.warn("+=============================+");
                                 logger.warn("| DANGEROUS TTL CONFIGURATION |");
                                 logger.warn("+-----------------------------+");
                                 logger.warn("| The server was configured   |");
                                 logger.warn("| to cache display names for  |");
-                                logger.warn("| more than 30 days!          |");
+                                logger.warn("| more than 37 days!          |");
                                 logger.warn("|                             |");
                                 logger.warn("| This WILL cause issues when |");
                                 logger.warn("| searching for profiles or   |");
