@@ -274,6 +274,13 @@
                                         </configuration>
                                 </plugin>
 
+                                <!-- Launch4j -->
+                                <plugin>
+                                        <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                                        <artifactId>launch4j-maven-plugin</artifactId>
+                                        <version>1.7.10</version>
+                                </plugin>
+
                                 <!-- Assembly -->
                                 <plugin>
                                         <groupId>org.apache.maven.plugins</groupId>

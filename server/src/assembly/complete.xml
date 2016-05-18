@@ -36,6 +36,7 @@
                         <outputDirectory>.</outputDirectory>
 
                         <includes>
+                                <include>*.exe</include>
                                 <include>*.jar</include>
                         </includes>
                 </fileSet>
