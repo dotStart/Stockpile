@@ -58,11 +58,10 @@ import java.util.UUID;
 public class ProfileService {
         public static final String NAME_URL_TEMPLATE = "https://api.mojang.com/users/profiles/minecraft/%s";
         public static final String PROFILE_URL_TEMPLATE = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
-        private static final Logger logger = LogManager.getFormatterLogger(ProfileService.class);
         public static final ObjectReader reader;
-
         private final CacheConfiguration cacheConfiguration;
         private final DisplayNameRepository displayNameRepository;
+        private static final Logger logger = LogManager.getFormatterLogger(ProfileService.class);
         private final ProfilePropertyRepository profilePropertyRepository;
         private final ProfileRepository profileRepository;
 
@@ -331,6 +330,17 @@ public class ProfileService {
          * @param name a display name.
          */
         public void purge(@Nonnull String name) {
+                // FIXME: Custom delete methods will probably improve this method's performance
                 this.displayNameRepository.findOneByName(name).ifPresent((n) -> this.profileRepository.delete(n.getProfile()));
+        }
+
+        /**
+         * Purges a single display name from the cache.
+         *
+         * @param name a name.
+         */
+        public void purgeName(@Nonnull String name) {
+                // FIXME: Custom delete methods will probably improve this method's performance
+                this.displayNameRepository.findOneByName(name).ifPresent(this.displayNameRepository::delete);
         }
 }

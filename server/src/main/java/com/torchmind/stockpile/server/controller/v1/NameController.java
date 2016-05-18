@@ -19,6 +19,7 @@ package com.torchmind.stockpile.server.controller.v1;
 import com.torchmind.stockpile.data.v1.NameLookupResult;
 import com.torchmind.stockpile.server.service.api.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Nonnull;
@@ -66,5 +67,31 @@ public class NameController {
         @RequestMapping(method = RequestMethod.POST)
         public NameLookupResult lookupBody(@Nonnull @RequestBody String name) {
                 return this.lookup(name);
+        }
+
+        /**
+         * <code>DELETE /v1/name/{name}</code>
+         *
+         * Purges a name from the cache.
+         *
+         * @param name a display name.
+         */
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        @RequestMapping(path = "/{name}", method = RequestMethod.DELETE)
+        public void purge(@Nonnull @PathVariable("name") String name) {
+                this.profileService.purgeName(name);
+        }
+
+        /**
+         * <code>DELETE /v1/name</code>
+         *
+         * Purges a name from the cache.
+         *
+         * @param name a display name.
+         */
+        @ResponseStatus(HttpStatus.NO_CONTENT)
+        @RequestMapping(method = RequestMethod.DELETE)
+        public void purgeBody(@Nonnull @RequestBody String name) {
+                this.purge(name);
         }
 }
