@@ -29,6 +29,8 @@ import com.torchmind.stockpile.server.entity.repository.ProfileRepository;
 import com.torchmind.stockpile.server.error.NoSuchProfileException;
 import com.torchmind.stockpile.server.error.ServiceException;
 import com.torchmind.stockpile.server.error.TooManyRequestsException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +58,7 @@ import java.util.UUID;
 public class ProfileService {
         public static final String NAME_URL_TEMPLATE = "https://api.mojang.com/users/profiles/minecraft/%s";
         public static final String PROFILE_URL_TEMPLATE = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
+        private static final Logger logger = LogManager.getFormatterLogger(ProfileService.class);
         public static final ObjectReader reader;
 
         private final CacheConfiguration cacheConfiguration;
@@ -91,8 +94,14 @@ public class ProfileService {
                 URL profileUrl = new URL(String.format(PROFILE_URL_TEMPLATE, (new MojangUUID(identifier)).toString()));
                 HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
 
-                if (connection.getResponseCode() == 429) {
-                        throw new TooManyRequestsException("Rate limit exceeded");
+                switch (connection.getResponseCode()) {
+                        case 204:
+                                // Dear Mojang,
+                                // 204 No Content is not the correct status code to signify no results
+                                // Thanks for your time
+                                throw new NoSuchProfileException(identifier);
+                        case 429:
+                                throw new TooManyRequestsException("Rate limit exceeded");
                 }
 
                 try (InputStream inputStream = connection.getInputStream()) {
@@ -148,8 +157,14 @@ public class ProfileService {
                 URL identifierUrl = new URL(String.format(NAME_URL_TEMPLATE, name));
                 HttpURLConnection connection = (HttpURLConnection) identifierUrl.openConnection();
 
-                if (connection.getResponseCode() == 429) {
-                        throw new TooManyRequestsException("Rate limit exceeded");
+                switch (connection.getResponseCode()) {
+                        case 204:
+                                // Dear Mojang,
+                                // 204 No Content is not the correct status code to signify no results
+                                // Thanks for your time
+                                throw new NoSuchProfileException(name);
+                        case 429:
+                                throw new TooManyRequestsException("Rate limit exceeded");
                 }
 
                 try (InputStream inputStream = connection.getInputStream()) {
@@ -251,6 +266,7 @@ public class ProfileService {
                         } catch (FileNotFoundException ex) {
                                 throw new NoSuchProfileException(name);
                         } catch (TooManyRequestsException | IOException ex) {
+                                logger.error("Failed to poll identifier for profile \"" + name + "\": " + ex.getMessage(), ex);
                                 throw new ServiceException("Could not poll identifier from upstream: " + ex.getMessage(), ex);
                         }
                 }
@@ -292,6 +308,7 @@ public class ProfileService {
                                         return profile;
                                 }
 
+                                logger.error("Could not poll profile for identifier \"" + identifier.toString() + "\": " + ex.getMessage(), ex);
                                 throw new ServiceException("Could not poll profile from upstream: " + ex.getMessage(), ex);
                         }
                 }
