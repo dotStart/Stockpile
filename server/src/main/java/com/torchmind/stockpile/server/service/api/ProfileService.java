@@ -56,6 +56,7 @@ import java.util.UUID;
 @Service
 @ThreadSafe
 public class ProfileService {
+        public static final String JOIN_URL_TEMPLATE = "https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%1$s&serverId=%2$s";
         public static final String NAME_URL_TEMPLATE = "https://api.mojang.com/users/profiles/minecraft/%s";
         public static final String PROFILE_URL_TEMPLATE = "https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false";
         public static final ObjectReader reader;
@@ -90,56 +91,7 @@ public class ProfileService {
          */
         @Nonnull
         private Profile fetch(@Nonnull UUID identifier) throws IOException {
-                URL profileUrl = new URL(String.format(PROFILE_URL_TEMPLATE, (new MojangUUID(identifier)).toString()));
-                HttpURLConnection connection = (HttpURLConnection) profileUrl.openConnection();
-
-                switch (connection.getResponseCode()) {
-                        case 204:
-                                // Dear Mojang,
-                                // 204 No Content is not the correct status code to signify no results
-                                // Thanks for your time
-                                throw new NoSuchProfileException(identifier);
-                        case 429:
-                                throw new TooManyRequestsException("Rate limit exceeded");
-                }
-
-                try (InputStream inputStream = connection.getInputStream()) {
-                        JsonNode node = reader.readTree(inputStream);
-
-                        // try to fetch a profile or create a new one if none is stored within the database
-                        final Profile profile;
-                        {
-                                Profile prof = this.profileRepository.findOne(identifier);
-
-                                if (prof == null) {
-                                        profile = new Profile(identifier);
-                                } else {
-                                        profile = prof;
-                                        profile.setLastSeen(Instant.now());
-                                }
-                        }
-                        this.profileRepository.save(profile);
-
-                        // try to fetch a display name for the current profile and create a new one if none is stored in
-                        // the database
-                        DisplayName displayName = this.displayNameRepository.findOneByNameAndProfile(node.get("name").asText(), profile).orElseGet(() -> new DisplayName(node.get("name").asText(), Instant.now(), profile));
-
-                        displayName.setLastSeen(Instant.now());
-                        this.displayNameRepository.save(displayName);
-
-                        // iterate over all properties and create/update their respective values
-                        node.get("properties").forEach((p) -> {
-                                String name = p.get("name").asText();
-
-                                ProfileProperty property = this.profilePropertyRepository.findByNameAndProfile(name, profile).orElseGet(() -> new ProfileProperty(profile, name, p.get("value").asText(), (p.has("signature") ? p.get("signature").asText() : null)));
-
-                                property.setLastSeen(Instant.now());
-                                this.profilePropertyRepository.save(property);
-                                profile.addProperty(property);
-                        });
-
-                        return profile;
-                }
+                return this.fetchProfile(new URL(String.format(PROFILE_URL_TEMPLATE, (new MojangUUID(identifier)).toString())));
         }
 
         /**
@@ -215,6 +167,68 @@ public class ProfileService {
         @Nullable
         private Profile fetchLocal(@Nonnull UUID identifier) {
                 return this.profileRepository.findOne(identifier);
+        }
+
+        /**
+         * Fetches a profile from the specified URL.
+         *
+         * @param url a url.
+         * @return a profile
+         *
+         * @throws IOException when an error occurs.
+         */
+        @Nonnull
+        private Profile fetchProfile(@Nonnull URL url) throws IOException {
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+                switch (connection.getResponseCode()) {
+                        case 204:
+                                // Dear Mojang,
+                                // 204 No Content is not the correct status code to signify no results
+                                // Thanks for your time
+                                throw new NoSuchProfileException();
+                        case 429:
+                                throw new TooManyRequestsException("Rate limit exceeded");
+                }
+
+                try (InputStream inputStream = connection.getInputStream()) {
+                        JsonNode node = reader.readTree(inputStream);
+                        UUID identifier = (new MojangUUID(node.get("id").asText())).toUUID();
+
+                        // try to fetch a profile or create a new one if none is stored within the database
+                        final Profile profile;
+                        {
+                                Profile prof = this.profileRepository.findOne(identifier);
+
+                                if (prof == null) {
+                                        profile = new Profile(identifier);
+                                } else {
+                                        profile = prof;
+                                        profile.setLastSeen(Instant.now());
+                                }
+                        }
+                        this.profileRepository.save(profile);
+
+                        // try to fetch a display name for the current profile and create a new one if none is stored in
+                        // the database
+                        DisplayName displayName = this.displayNameRepository.findOneByNameAndProfile(node.get("name").asText(), profile).orElseGet(() -> new DisplayName(node.get("name").asText(), Instant.now(), profile));
+
+                        displayName.setLastSeen(Instant.now());
+                        this.displayNameRepository.save(displayName);
+
+                        // iterate over all properties and create/update their respective values
+                        node.get("properties").forEach((p) -> {
+                                String name = p.get("name").asText();
+
+                                ProfileProperty property = this.profilePropertyRepository.findByNameAndProfile(name, profile).orElseGet(() -> new ProfileProperty(profile, name, p.get("value").asText(), (p.has("signature") ? p.get("signature").asText() : null)));
+
+                                property.setLastSeen(Instant.now());
+                                this.profilePropertyRepository.save(property);
+                                profile.addProperty(property);
+                        });
+
+                        return profile;
+                }
         }
 
         /**
@@ -311,6 +325,24 @@ public class ProfileService {
                 }
 
                 return profile;
+        }
+
+        /**
+         * Fetches a profile by proxying a join request.
+         *
+         * @param username a username.
+         * @param serverId a serverId hash.
+         * @return a profile.
+         */
+        @Nonnull
+        public Profile join(@Nonnull String username, @Nonnull String serverId) {
+                try {
+                        return this.fetchProfile(new URL(String.format(JOIN_URL_TEMPLATE, username, serverId)));
+                } catch (FileNotFoundException ex) {
+                        throw new NoSuchProfileException(username);
+                } catch (TooManyRequestsException | IOException ex) {
+                        throw new ServiceException("Could not poll profile from session server: " + ex.getMessage(), ex);
+                }
         }
 
         /**
