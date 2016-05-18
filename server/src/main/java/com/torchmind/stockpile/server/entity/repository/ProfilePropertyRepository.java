@@ -21,8 +21,10 @@ import com.torchmind.stockpile.server.entity.ProfileProperty;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import javax.annotation.Nonnull;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * <strong>Profile Property Repository</strong>
@@ -33,6 +35,15 @@ import java.util.UUID;
  * @author <a href="mailto:johannesd@torchmind.com">Johannes Donath</a>
  */
 public interface ProfilePropertyRepository extends PagingAndSortingRepository<ProfileProperty, UUID> {
+
+        /**
+         * Searches for a set of profile properties that were last seen before the supplied timestamp occurred.
+         *
+         * @param lastSeen a timestamp.
+         * @return a stream of profile properties.
+         */
+        @Nonnull
+        Stream<ProfileProperty> findByLastSeenLessThanOrderByLastSeenDesc(@Nonnull Instant lastSeen);
 
         /**
          * Searches for a profile property with the specified name and profile.
