@@ -144,6 +144,8 @@
 
         <!-- Build Settings -->
         <build>
+                <finalName>StockpileServer</finalName>
+
                 <resources>
                         <!-- Configuration -->
                         <resource>
@@ -211,6 +213,20 @@
                         <plugin>
                                 <groupId>org.apache.maven.plugins</groupId>
                                 <artifactId>maven-javadoc-plugin</artifactId>
+                        </plugin>
+
+                        <!-- Assembly -->
+                        <plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-assembly-plugin</artifactId>
+
+                                <configuration>
+                                        <appendAssemblyId>false</appendAssemblyId>
+
+                                        <descriptors>
+                                                <descriptor>src/assembly/complete.xml</descriptor>
+                                        </descriptors>
+                                </configuration>
                         </plugin>
 
                         <!-- Install -->
