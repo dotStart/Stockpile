@@ -1,0 +1,115 @@
+# Stockpile Configuration File
+# ============================
+# Generated for version ${project.version}
+
+# Server Settings
+# ===============
+server:
+    # Server Address
+    # ==============
+    # Specifies the address the server will bind to.
+    # This should preferably be an internal address which is not directly reachable from the internet.
+    #
+    # Default: 0.0.0.0 (all addresses)
+    address: 0.0.0.0
+
+    # Server Port
+    # ===========
+    # Specifies the port the server will bind to.
+    #
+    # Any value works here. Keep in mind, that ports 1024 and below are restricted and cannot be bound without
+    # Administrator privileges or setting a capability flag on the Java executable on modern systems.
+    #
+    # Default: 8080
+    port: 8080
+
+# Cache Configuration
+# ===================
+cache:
+    # Cache Aggressiveness
+    # ====================
+    # Specifies the cache's "aggressiveness" in terms of storage period.
+    #
+    # high => Display Names expire after 30 days, Profiles and their properties never expire
+    # moderate => Display Names, Profiles and Properties expire according to their configured TTLs.
+    # low => The cache will be populated but only used when the API refuses to respond to queries.
+    #
+    # Default: high
+    aggressiveness: high
+
+    # Time-to-Live (TTL) Configuration
+    # ================================
+    # Note: The settings in this section only take effect when the cache aggressiveness is set to "moderate".
+    ttl:
+        # Profile TTL
+        # ===========
+        # Specifies how long a Profile is cached in the database (in seconds).
+        # A value of -1 signifies an infinite caching period.
+        #
+        # Note: Profiles will only be kept around as long as there is at least one property or a name associated with
+        # it.
+        #
+        # Default: -1
+        profile: -1
+
+        # Display Name TTL
+        # ================
+        # Specifies how long display names are cached in the database (in seconds).
+        # A value of -1 signifies an infinite caching period.
+        #
+        # Default: 7200
+        name: 7200
+
+        # Property TTL
+        # ============
+        # Specifies how long properties are cached in the database (in seconds).
+        # A value of -1 signifies an infinite caching period.
+        #
+        # Note: Currently this feature only stores a player's skin.
+        #
+        # Default: 3600
+        property: 3600
+
+# Framework Configuration
+# =======================
+spring:
+    datasource:
+        # Database URI
+        # ============
+        # Specifies a JDBC URL to connect to in order to permanently store cache contents.
+        #
+        # Syntax: jdbc:<type>://<hostname>[:<port>]/<database>
+        # Default: jdbc:h2:./cache
+        url: jdbc:h2:./cache
+
+        # Username & Password
+        # ===================
+        # Specifies the username and password to pass to the database driver in order to authenticate with the backing
+        # server implementation.
+        #
+        # Default: stockpile:1234
+        username: stockpile
+        password: 1234
+    jpa:
+        # Schema Generation
+        # =================
+        # Enables or disabled automatic database schema generation and updating.
+        #
+        # Note: It is recommended to keep this option enabled as it will ensure the database layout is compatible with
+        # the currently running version of the application. Only disable this if you know what you are doing!
+        #
+        # Default: true
+        generate-ddl: true
+
+        # Schema Generation Mode
+        # ======================
+        # Specifies how schema generation is handled by the application.
+        #
+        # none => Disable schema generation.
+        # validate => Verify the database and prevent application startup when states mismatch.
+        # update => Create and update tables according to the new specification.
+        # create => Creates a new database schema (deleting all previously stored data).
+        # create-drop => Creates a new schema and deletes it on (graceful) shutdown.
+        #
+        # Default: update
+        ddl-auto: update
