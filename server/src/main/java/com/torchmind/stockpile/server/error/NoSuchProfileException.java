@@ -34,6 +34,10 @@ import java.util.UUID;
 public class NoSuchProfileException extends NoSuchElementException {
         public static final String MESSAGE_FORMAT = "Cannot find profile \"%s\"";
 
+        public NoSuchProfileException() {
+                super();
+        }
+
         public NoSuchProfileException(@Nonnull UUID identifier) {
                 super(String.format(MESSAGE_FORMAT, identifier));
         }
