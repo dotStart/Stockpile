@@ -23,6 +23,16 @@ server:
     # Default: 8080
     port: 8080
 
+    # Context Path
+    # ============
+    # Specifies the context path (URL prefix) the server will respond to.
+    #
+    # Usually you will not need to change this unless you are planning on running this cache implementation using a
+    # reverse proxy.
+    #
+    # Default: /
+    contextPath: /
+
 # Cache Configuration
 # ===================
 cache:
