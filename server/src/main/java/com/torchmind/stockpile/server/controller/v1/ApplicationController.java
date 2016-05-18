@@ -35,7 +35,7 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 @RestController
 @RequestMapping("/v1")
-public class RootController {
+public class ApplicationController {
         public static final Version VERSION = new Version(1, Version.State.DEVELOPMENT);
 
         /**
