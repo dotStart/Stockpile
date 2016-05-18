@@ -101,6 +101,11 @@
                         </exclusions>
                 </dependency>
 
+                <dependency>
+                        <groupId>javax.el</groupId>
+                        <artifactId>javax.el-api</artifactId>
+                </dependency>
+
                 <!-- Serialization -->
                 <dependency>
                         <groupId>com.fasterxml.jackson.core</groupId>
@@ -188,19 +193,15 @@
                                         <archive>
                                                 <manifest>
                                                         <mainClass>com.torchmind.stockpile.server.StockpileServer</mainClass>
-
-                                                        <addClasspath>true</addClasspath>
-                                                        <classpathPrefix>lib/</classpathPrefix>
-                                                        <classpathLayoutType>repository</classpathLayoutType>
                                                 </manifest>
                                         </archive>
                                 </configuration>
                         </plugin>
 
-                        <!-- Copy Dependencies -->
+                        <!-- Spring Boot -->
                         <plugin>
-                                <groupId>org.apache.maven.plugins</groupId>
-                                <artifactId>maven-dependency-plugin</artifactId>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-maven-plugin</artifactId>
                         </plugin>
 
                         <!-- Attach Sources -->
@@ -230,17 +231,12 @@
                                                 </goals>
 
                                                 <configuration>
+                                                        <dontWrapJar>true</dontWrapJar>
                                                         <headerType>console</headerType>
                                                         <outfile>${project.build.directory}/${project.build.finalName}.exe</outfile>
-                                                        <jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+                                                        <jar>${project.build.finalName}.jar</jar>
                                                         <errTitle>Stockpile</errTitle>
                                                         <icon>${project.basedir}/src/main/resources/favicon.ico</icon>
-
-                                                        <classPath>
-                                                                <mainClass>com.torchmind.stockpile.server.StockpileServer</mainClass>
-                                                                <addDependencies>false</addDependencies>
-                                                                <preCp>anything</preCp>
-                                                        </classPath>
 
                                                         <jre>
                                                                 <minVersion>1.8.0</minVersion>
