@@ -16,11 +16,11 @@
  */
 package com.torchmind.stockpile.server.entity;
 
+import com.torchmind.stockpile.data.v1.PlayerProfile;
+import org.hibernate.annotations.Type;
+
 import javax.annotation.Nonnull;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 
 /**
@@ -37,10 +37,12 @@ public class ProfileProperty extends BaseEntity {
         private Instant lastSeen;
         @Column(nullable = false, updatable = false)
         private final String name;
-        @ManyToOne(optional = false)
+        @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
         private final Profile profile;
         @Column
+        @Type(type = "text")
         private String signature;
+        @Type(type = "text")
         @Column(nullable = false)
         private String value;
 
@@ -94,5 +96,15 @@ public class ProfileProperty extends BaseEntity {
 
         public void setValue(@Nonnull String value) {
                 this.value = value;
+        }
+
+        /**
+         * Converts a stored profile property into its REST representation.
+         *
+         * @return a REST compatible representation.
+         */
+        @Nonnull
+        public PlayerProfile.Property toRestRepresentation() {
+                return new PlayerProfile.Property(this.name, this.value, this.signature);
         }
 }

@@ -16,16 +16,13 @@
  */
 package com.torchmind.stockpile.server.entity;
 
+import com.torchmind.stockpile.data.v1.PlayerProfile;
+
 import javax.annotation.Nonnull;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * <strong>Profile</strong>
@@ -36,26 +33,41 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "profile")
-public class Profile extends BaseEntity {
+public class Profile {
+        @Id
+        private final UUID identifier;
         @Column
         private Instant lastSeen;
-        @OneToMany(orphanRemoval = true, mappedBy = "profile")
-        private final List<DisplayName> names;
-        @OneToMany(orphanRemoval = true, mappedBy = "profile")
-        private final List<ProfileProperty> properties;
+        @OneToMany(orphanRemoval = true, mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+        private final Set<DisplayName> names;
+        @OneToMany(orphanRemoval = true, mappedBy = "profile", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+        private final Set<ProfileProperty> properties;
 
-        public Profile() {
-                this.names = new ArrayList<>();
-                this.properties = new ArrayList<>();
+        private Profile() {
+                this.identifier = null;
+                this.names = null;
+                this.properties = null;
                 this.lastSeen = Instant.now();
         }
 
         public Profile(@Nonnull UUID identifier) {
-                super(identifier);
-
-                this.names = new ArrayList<>();
-                this.properties = new ArrayList<>();
+                this.identifier = identifier;
+                this.names = new CopyOnWriteArraySet<>();
+                this.properties = new CopyOnWriteArraySet<>();
                 this.lastSeen = Instant.now();
+        }
+
+        public void addName(@Nonnull DisplayName name) {
+                this.names.add(name);
+        }
+
+        public void addProperty(@Nonnull ProfileProperty property) {
+                this.properties.add(property);
+        }
+
+        @Nonnull
+        public UUID getIdentifier() {
+                return identifier;
         }
 
         @Nonnull
@@ -64,13 +76,23 @@ public class Profile extends BaseEntity {
         }
 
         /**
+         * Retrieves the latest profile name.
+         *
+         * @return a name or, if no display name was found, an empty optional.
+         */
+        @Nonnull
+        public Optional<DisplayName> getLatestName() {
+                return this.getNames().stream().sorted((n1, n2) -> (int) Math.min(1, Math.max(-1, (n2.getLastSeen().toEpochMilli() - n1.getLastSeen().toEpochMilli())))).findFirst();
+        }
+
+        /**
          * Retrieves a list of associated names.
          *
          * @return a list of names.
          */
         @Nonnull
-        public List<DisplayName> getNames() {
-                return Collections.unmodifiableList(this.names);
+        public Set<DisplayName> getNames() {
+                return this.names;
         }
 
         /**
@@ -79,11 +101,24 @@ public class Profile extends BaseEntity {
          * @return a list of properties.
          */
         @Nonnull
-        public List<ProfileProperty> getProperties() {
-                return Collections.unmodifiableList(this.properties);
+        public Set<ProfileProperty> getProperties() {
+                return this.properties;
         }
 
         public void setLastSeen(@Nonnull Instant lastSeen) {
                 this.lastSeen = lastSeen;
+        }
+
+        /**
+         * Converts a stored profile into a REST compatible resource.
+         *
+         * @return a REST profile.
+         */
+        @Nonnull
+        public PlayerProfile toRestRepresentation() {
+                List<PlayerProfile.Property> properties = new ArrayList<>();
+                this.getProperties().forEach((p) -> properties.add(p.toRestRepresentation()));
+
+                return new PlayerProfile(this.getIdentifier(), this.getLatestName().map((n) -> n.getName()).orElse(null), properties, this.getLastSeen());
         }
 }
