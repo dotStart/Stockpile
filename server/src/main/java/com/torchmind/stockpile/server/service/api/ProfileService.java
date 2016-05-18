@@ -300,8 +300,6 @@ public class ProfileService {
                 if (profile == null || profile.getNames().size() == 0 || profile.getProperties().size() == 0) {
                         try {
                                 return this.fetch(identifier);
-                        } catch (TooManyRequestsException ex) {
-                                throw ex;
                         } catch (IOException ex) {
                                 if (profile != null) {
                                         return profile;
