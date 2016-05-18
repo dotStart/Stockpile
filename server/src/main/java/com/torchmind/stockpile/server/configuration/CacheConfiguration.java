@@ -17,6 +17,7 @@
 package com.torchmind.stockpile.server.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -31,17 +32,26 @@ import javax.annotation.Nonnull;
 @Component
 @ConfigurationProperties(prefix = "cache")
 public class CacheConfiguration {
-        private Aggressiveness aggressiveness = Aggressiveness.HIGH;
+        private Aggressiveness aggressiveness;
+        @NestedConfigurationProperty
         private TimeToLiveConfiguration ttl = new TimeToLiveConfiguration();
 
         @Nonnull
         public Aggressiveness getAggressiveness() {
-                return aggressiveness;
+                return this.aggressiveness;
         }
 
         @Nonnull
         public TimeToLiveConfiguration getTtl() {
-                return ttl;
+                return this.ttl;
+        }
+
+        public void setAggressiveness(@Nonnull Aggressiveness aggressiveness) {
+                this.aggressiveness = aggressiveness;
+        }
+
+        public void setTtl(@Nonnull TimeToLiveConfiguration ttl) {
+                this.ttl = ttl;
         }
 
         /**
@@ -77,7 +87,6 @@ public class CacheConfiguration {
                  * <strong>Unknown</strong>
                  *
                  * This is a placeholder annotation for cases in which unknown or default values are required.
-                 * Do not use this in your configuration!
                  */
                 UNKNOWN
         }
@@ -85,22 +94,33 @@ public class CacheConfiguration {
         /**
          * Represents an externalized TTL configuration.
          */
-        @ConfigurationProperties(prefix = "cache.ttl")
         public static class TimeToLiveConfiguration {
                 private long name = 7200;
                 private long profile = -1;
                 private long property = 3600;
 
                 public long getName() {
-                        return name;
+                        return this.name;
                 }
 
                 public long getProfile() {
-                        return profile;
+                        return this.profile;
                 }
 
                 public long getProperty() {
-                        return property;
+                        return this.property;
+                }
+
+                public void setName(long name) {
+                        this.name = name;
+                }
+
+                public void setProfile(long profile) {
+                        this.profile = profile;
+                }
+
+                public void setProperty(long property) {
+                        this.property = property;
                 }
         }
 }
