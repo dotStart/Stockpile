@@ -34,6 +34,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Entity
 @Table(name = "profile")
 public class Profile {
+        @Transient
+        private final transient boolean cached;
         @Id
         private final UUID identifier;
         @Column
@@ -48,6 +50,8 @@ public class Profile {
                 this.names = null;
                 this.properties = null;
                 this.lastSeen = Instant.now();
+
+                this.cached = true;
         }
 
         public Profile(@Nonnull UUID identifier) {
@@ -55,6 +59,8 @@ public class Profile {
                 this.names = new CopyOnWriteArraySet<>();
                 this.properties = new CopyOnWriteArraySet<>();
                 this.lastSeen = Instant.now();
+
+                this.cached = false;
         }
 
         public void addName(@Nonnull DisplayName name) {
@@ -103,6 +109,16 @@ public class Profile {
         @Nonnull
         public Set<ProfileProperty> getProperties() {
                 return this.properties;
+        }
+
+        /**
+         * Checks whether the profile has just been created as a result of the request or whether it was received
+         * from the storage backend.
+         *
+         * @return true if cached, false otherwise.
+         */
+        public boolean isCached() {
+                return this.cached;
         }
 
         public void setLastSeen(@Nonnull Instant lastSeen) {
