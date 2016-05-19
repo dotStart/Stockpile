@@ -24,6 +24,14 @@
 
         <fileSets>
                 <fileSet>
+                        <directory>${project.basedir}</directory>
+                        <outputDirectory>.</outputDirectory>
+
+                        <includes>
+                                <include>THIRDPARTY-LIBRARIES.md</include>
+                        </includes>
+                </fileSet>
+                <fileSet>
                         <directory>${project.basedir}/src</directory>
                         <outputDirectory>.</outputDirectory>
 
