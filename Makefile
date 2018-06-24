@@ -5,7 +5,7 @@ APPLICATION_TIMESTAMP := `date --utc "+%s"`
 
 LDFLAGS :=-ldflags "-X github.com/dotStart/Stockpile/metadata.brand=${APPLICATION_BRAND} -X github.com/dotStart/Stockpile/metadata.version=${APPLICATION_VERSION} -X github.com/dotStart/Stockpile/metadata.commitHash=${APPLICATION_COMMIT_HASH} -X \"github.com/dotStart/Stockpile/metadata.timestampRaw=${APPLICATION_TIMESTAMP}\""
 
-.PHONY: print-config install-dependencies generate-sources build package
+.PHONY: print-config install-dependencies build package
 
 clean:
 	@echo "==> Clearing previous build data"
@@ -26,11 +26,6 @@ print-config:
 install-dependencies:
 	@echo "==> Installing dependencies"
 	@dep ensure -v
-	@echo ""
-
-generate-sources:
-	@echo "==> Generating protobuf sources"
-	# todo
 	@echo ""
 
 build: build/mac32/stockpile build/mac64/stockpile \
