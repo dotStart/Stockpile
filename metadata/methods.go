@@ -45,6 +45,10 @@ func VersionFull() string {
 
 // Retrieves the commit hash from which this version was built
 func CommitHash() string {
+  if len(commitHash) == 0 {
+    return "development"
+  }
+
   return commitHash
 }
 
