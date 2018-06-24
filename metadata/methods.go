@@ -37,7 +37,7 @@ func Version() string {
 func VersionFull() string {
   versionExtension := "+dev"
   if commitHash != "" {
-    versionExtension = "+git-" + commitHash
+    versionExtension = "+git-" + commitHash[0:7]
   }
 
   return version + versionExtension
