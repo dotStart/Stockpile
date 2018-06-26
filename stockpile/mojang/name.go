@@ -32,11 +32,12 @@ var unixEpoch = time.Unix(0, 0)
 // represents a single profile id mapping between a display name and a mapping at a given time
 // note that lastSeenAt and validUntil may be set to UNIX epoch if the initial mapping is requested
 type ProfileId struct {
-  Id         uuid.UUID
-  RawId      string `json:"id"`
-  Name       string `json:"name"`
-  LastSeenAt time.Time
-  ValidUntil time.Time
+  Id          uuid.UUID
+  RawId       string `json:"id"`
+  Name        string `json:"name"`
+  FirstSeenAt time.Time
+  LastSeenAt  time.Time
+  ValidUntil  time.Time
 }
 
 // represents a single name change within a profile's history
@@ -48,22 +49,28 @@ type NameChange struct {
   ValidUntil     time.Time
 }
 
-func (p *ProfileId) init(lastSeen time.Time) error {
+func (p *ProfileId) init(seen time.Time) error {
   id, err := ToStandardId(p.RawId)
   if err != nil {
     return err
   }
 
   p.Id = id
-  p.LastSeenAt = lastSeen
+  p.FirstSeenAt = seen
+  p.LastSeenAt = seen
 
-  if lastSeen != unixEpoch {
-    p.ValidUntil = CalculateNameGracePeriodEnd(lastSeen)
+  if seen != unixEpoch {
+    p.ValidUntil = CalculateNameGracePeriodEnd(seen)
   } else {
     p.ValidUntil = unixEpoch
   }
 
   return nil
+}
+
+// evaluates whether the profile is still valid at the given time
+func (p *ProfileId) IsValid(at time.Time) bool {
+  return !p.FirstSeenAt.After(at) && p.ValidUntil.After(at)
 }
 
 func (c *NameChange) init() error {

@@ -58,7 +58,7 @@ func (a *MojangAPI) execute(method string, uri string, body io.Reader) (*http.Re
   statusCategory := res.StatusCode / 100
   a.logger.Debugf("Server responded with status code %d (category %d)", res.StatusCode, statusCategory)
 
-  if statusCategory == 2 {
+  if statusCategory == 2 || res.StatusCode == 404 {
     return res, nil
   }
   if statusCategory == 4 {
