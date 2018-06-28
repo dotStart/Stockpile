@@ -40,8 +40,12 @@ func printValue(val reflect.Value) []string {
     for i := 0; i < val.Len(); i++ {
       encodedVal := printValue(val.Index(i))
 
-      for _, str := range encodedVal {
-        encoded = append(encoded, str)
+      for j, str := range encodedVal {
+        if j == 0 {
+          encoded = append(encoded, "-> " + str)
+        } else {
+          encoded = append(encoded, "   " + str)
+        }
       }
 
       if i+1 != val.Len() {
