@@ -23,6 +23,60 @@ import (
   "strings"
 )
 
+// evaluates whether a given field is hidden (specifically whether it is merely used to represent
+// the internal state of a protobuf message)
+func isHiddenField(field *reflect.StructField) bool {
+  return strings.HasPrefix(field.Name, "XXX_")
+}
+
+// pretty prints an arbitrary value
+func printValue(val reflect.Value) []string {
+  switch val.Kind() {
+  case reflect.Slice:
+    fallthrough
+  case reflect.Array:
+    encoded := make([]string, 0)
+
+    for i := 0; i < val.Len(); i++ {
+      encodedVal := printValue(val.Index(i))
+
+      for _, str := range encodedVal {
+        encoded = append(encoded, str)
+      }
+
+      if i+1 != val.Len() {
+        encoded = append(encoded, "")
+      }
+    }
+    return encoded
+  case reflect.Struct:
+    encoded := make([]string, 0)
+
+    for i := 0; i < val.NumField(); i++ {
+      field := val.Type().Field(i)
+      fieldValue := val.Field(i)
+
+      if isHiddenField(&field) {
+        continue
+      }
+
+      encodedField := printValue(fieldValue)
+      for j, str := range encodedField {
+        if j == 0 {
+          encoded = append(encoded, field.Name+": "+str)
+        } else {
+          encoded = append(encoded, strings.Repeat(" ", len(field.Name)+2)+str)
+        }
+      }
+    }
+    return encoded
+  case reflect.Ptr:
+    return printValue(val.Elem())
+  }
+
+  return []string{fmt.Sprintf("%v", val)}
+}
+
 // prints a struct in a human readable table format
 func writeTable(writer io.Writer, data interface{}) {
   val := reflect.ValueOf(data)
@@ -30,24 +84,31 @@ func writeTable(writer io.Writer, data interface{}) {
 
   headerCellLength := 3
   valueCellLength := 5
+  fieldCount := typ.NumField()
 
+  valueMap := make(map[string][]string)
   for i := 0; i < typ.NumField(); i++ {
     fieldDef := typ.Field(i)
     field := val.Field(i)
 
-    if strings.HasPrefix(fieldDef.Name, "XXX_") {
+    if isHiddenField(&fieldDef) {
+      fieldCount--
       continue
     }
 
+    valueMap[fieldDef.Name] = printValue(field)
+
     keyLength := len(fieldDef.Name)
-    val := fmt.Sprintf("%v", field)
-    valueLength := len(val)
 
     if keyLength > headerCellLength {
       headerCellLength = keyLength
     }
-    if valueLength > valueCellLength {
-      valueCellLength = valueLength
+    for _, str := range valueMap[fieldDef.Name] {
+      l := len(str)
+
+      if l > valueCellLength {
+        valueCellLength = l
+      }
     }
   }
 
@@ -63,9 +124,8 @@ func writeTable(writer io.Writer, data interface{}) {
 
   for i := 0; i < typ.NumField(); i++ {
     fieldDef := typ.Field(i)
-    field := val.Field(i)
 
-    if strings.HasPrefix(fieldDef.Name, "XXX_") {
+    if isHiddenField(&fieldDef) {
       continue
     }
 
@@ -73,7 +133,21 @@ func writeTable(writer io.Writer, data interface{}) {
     io.WriteString(writer, strings.Repeat(" ", headerCellLength-len(fieldDef.Name)))
     io.WriteString(writer, " | ")
 
-    io.WriteString(writer, fmt.Sprintf("%v", field))
-    io.WriteString(writer, "\n")
+    for j, str := range valueMap[fieldDef.Name] {
+      if j != 0 {
+        io.WriteString(writer, strings.Repeat(" ", headerCellLength))
+        io.WriteString(writer, " | ")
+      }
+
+      io.WriteString(writer, str)
+      io.WriteString(writer, "\n")
+    }
+
+    if i+1 != fieldCount {
+      io.WriteString(writer, strings.Repeat("-", headerCellLength))
+      io.WriteString(writer, "-+-")
+      io.WriteString(writer, strings.Repeat("-", valueCellLength))
+      io.WriteString(writer, "\n")
+    }
   }
 }
