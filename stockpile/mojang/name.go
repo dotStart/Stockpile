@@ -116,7 +116,7 @@ func (a *MojangAPI) GetId(name string, at time.Time) (*ProfileId, error) {
 
 // resolves a list of multiple names at the current time
 // only 100 names may be resolved at a time
-func (a *MojangAPI) BulkGetId(names []string) ([]ProfileId, error) {
+func (a *MojangAPI) BulkGetId(names []string) ([]*ProfileId, error) {
   if len(names) > 100 {
     return nil, errors.New("cannot request more than 100 names")
   }
@@ -133,10 +133,10 @@ func (a *MojangAPI) BulkGetId(names []string) ([]ProfileId, error) {
   }
 
   if res.StatusCode == 204 { // TODO: verify whether this case actually occurs
-    return make([]ProfileId, 0), nil
+    return make([]*ProfileId, 0), nil
   }
 
-  profiles := make([]ProfileId, 0)
+  profiles := make([]*ProfileId, 0)
   defer res.Body.Close()
   err = json.NewDecoder(res.Body).Decode(&profiles)
   if err != nil {
@@ -154,7 +154,7 @@ func (a *MojangAPI) BulkGetId(names []string) ([]ProfileId, error) {
 
 // retrieves the complete name change history for a given profile
 // the initial account name is indicated by the lack of its timestamp (e.g. if set to UNIX epoch)
-func (a *MojangAPI) GetHistory(id uuid.UUID) ([]NameChange, error) {
+func (a *MojangAPI) GetHistory(id uuid.UUID) ([]*NameChange, error) {
   res, err := a.execute("GET", fmt.Sprintf("https://api.mojang.com/user/profiles/%s/names", ToMojangId(id)), nil)
   if err != nil {
     return nil, err
@@ -164,7 +164,7 @@ func (a *MojangAPI) GetHistory(id uuid.UUID) ([]NameChange, error) {
     return nil, nil
   }
 
-  history := make([]NameChange, 0)
+  history := make([]*NameChange, 0)
   defer res.Body.Close()
   err = json.NewDecoder(res.Body).Decode(&history)
   if err != nil {
