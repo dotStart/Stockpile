@@ -26,7 +26,7 @@ import (
 // prints a struct in a human readable table format
 func writeTable(writer io.Writer, data interface{}) {
   val := reflect.ValueOf(data)
-  typ := val.Type()
+  typ := reflect.TypeOf(data)
 
   headerCellLength := 3
   valueCellLength := 5
