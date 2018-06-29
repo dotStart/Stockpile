@@ -32,7 +32,7 @@ var ipPattern, _ = regexp.Compile("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){
 
 // represents a server blacklist
 type Blacklist struct {
-  hashes []string
+  Hashes []string
 }
 
 // retrieves the server blacklist
@@ -66,11 +66,11 @@ func NewBlacklist(hashes []string) (*Blacklist, error) {
     }
   }
 
-  return &Blacklist{hashes: hashes}, nil
+  return &Blacklist{Hashes: hashes}, nil
 }
 
 func (b *Blacklist) Serialize() ([]byte, error) {
-  return json.Marshal(b.hashes)
+  return json.Marshal(b.Hashes)
 }
 
 func (b *Blacklist) Deserialize(enc []byte) error {
@@ -80,13 +80,13 @@ func (b *Blacklist) Deserialize(enc []byte) error {
     return err
   }
 
-  b.hashes = hashes
+  b.Hashes = hashes
   return nil
 }
 
 // evaluates whether a certain hash is part of a blacklist
 func (b *Blacklist) Contains(hash string) bool {
-  for _, blacklistedHash := range b.hashes {
+  for _, blacklistedHash := range b.Hashes {
     if blacklistedHash == hash {
       return true
     }
