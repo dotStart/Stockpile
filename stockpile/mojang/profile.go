@@ -255,7 +255,7 @@ func (t *ProfileTextures) read(reader io.Reader) error {
 
 // retrieves a single profile from the server
 func (a *MojangAPI) GetProfile(id uuid.UUID) (*Profile, error) {
-  res, err := a.execute("GET", fmt.Sprintf("https://sessionserver.mojang.com/session/minecraft/profile/%s", ToMojangId(id)), nil)
+  res, err := a.execute("GET", fmt.Sprintf("https://sessionserver.mojang.com/session/minecraft/profile/%s?unsigned=false", ToMojangId(id)), nil)
   if err != nil {
     return nil, err
   }
