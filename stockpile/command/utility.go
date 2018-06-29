@@ -31,6 +31,12 @@ func isHiddenField(field *reflect.StructField) bool {
 
 // pretty prints an arbitrary value
 func printValue(val reflect.Value) []string {
+  convMethod := val.MethodByName("String")
+  if convMethod.IsValid() {
+    retValues := convMethod.Call([]reflect.Value{})
+    return []string{retValues[0].String()}
+  }
+
   switch val.Kind() {
   case reflect.Slice:
     fallthrough
@@ -42,9 +48,9 @@ func printValue(val reflect.Value) []string {
 
       for j, str := range encodedVal {
         if j == 0 {
-          encoded = append(encoded, "-> " + str)
+          encoded = append(encoded, "-> "+str)
         } else {
-          encoded = append(encoded, "   " + str)
+          encoded = append(encoded, "   "+str)
         }
       }
 
