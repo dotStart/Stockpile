@@ -29,6 +29,15 @@ func isHiddenField(field *reflect.StructField) bool {
   return strings.HasPrefix(field.Name, "XXX_")
 }
 
+// shortens long strings for display within the command line
+func strEllipsis(str string) string {
+  if len(str) > 36 { // 36 == uuid
+    return str[:3] + "..." + str[len(str)-3:]
+  }
+
+  return str
+}
+
 // pretty prints an arbitrary value
 func printValue(val reflect.Value) []string {
   if !val.IsValid() {
@@ -37,8 +46,7 @@ func printValue(val reflect.Value) []string {
 
   convMethod := val.MethodByName("String")
   if convMethod.IsValid() {
-    retValues := convMethod.Call([]reflect.Value{})
-    return []string{retValues[0].String()}
+    return []string{strEllipsis(convMethod.Call([]reflect.Value{})[0].String())}
   }
 
   switch val.Kind() {
@@ -63,6 +71,20 @@ func printValue(val reflect.Value) []string {
       }
     }
     return encoded
+  case reflect.Map:
+    encoded := make([]string, 0)
+    for _, key := range val.MapKeys() {
+      encodedValue := printValue(val.MapIndex(key))
+      encoded = append(encoded, strings.Join(printValue(key), ", ")+":")
+      for _, str := range encodedValue {
+        encoded = append(encoded, "  "+str)
+      }
+    }
+    return encoded
+  case reflect.Ptr:
+    return printValue(val.Elem())
+  case reflect.String:
+    return []string{strEllipsis(val.String())}
   case reflect.Struct:
     encoded := make([]string, 0)
 
@@ -84,8 +106,6 @@ func printValue(val reflect.Value) []string {
       }
     }
     return encoded
-  case reflect.Ptr:
-    return printValue(val.Elem())
   }
 
   return []string{fmt.Sprintf("%v", val)}
