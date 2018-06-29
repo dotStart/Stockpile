@@ -115,7 +115,7 @@ func (p *Profile) read(reader io.Reader) error {
     return err
   }
 
-  id, err := uuid.Parse(parsed.Id)
+  id, err := ParseId(parsed.Id)
   if err != nil {
     return err
   }
