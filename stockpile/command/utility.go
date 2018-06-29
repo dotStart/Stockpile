@@ -31,6 +31,10 @@ func isHiddenField(field *reflect.StructField) bool {
 
 // pretty prints an arbitrary value
 func printValue(val reflect.Value) []string {
+  if !val.IsValid() {
+    return []string{"unset"}
+  }
+
   convMethod := val.MethodByName("String")
   if convMethod.IsValid() {
     retValues := convMethod.Call([]reflect.Value{})
