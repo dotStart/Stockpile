@@ -31,7 +31,7 @@ func isHiddenField(field *reflect.StructField) bool {
 
 // shortens long strings for display within the command line
 func strEllipsis(str string) string {
-  if len(str) > 36 { // 36 == uuid
+  if len(str) > 128 { // 36 == uuid
     return str[:3] + "..." + str[len(str)-3:]
   }
 
