@@ -17,6 +17,7 @@
 package mojang
 
 import (
+  "encoding/base64"
   "encoding/json"
   "fmt"
   "io"
@@ -130,8 +131,13 @@ func (p *Profile) read(reader io.Reader) error {
   p.Textures = nil
   texProp := p.Properties["textures"]
   if texProp != nil {
+    extractedValue, err := base64.StdEncoding.DecodeString(texProp.Value)
+    if err != nil {
+      return err
+    }
+
     parsedProp := restProfileTextures{}
-    err := json.Unmarshal([]byte(texProp.Value), &parsedProp)
+    err = json.Unmarshal(extractedValue, &parsedProp)
     if err != nil {
       return err
     }
@@ -267,5 +273,5 @@ func (a *MojangAPI) GetProfile(id uuid.UUID) (*Profile, error) {
   profile := &Profile{}
   defer res.Body.Close()
   err = profile.read(res.Body)
-  return profile, nil
+  return profile, err
 }
