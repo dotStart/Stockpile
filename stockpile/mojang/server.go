@@ -19,6 +19,7 @@ package mojang
 import (
   "crypto/sha1"
   "encoding/hex"
+  "encoding/json"
   "errors"
   "io/ioutil"
   "regexp"
@@ -66,6 +67,21 @@ func NewBlacklist(hashes []string) (*Blacklist, error) {
   }
 
   return &Blacklist{hashes: hashes}, nil
+}
+
+func (b *Blacklist) Serialize() ([]byte, error) {
+  return json.Marshal(b.hashes)
+}
+
+func (b *Blacklist) Deserialize(enc []byte) error {
+  hashes := make([]string, 0)
+  err := json.Unmarshal(enc, &hashes)
+  if err != nil {
+    return err
+  }
+
+  b.hashes = hashes
+  return nil
 }
 
 // evaluates whether a certain hash is part of a blacklist

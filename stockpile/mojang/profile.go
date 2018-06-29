@@ -19,18 +19,141 @@ package mojang
 import (
   "encoding/json"
   "fmt"
+  "io"
   "time"
 
   "github.com/google/uuid"
 )
 
 type Profile struct {
-  Id            uuid.UUID
-  RawId         string            `json:"id"`
-  Name          string
-  Properties    map[string]*ProfileProperty
-  RawProperties []ProfileProperty `json:"properties"`
-  Textures      *ProfileTextures
+  Id         uuid.UUID
+  Name       string
+  Properties map[string]*ProfileProperty
+  Textures   *ProfileTextures
+}
+
+type restProfile struct {
+  Id         string             `json:"id"`
+  Name       string             `json:"name"`
+  Properties []*ProfileProperty `json:"properties"`
+}
+
+type serializableProfile struct {
+  restProfile
+  Textures *serializableProfileTextures
+}
+
+func (p *Profile) Serialize() ([]byte, error) {
+  i := 0
+  props := make([]*ProfileProperty, len(p.Properties))
+  for _, prop := range p.Properties {
+    props[i] = prop
+    i++
+  }
+
+  var tex *serializableProfileTextures = nil
+  if p.Textures != nil {
+    tex = &serializableProfileTextures{
+      Timestamp:   p.Textures.Timestamp.Unix(),
+      ProfileId:   p.Textures.ProfileId.String(),
+      ProfileName: p.Textures.ProfileName,
+      Textures:    p.Textures.Textures,
+    }
+  }
+
+  enc := serializableProfile{
+    restProfile: restProfile{
+      Id:         p.Id.String(),
+      Name:       p.Name,
+      Properties: props,
+    },
+    Textures: tex,
+  }
+  return json.Marshal(&enc)
+}
+
+func (p *Profile) Deserialize(enc []byte) error {
+  parsed := serializableProfile{}
+  err := json.Unmarshal(enc, &parsed)
+  if err != nil {
+    return err
+  }
+
+  id, err := uuid.Parse(parsed.Id)
+  if err != nil {
+    return err
+  }
+  p.Id = id
+  p.Name = parsed.Name
+
+  p.Properties = make(map[string]*ProfileProperty)
+  for _, prop := range parsed.Properties {
+    p.Properties[prop.Name] = prop
+  }
+
+  p.Textures = nil
+  if parsed.Textures != nil {
+    id, err := uuid.Parse(parsed.Textures.ProfileId)
+    if err != nil {
+      return err
+    }
+
+    p.Textures = &ProfileTextures{
+      Timestamp:   time.Unix(parsed.Textures.Timestamp, 0),
+      ProfileId:   id,
+      ProfileName: parsed.Textures.ProfileName,
+      Textures:    parsed.Textures.Textures,
+    }
+  }
+  return nil
+}
+
+func (p *Profile) read(reader io.Reader) error {
+  parsed := restProfile{}
+  err := json.NewDecoder(reader).Decode(&parsed)
+  if err != nil {
+    return err
+  }
+
+  id, err := uuid.Parse(parsed.Id)
+  if err != nil {
+    return err
+  }
+  p.Id = id
+  p.Name = parsed.Name
+
+  p.Properties = make(map[string]*ProfileProperty)
+  for _, prop := range parsed.Properties {
+    p.Properties[prop.Name] = prop
+  }
+
+  p.Textures = nil
+  texProp := p.Properties["textures"]
+  if texProp != nil {
+    parsedProp := restProfileTextures{}
+    err := json.Unmarshal([]byte(texProp.Value), &parsedProp)
+    if err != nil {
+      return err
+    }
+
+    id, err := ParseId(parsedProp.ProfileId)
+    if err != nil {
+      return err
+    }
+
+    textures := make(map[string]string)
+    for key, spec := range parsedProp.Textures {
+      textures[key] = spec.Url
+    }
+
+    p.Textures = &ProfileTextures{
+      Timestamp:   time.Unix(parsedProp.Timestamp, 0),
+      ProfileId:   id,
+      ProfileName: parsedProp.ProfileName,
+      Textures:    textures,
+    }
+  }
+  return nil
 }
 
 type ProfileProperty struct {
@@ -39,57 +162,92 @@ type ProfileProperty struct {
   Signature string `json:"signature"`
 }
 
-type ProfileTextures struct {
-  Timestamp    time.Time
-  RawTimestamp int64                         `json:"timestamp"`
-  ProfileId    uuid.UUID
-  RawProfileId string                        `json:"profileId"`
-  ProfileName  string                        `json:"profileName"`
-  Textures     map[string]string
-  RawTextures  map[string]ProfileTextureSpec `json:"textures"`
+func (p *ProfileProperty) Serialize() ([]byte, error) {
+  return json.Marshal(p)
 }
 
-type ProfileTextureSpec struct {
+func (p *ProfileProperty) Deserialize(enc []byte) error {
+  return json.Unmarshal(enc, p)
+}
+
+func (p *ProfileProperty) read(reader io.Reader) error {
+  return json.NewDecoder(reader).Decode(p)
+}
+
+type ProfileTextures struct {
+  Timestamp   time.Time
+  ProfileId   uuid.UUID
+  ProfileName string
+  Textures    map[string]string
+}
+
+type restProfileTextures struct {
+  Timestamp   int64                             `json:"timestamp"`
+  ProfileId   string                            `json:"profileId"`
+  ProfileName string                            `json:"profileName"`
+  Textures    map[string]restProfileTextureSpec `json:"textures"`
+}
+
+type serializableProfileTextures struct {
+  Timestamp   int64  `json:"timestamp"`
+  ProfileId   string `json:"profileId"`
+  ProfileName string `json:"profileName"`
+  Textures    map[string]string
+}
+
+type restProfileTextureSpec struct {
   Url string `json:"url"`
 }
 
-func (p *Profile) init() error {
-  id, err := ToStandardId(p.RawId)
+func (t *ProfileTextures) Serialize() ([]byte, error) {
+  enc := &serializableProfileTextures{
+    Timestamp:   t.Timestamp.Unix(),
+    ProfileId:   t.ProfileId.String(),
+    ProfileName: t.ProfileName,
+    Textures:    t.Textures,
+  }
+
+  return json.Marshal(enc)
+}
+
+func (t *ProfileTextures) Deserialize(enc []byte) error {
+  parsed := serializableProfileTextures{}
+  err := json.Unmarshal(enc, &parsed)
   if err != nil {
     return err
   }
 
-  p.Id = id
-
-  p.Properties = make(map[string]*ProfileProperty)
-  for _, prop := range p.RawProperties {
-    p.Properties[prop.Name] = &prop
+  id, err := uuid.Parse(parsed.ProfileId)
+  if err != nil {
+    return err
   }
 
-  textures := p.Properties["textures"]
-  if textures != nil {
-    p.Textures = &ProfileTextures{}
-    err = json.Unmarshal([]byte(textures.Value), p.Textures)
-    if err != nil {
-      return err
-    }
-  }
-
+  t.Timestamp = time.Unix(parsed.Timestamp, 0)
+  t.ProfileId = id
+  t.ProfileName = parsed.ProfileName
+  t.Textures = parsed.Textures
   return nil
 }
 
-func (p *ProfileTextures) init() error {
-  id, err := ToStandardId(p.RawProfileId)
+func (t *ProfileTextures) read(reader io.Reader) error {
+  parsed := restProfileTextures{}
+  err := json.NewDecoder(reader).Decode(&parsed)
   if err != nil {
     return err
   }
 
-  p.Timestamp = time.Unix(p.RawTimestamp/1000, p.RawTimestamp%1000*1000000)
-  p.ProfileId = id
+  id, err := ParseId(parsed.ProfileId)
+  if err != nil {
+    return err
+  }
 
-  p.Textures = make(map[string]string)
-  for key, spec := range p.RawTextures {
-    p.Textures[key] = spec.Url
+  t.Timestamp = time.Unix(parsed.Timestamp, 0)
+  t.ProfileId = id
+  t.ProfileName = parsed.ProfileName
+
+  textures := make(map[string]string)
+  for key, spec := range parsed.Textures {
+    textures[key] = spec.Url
   }
 
   return nil
@@ -108,14 +266,6 @@ func (a *MojangAPI) GetProfile(id uuid.UUID) (*Profile, error) {
 
   profile := &Profile{}
   defer res.Body.Close()
-  err = json.NewDecoder(res.Body).Decode(profile)
-  if err != nil {
-    return nil, err
-  }
-
-  err = profile.init()
-  if err != nil {
-    return nil, err
-  }
+  err = profile.read(res.Body)
   return profile, nil
 }
