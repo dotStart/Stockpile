@@ -149,7 +149,9 @@ func (m *MemoryStorageBackend) clearExpiredEntries() { // TODO: run on a timer i
   deletedBlacklists := 0
 
   for profileId, mappings := range m.profileId {
-    for i, exp := range mappings {
+    for i := 0; i < len(mappings); {
+      exp := mappings[i]
+
       if !exp.isValid(m.cfg.Ttl.Name) {
         deletedProfileIds++
 
@@ -161,6 +163,8 @@ func (m *MemoryStorageBackend) clearExpiredEntries() { // TODO: run on a timer i
         mappings = append(mappings[:i], mappings[i+1:]...)
         continue
       }
+
+      i++
     }
   }
 
