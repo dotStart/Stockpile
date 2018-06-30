@@ -20,11 +20,13 @@ import (
   "crypto/sha1"
   "encoding/hex"
   "encoding/json"
-  "errors"
+  "fmt"
   "io/ioutil"
+  "net/url"
   "regexp"
   "strings"
 
+  "github.com/op/go-logging"
   "golang.org/x/text/encoding/charmap"
 )
 
@@ -32,6 +34,8 @@ var ipPattern, _ = regexp.Compile("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){
 
 // represents a server blacklist
 type Blacklist struct {
+  logger *logging.Logger
+
   Hashes []string
 }
 
@@ -58,15 +62,39 @@ func (a *MojangAPI) GetBlacklist() (*Blacklist, error) {
   return NewBlacklist(strings.Split(blacklistStr, "\n"))
 }
 
+// performs the server-side phase of the online handshake
+func (a *MojangAPI) Login(displayName string, serverId string, ip string) (*Profile, error) {
+  res, err := a.execute("GET", fmt.Sprintf("https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%s&serverId=%s&ip=%s", url.QueryEscape(displayName), url.QueryEscape(serverId), url.QueryEscape(ip)), nil)
+  if err != nil {
+    return nil, err
+  }
+
+  profile := &Profile{}
+  defer res.Body.Close()
+  err = profile.read(res.Body)
+  if err != nil {
+    return nil, err
+  }
+
+  return profile, nil
+}
+
 // creates a new blacklist from the supplied list of hashes
 func NewBlacklist(hashes []string) (*Blacklist, error) {
   for _, hash := range hashes {
+    if hash == "" {
+      continue // skip extras
+    }
+
     if len(hash) != 40 {
-      return nil, errors.New("one or more hashes are malformed")
+      return nil, fmt.Errorf("encountered malformed hash \"%s\": must be exactly 40 characters long", hash)
     }
   }
 
-  return &Blacklist{Hashes: hashes}, nil
+  return &Blacklist{
+    logger: logging.MustGetLogger("blacklist"),
+    Hashes: hashes,
+  }, nil
 }
 
 func (b *Blacklist) Serialize() ([]byte, error) {
@@ -98,6 +126,7 @@ func (b *Blacklist) Contains(hash string) bool {
 // evaluates whether the passed hostname has been blacklisted
 func (b *Blacklist) IsBlacklisted(addr string) (bool, error) {
   hash, err := calculateHash(addr)
+  b.logger.Debugf("Checking address %s (hash: %s) against blacklist", addr, hash)
   if err != nil {
     return false, err
   }
@@ -116,8 +145,9 @@ func (b *Blacklist) IsBlacklisted(addr string) (bool, error) {
 func (b *Blacklist) IsBlacklistedIP(ip string) (bool, error) {
   elements := strings.Split(ip, ".") // TODO: does Minecraft support IPv6 blacklisting?
   for i := 3; i > 0; i-- {
-    addr := strings.Join(elements[0:i], ".") + strings.Repeat(".*", 4-i)
+    addr := strings.Join(elements[:i], ".") + ".*"
     hash, err := calculateHash(addr)
+    b.logger.Debugf("Checking IP %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }
@@ -136,8 +166,9 @@ func (b *Blacklist) IsBlacklistedDomain(hostname string) (bool, error) {
   length := len(elements)
 
   for i := 1; i < length; i++ {
-    addr := strings.Repeat("*.", i) + strings.Join(elements[i:(length - i)], ".")
+    addr := "*." + strings.Join(elements[i:], ".")
     hash, err := calculateHash(addr)
+    b.logger.Debugf("Checking domain %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }
@@ -152,15 +183,15 @@ func (b *Blacklist) IsBlacklistedDomain(hostname string) (bool, error) {
 
 // calculates a blacklist compatible hash
 func calculateHash(input string) (string, error) {
-  hash := sha1.New()
   encoder := charmap.ISO8859_10.NewEncoder()
 
-  encoded, err := encoder.Bytes([]byte(input))
+  encoded, err := encoder.String(input)
   if err != nil {
     return "", err
   }
 
-  return hex.EncodeToString(hash.Sum(encoded)), nil
+  hash := sha1.Sum([]byte(encoded))
+  return hex.EncodeToString(hash[:]), nil
 }
 
 // evaluates whether the given address is an IPv4 address
