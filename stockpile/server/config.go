@@ -17,6 +17,7 @@
 package server
 
 import (
+  "errors"
   "fmt"
   "io/ioutil"
   "os"
@@ -118,7 +119,7 @@ func LoadConfig(path string) (*Config, error) {
     return nil, err
   }
   base.Merge(cfg)
-  return base, nil
+  return base, base.validate()
 }
 
 // Loads an entire directory of configuration files
@@ -143,7 +144,7 @@ func LoadConfigDirectory(path string) (*Config, error) {
     }
   }
 
-  return base, nil
+  return base, base.validate()
 }
 
 // Loads a single configuration file
@@ -244,4 +245,24 @@ func (c *TtlConfig) Parse() error {
 
 func (c *Config) Parse() error {
   return c.Ttl.Parse()
+}
+
+func (c *Config) validate() error {
+  if c.BindAddress == "" {
+    return errors.New("illegal bind address")
+  }
+
+  if c.Storage == nil {
+    return errors.New("missing storage backend configuration")
+  }
+
+  if c.Storage.Type == "" {
+    return errors.New("illegal storage backend type")
+  }
+
+  if c.Ttl == nil {
+    return errors.New("missing ttl configuration")
+  }
+
+  return nil
 }
