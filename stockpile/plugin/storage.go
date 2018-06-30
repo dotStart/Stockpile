@@ -28,12 +28,16 @@ type StorageBackend interface {
   // Profile Data
   GetProfileId(name string, at time.Time) (*mojang.ProfileId, error)
   PutProfileId(profileId *mojang.ProfileId) error
+  PurgeProfileId(name string, at time.Time) error
   GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error)
   PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error
+  PurgeNameHistory(id uuid.UUID) error
   GetProfile(id uuid.UUID) (*mojang.Profile, error)
   PutProfile(profile *mojang.Profile) error
+  PurgeProfile(id uuid.UUID) error
 
   // Server Data
   GetBlacklist() (*mojang.Blacklist, error)
   PutBlacklist(blacklist *mojang.Blacklist) error
+  PurgeBlacklist() error
 }
