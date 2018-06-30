@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package rpc;
+option java_package = "tv.dotstart.stockpile";
+
+import "common.proto";
+
+/**
+ * Exposes cached (and slightly more consistent) versions of the Mojang server
+ * APIs (e.g. to access the blacklist or to perform cache assisted logins).
+ */
+service ServerService {
+  /**
+   * Retrieves a cached version of the entire server blacklist.
+   */
+  rpc GetBlacklist (EmptyRequest) returns (Blacklist);
+
+  /**
+   * Evaluates whether a given address has been blacklisted.
+   *
+   * This method accepts both IP v4 addresses and regular hostnames.
+   */
+  rpc CheckBlacklist (CheckBlacklistRequest) returns (CheckBlacklistResponse);
+
+  /**
+   * Performs a cache assisted login (e.g. when a player joins).
+   *
+   * The player profile will automatically be placed inside the cache storage
+   * backend when this method is invoked and will thus greatly reduce the
+   * latency of succeeding requests.
+   *
+   * Logins do not count towards the API rate limit.
+   */
+  rpc Login (LoginRequest) returns (Profile);
+}
+
+/**
+ * Represents the current server blacklist.
+ */
+message Blacklist {
+  repeated string hashes = 1;
+}
+
+/**
+ * Represents a request which evaluates whether the passed hostnames or ip
+ * addresses match the server blacklist
+ */
+message CheckBlacklistRequest {
+  repeated string addresses = 1;
+}
+
+/**
+ * represents a response to a prior blacklist check
+ */
+message CheckBlacklistResponse {
+  repeated string matchedAddresses = 1;
+}
+
+message LoginRequest {
+  string displayName = 1;
+  string serverId = 2;
+  string ip = 3;
+}

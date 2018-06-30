@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package rpc;
+option java_package = "tv.dotstart.stockpile";
+
+/**
+ * Used in services where no input parameters are expected.
+ */
+message EmptyRequest {
+}
+
+/**
+ * Used in services where no outputs are expected.
+ */
+message EmptyResponse {
+}
+
+/**
+ * Represents a complete user profile.
+ */
+message Profile {
+  string id = 1;
+  string name = 2;
+  repeated ProfileProperty properties = 3;
+  ProfileTextures textures = 4; // not set if no skin/cape are set for this account
+}
+
+message ProfileProperty {
+  string name = 1;
+  string value = 2;
+  string signature = 3;
+}
+
+message ProfileTextures {
+  string profileId = 1;
+  string profileName = 2;
+  string skinUrl = 3;
+  string capeUrl = 4;
+  int64 timestamp = 5;
+}
