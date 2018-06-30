@@ -49,6 +49,10 @@ func NewMemoryStorageBackend(cfg *server.Config) *MemoryStorageBackend {
   }
 }
 
+func (m *MemoryStorageBackend) Close() error {
+  return nil
+}
+
 func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*mojang.ProfileId, error) {
   m.clearExpiredEntries()
 

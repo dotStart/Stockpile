@@ -90,3 +90,9 @@ func (s *Server) Listen(listener net.Listener) {
 func (s *Server) Stop() {
   s.srv.Stop()
 }
+
+// destroys the server instance permanently
+func (s *Server) Destroy() {
+  s.srv.Stop()
+  s.storage.Close()
+}

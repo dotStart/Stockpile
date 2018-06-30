@@ -25,6 +25,8 @@ import (
 
 // provides an abstraction layer between the application and a storage backend
 type StorageBackend interface {
+  Close() error
+
   // Profile Data
   GetProfileId(name string, at time.Time) (*mojang.ProfileId, error)
   PutProfileId(profileId *mojang.ProfileId) error

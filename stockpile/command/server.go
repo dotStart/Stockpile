@@ -141,7 +141,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
     log.Fatalf("Failed to initialize grpc server: %s", err)
   }
   go rpcServer.Listen(mux.Match(rpcPolicy))
-  defer rpcServer.Stop()
+  defer rpcServer.Destroy()
   log.Info("Enabled grpc server")
 
   mux.Serve()
