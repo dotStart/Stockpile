@@ -16,24 +16,15 @@
  */
 package plugin
 
-import (
-  "time"
+import "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/google/uuid"
-)
+// provides a primitive wrapper object which handles expiration in the memory storage backend
+type expirationWrapper struct {
+  content   interface{}
+  createdAt time.Time
+}
 
-// provides an abstraction layer between the application and a storage backend
-type StorageBackend interface {
-  // Profile Data
-  GetProfileId(name string, at time.Time) (*mojang.ProfileId, error)
-  PutProfileId(profileId *mojang.ProfileId) error
-  GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error)
-  PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error
-  GetProfile(id uuid.UUID) (*mojang.Profile, error)
-  PutProfile(profile *mojang.Profile) error
-
-  // Server Data
-  GetBlacklist() (*mojang.Blacklist, error)
-  PutBlacklist(blacklist *mojang.Blacklist) error
+// evaluates whether a particular entry is still considered valid
+func (w *expirationWrapper) isValid(ttl time.Duration) bool {
+  return time.Since(w.createdAt) <= ttl
 }
