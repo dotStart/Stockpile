@@ -39,8 +39,8 @@ const DefaultPort = 36623
 
 // Represents a server configuration (typically parsed from one or more HCL files)
 type Config struct {
-  BindAddress     string         `hcl:"bind-address,attr"`
-  EnableLegacyApi bool           `hcl:"legacy-api,attr"`
+  BindAddress     *string        `hcl:"bind-address,attr"`
+  EnableLegacyApi *bool          `hcl:"legacy-api,attr"`
   Storage         *StorageConfig `hcl:"storage,block"`
   Ttl             *TtlConfig     `hcl:"ttl,block"`
 }
@@ -71,9 +71,12 @@ func EmptyConfig() *Config {
 }
 
 func DefaultConfig() *Config {
+  addr := fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort)
+  legacyEnabled := false
+
   cfg := &Config{
-    BindAddress:     fmt.Sprintf("%s:%d", DefaultAddress, DefaultPort),
-    EnableLegacyApi: false,
+    BindAddress:     &addr,
+    EnableLegacyApi: &legacyEnabled,
     Storage: &StorageConfig{
       Type: "mem",
     },
@@ -96,9 +99,10 @@ func DefaultConfig() *Config {
 }
 
 func DevelopmentConfig() *Config {
+  legacyEnabled := true
+
   return DefaultConfig().Merge(&Config{
-    BindAddress:     fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort),
-    EnableLegacyApi: true,
+    EnableLegacyApi: &legacyEnabled,
   })
 }
 
@@ -168,12 +172,12 @@ func LoadConfigFile(path string) (*Config, error) {
 
 // Merges two configuration instances into one
 func (c *Config) Merge(other *Config) *Config {
-  if other.BindAddress != "" {
+  if other.BindAddress != nil {
     c.BindAddress = other.BindAddress
   }
 
-  if other.EnableLegacyApi {
-    c.EnableLegacyApi = true
+  if other.EnableLegacyApi != nil {
+    c.EnableLegacyApi = other.EnableLegacyApi
   }
 
   if c.Storage == nil {
@@ -251,7 +255,7 @@ func (c *Config) Parse() error {
 }
 
 func (c *Config) validate() error {
-  if c.BindAddress == "" {
+  if c.BindAddress == nil {
     return errors.New("illegal bind address")
   }
 
