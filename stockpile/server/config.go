@@ -244,7 +244,10 @@ func (c *TtlConfig) Parse() error {
 }
 
 func (c *Config) Parse() error {
-  return c.Ttl.Parse()
+  if c.Ttl != nil {
+    return c.Ttl.Parse()
+  }
+  return nil
 }
 
 func (c *Config) validate() error {
