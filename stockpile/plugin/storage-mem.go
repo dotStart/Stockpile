@@ -83,17 +83,27 @@ func (m *MemoryStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
   name := strings.ToLower(profileId.Name)
   m.logger.Debugf("Updating association for name \"%s\" to profile %s at time %s (valid until %s)", profileId.Name, profileId.Id, profileId.LastSeenAt, profileId.ValidUntil)
   mappings := m.profileId[name]
-
-  if mappings == nil {
-    mappings = make([]expirationWrapper, 1)
+  found := false
+  if mappings != nil {
+    for _, e := range mappings {
+      entry := e.content.(*mojang.ProfileId)
+      if entry.IsOverlappingWith(profileId) {
+        entry.UpdateExpiration(profileId.LastSeenAt)
+        found = true
+      }
+    }
+  } else {
+    mappings = make([]expirationWrapper, 0)
   }
 
-  mappings = append(mappings, expirationWrapper{
-    content:   profileId,
-    createdAt: time.Now(),
-  })
-  m.profileId[name] = mappings
+  if !found {
+    mappings = append(mappings, expirationWrapper{
+      content:   profileId,
+      createdAt: time.Now(),
+    })
+  }
 
+  m.profileId[name] = mappings
   return nil
 }
 
