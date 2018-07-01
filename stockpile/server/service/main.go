@@ -49,6 +49,13 @@ func NewServer(config *server.Config) (*Server, error) {
   if config.Storage.Type == "mem" {
     logger.Warning("Using in-memory storage")
     storage = plugin.NewMemoryStorageBackend(config)
+  } else if config.Storage.Type == "file" {
+    logger.Info("Using file storage")
+    var err error
+    storage, err = plugin.NewFileStorageBackend(config)
+    if err != nil {
+      return nil, err
+    }
   } else {
     plg, err := plugin.Open(path.Join("plugins", config.Storage.Type))
     if err != nil {
