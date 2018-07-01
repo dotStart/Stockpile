@@ -200,6 +200,16 @@ func (p *ProfileId) IsValid(at time.Time) bool {
   return !p.FirstSeenAt.After(at) && p.ValidUntil.After(at)
 }
 
+// evaluates whether two profileIds theoretically overlap
+//
+// two profiles are considered to overlap if their validity period overlaps at any point in time or
+// if their assignments are equal while less than 30 days have passed (e.g. it is impossible for
+// another user to claim and unclaim the name in the meantime due to the grace period)
+// TODO: I have no clue how and whether Mojang handles theft of names with content creators
+func (p *ProfileId) IsOverlappingWith(other *ProfileId) bool {
+  return p.IsValid(other.FirstSeenAt) || p.IsValid(other.ValidUntil) || (p.Id == other.Id && p.ValidUntil.Add(NameChangeRateLimitPeriod).After(p.FirstSeenAt))
+}
+
 // encapsulates a name history
 type NameChangeHistory struct {
   History []*NameChange
