@@ -30,12 +30,11 @@ import (
   "golang.org/x/text/encoding/charmap"
 )
 
+var blacklistLogger = logging.MustGetLogger("blacklist")
 var ipPattern, _ = regexp.Compile("^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
 
 // represents a server blacklist
 type Blacklist struct {
-  logger *logging.Logger
-
   Hashes []string
 }
 
@@ -97,7 +96,6 @@ func NewBlacklist(hashes []string) (*Blacklist, error) {
   }
 
   return &Blacklist{
-    logger: logging.MustGetLogger("blacklist"),
     Hashes: hashes,
   }, nil
 }
@@ -131,7 +129,7 @@ func (b *Blacklist) Contains(hash string) bool {
 // evaluates whether the passed hostname has been blacklisted
 func (b *Blacklist) IsBlacklisted(addr string) (bool, error) {
   hash, err := calculateHash(addr)
-  b.logger.Debugf("Checking address %s (hash: %s) against blacklist", addr, hash)
+  blacklistLogger.Debugf("Checking address %s (hash: %s) against blacklist", addr, hash)
   if err != nil {
     return false, err
   }
@@ -152,7 +150,7 @@ func (b *Blacklist) IsBlacklistedIP(ip string) (bool, error) {
   for i := 3; i > 0; i-- {
     addr := strings.Join(elements[:i], ".") + ".*"
     hash, err := calculateHash(addr)
-    b.logger.Debugf("Checking IP %s (hash: %s) against blacklist", addr, hash)
+    blacklistLogger.Debugf("Checking IP %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }
@@ -173,7 +171,7 @@ func (b *Blacklist) IsBlacklistedDomain(hostname string) (bool, error) {
   for i := 1; i < length; i++ {
     addr := "*." + strings.Join(elements[i:], ".")
     hash, err := calculateHash(addr)
-    b.logger.Debugf("Checking domain %s (hash: %s) against blacklist", addr, hash)
+    blacklistLogger.Debugf("Checking domain %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }
