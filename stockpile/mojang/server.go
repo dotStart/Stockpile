@@ -81,14 +81,19 @@ func (a *MojangAPI) Login(displayName string, serverId string, ip string) (*Prof
 
 // creates a new blacklist from the supplied list of hashes
 func NewBlacklist(hashes []string) (*Blacklist, error) {
-  for _, hash := range hashes {
+  for i := 0; i < len(hashes); {
+    hash := hashes[i]
+
     if hash == "" {
+      hashes = append(hashes[:i], hashes[i+1:]...)
       continue // skip extras
     }
 
     if len(hash) != 40 {
       return nil, fmt.Errorf("encountered malformed hash \"%s\": must be exactly 40 characters long", hash)
     }
+
+    i++
   }
 
   return &Blacklist{
