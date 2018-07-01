@@ -81,7 +81,7 @@ func SerializeProfileIdArray(profileIds []*ProfileId) ([]byte, error) {
       ValidUntil:  profileId.ValidUntil.Unix(),
     }
   }
-  return json.Marshal(enc)
+  return json.Marshal(&enc)
 }
 
 func (p *ProfileId) Deserialize(enc []byte) error {
@@ -106,7 +106,7 @@ func (p *ProfileId) Deserialize(enc []byte) error {
 
 func DeserializeProfileIdArray(enc []byte) ([]*ProfileId, error) {
   parsed := make([]serializableProfileId, 0)
-  err := json.Unmarshal(enc, parsed)
+  err := json.Unmarshal(enc, &parsed)
   if err != nil {
     return nil, err
   }
@@ -281,7 +281,7 @@ func SerializeNameChangeArray(history []*NameChange) ([]byte, error) {
     }
   }
 
-  return json.Marshal(enc)
+  return json.Marshal(&enc)
 }
 
 func (p *NameChange) Deserialize(enc []byte) error {
@@ -299,7 +299,7 @@ func (p *NameChange) Deserialize(enc []byte) error {
 
 func DeserializeNameChangeArray(enc []byte) ([]*NameChange, error) {
   parsed := make([]serializableNameChange, 0)
-  err := json.Unmarshal(enc, parsed)
+  err := json.Unmarshal(enc, &parsed)
   if err != nil {
     return nil, err
   }
