@@ -1,35 +1,14 @@
+PLATFORMS := darwin/386 darwin/amd64 linux/386 linux/amd64 linux/arm windows/386 windows/amd64
 LDFLAGS :=-ldflags "-X github.com/dotStart/Stockpile/metadata.brand=${APPLICATION_BRAND} -X github.com/dotStart/Stockpile/stockpile/metadata.version=${APPLICATION_VERSION} -X github.com/dotStart/Stockpile/stockpile/metadata.commitHash=${APPLICATION_COMMIT_HASH} -X \"github.com/dotStart/Stockpile/stockpile/metadata.timestampRaw=${APPLICATION_TIMESTAMP}\""
 
-build: ../build/mac32/stockpile ../build/mac64/stockpile \
-	   ../build/linux32/stockpile ../build/linux64/stockpile ../build/linuxarm/stockpile \
-	   ../build/win32/stockpile.exe ../build/win64/stockpile.exe
+# magical formula:
+temp = $(subst /, ,$@)
+os = $(word 1, $(temp))
+arch = $(word 2, $(temp))
 
-../build/mac32/stockpile:
-	@export GOOS="darwin"; export GOARCH="386"; go build -v ${LDFLAGS} -o ../build/mac32/stockpile
-	@echo ""
+build: $(PLATFORMS)
 
-../build/mac64/stockpile:
-	@export GOOS="darwin"; export GOARCH="amd64"; go build -v ${LDFLAGS} -o ../build/mac64/stockpile
-	@echo ""
-
-../build/linux32/stockpile:
-	@export GOOS="linux"; export GOARCH="386"; go build -v ${LDFLAGS} -o ../build/linux32/stockpile
-	@echo ""
-
-../build/linux64/stockpile:
-	@export GOOS="linux"; export GOARCH="amd64"; go build -v ${LDFLAGS} -o ../build/linux64/stockpile
-	@echo ""
-
-../build/linuxarm/stockpile:
-	@export GOOS="linux"; export GOARCH="arm"; go build -v ${LDFLAGS} -o ../build/linuxarm/stockpile
-	@echo ""
-
-../build/win32/stockpile.exe:
-	@export GOOS="windows"; export GOARCH="386"; go build -v ${LDFLAGS} -o ../build/win32/stockpile.exe
-	@echo ""
-
-../build/win64/stockpile.exe:
-	@export GOOS="windows"; export GOARCH="amd64"; go build -v ${LDFLAGS} -o ../build/win64/stockpile.exe
-	@echo ""
+$(PLATFORMS):
+	@export GOOS=$(os); export GOARCH=$(arch); go build -v ${LDFLAGS} -o ../build/$(os)-$(arch)/stockpile
 
 .PHONY: build
