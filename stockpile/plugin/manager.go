@@ -91,6 +91,6 @@ func (m *Manager) Load(path string) {
       m.logger.Errorf("Failed to register one or more components of plugin \"%s\" v%s (defined by file \"%s\"): %s", plugin.Metadata.Name, plugin.Metadata.Version, path, err)
     }
 
-    m.logger.Infof("Loaded plugin \"%s\" v%s by %s (%s) from file %s", plugin.Metadata.Name, plugin.Metadata.Version, strings.Join(plugin.Metadata.Authors, ", "), plugin.Metadata.Website, path)
+    m.logger.Infof("Loaded plugin \"%s\" v%s from file %s", plugin.Metadata.Name, plugin.Metadata.Version, path)
   }
 }
