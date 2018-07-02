@@ -23,7 +23,10 @@ import (
   "strings"
 
   "github.com/dotStart/Stockpile/stockpile/server"
+  "github.com/op/go-logging"
 )
+
+var logger = logging.MustGetLogger("plugin")
 
 // represents the metadata associated with a plugin implementation
 type Metadata struct {
@@ -61,13 +64,24 @@ func Open(path string) (*StockpilePlugin, error) {
     return nil, err
   }
 
+  capabilities := make([]string, 0)
   var storageFactory func(backend *server.Config) (StorageBackend, error)
   storageFactorySymbol, err := handle.Lookup("CreateStorageBackend")
   if err != nil {
     storageFactory = nil
   } else {
     storageFactory = storageFactorySymbol.(func(backend *server.Config) (StorageBackend, error))
+    capabilities = append(capabilities, "storage")
   }
+
+  metadata := metaSymbol.(func() (Metadata))()
+  logger.Info("==> Loaded plugin: %s", metadata.Name)
+  logger.Info("")
+  logger.Info("  Version: %s", metadata.Version)
+  logger.Info("  Website: %s", metadata.Website)
+  logger.Info("  Author(s): %s", strings.Join(metadata.Authors, ", "))
+  logger.Info("  Capabilities: %s", strings.Join(capabilities, ", "))
+  logger.Info("")
 
   return &StockpilePlugin{
     handle:         handle,
