@@ -39,6 +39,7 @@ const DefaultPort = 36623
 
 // Represents a server configuration (typically parsed from one or more HCL files)
 type Config struct {
+  PluginDir       *string        `hcl:"plugin-dir"`
   BindAddress     *string        `hcl:"bind-address,attr"`
   EnableLegacyApi *bool          `hcl:"legacy-api,attr"`
   Storage         *StorageConfig `hcl:"storage,block"`
@@ -71,10 +72,12 @@ func EmptyConfig() *Config {
 }
 
 func DefaultConfig() *Config {
+  pluginDir := "plugins"
   addr := fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort)
   legacyEnabled := false
 
   cfg := &Config{
+    PluginDir:       &pluginDir,
     BindAddress:     &addr,
     EnableLegacyApi: &legacyEnabled,
     Storage: &StorageConfig{
@@ -172,6 +175,10 @@ func LoadConfigFile(path string) (*Config, error) {
 
 // Merges two configuration instances into one
 func (c *Config) Merge(other *Config) *Config {
+  if other.PluginDir != nil {
+    c.PluginDir = other.PluginDir
+  }
+
   if other.BindAddress != nil {
     c.BindAddress = other.BindAddress
   }
@@ -255,8 +262,12 @@ func (c *Config) Parse() error {
 }
 
 func (c *Config) validate() error {
+  if c.PluginDir == nil {
+    return errors.New("missing plugin directory")
+  }
+
   if c.BindAddress == nil {
-    return errors.New("illegal bind address")
+    return errors.New("missing bind address")
   }
 
   if c.Storage == nil {

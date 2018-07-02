@@ -38,7 +38,7 @@ type MemoryStorageBackend struct {
 }
 
 // creates a new memory based storage backend
-func NewMemoryStorageBackend(cfg *server.Config) *MemoryStorageBackend {
+func NewMemoryStorageBackend(cfg *server.Config) (StorageBackend, error) {
   return &MemoryStorageBackend{
     cfg:    cfg,
     logger: logging.MustGetLogger("memdb"),
@@ -46,7 +46,7 @@ func NewMemoryStorageBackend(cfg *server.Config) *MemoryStorageBackend {
     profileId:   make(map[string][]expirationWrapper),
     nameHistory: make(map[uuid.UUID]*expirationWrapper),
     profile:     make(map[uuid.UUID]*expirationWrapper),
-  }
+  }, nil
 }
 
 func (m *MemoryStorageBackend) Close() error {

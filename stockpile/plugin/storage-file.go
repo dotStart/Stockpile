@@ -50,7 +50,7 @@ type FileStorageBackendCfg struct {
 }
 
 // creates a new file storage backend
-func NewFileStorageBackend(cfg *server.Config) (*FileStorageBackend, error) {
+func NewFileStorageBackend(cfg *server.Config) (StorageBackend, error) {
   fileCfg := &FileStorageBackendCfg{}
   gohcl.DecodeBody(cfg.Storage.Parameters, nil, fileCfg)
 

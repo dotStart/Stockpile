@@ -1,3 +1,4 @@
+plugin-dir = "plugins"
 bind-address = "0.0.0.0:36623"
 legacy-api = false
 

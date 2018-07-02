@@ -21,7 +21,6 @@ package service
 import (
   "fmt"
   "net"
-  "path"
 
   "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/plugin"
@@ -36,6 +35,7 @@ import (
 type Server struct {
   logger  *logging.Logger
   cfg     *server.Config
+  plugin  *plugin.Manager
   storage plugin.StorageBackend
 
   srv *grpc.Server
@@ -45,38 +45,23 @@ type Server struct {
 func NewServer(config *server.Config) (*Server, error) {
   logger := logging.MustGetLogger("rpc")
 
-  var storage plugin.StorageBackend
-  if config.Storage.Type == "mem" {
-    logger.Warning("Using in-memory storage")
-    storage = plugin.NewMemoryStorageBackend(config)
-  } else if config.Storage.Type == "file" {
-    logger.Info("Using file storage")
-    var err error
-    storage, err = plugin.NewFileStorageBackend(config)
-    if err != nil {
-      return nil, err
-    }
-  } else {
-    plg, err := plugin.Open(path.Join("plugins", config.Storage.Type))
-    if err != nil {
-      return nil, err
-    }
+  plugin := plugin.NewManager(*config.PluginDir)
+  plugin.LoadAll()
 
-    if !plg.HasStorageBackendImplementation() {
-      return nil, fmt.Errorf("selected plugin \"%s\" does not provide a storage backend implementation", config.Storage.Type)
-    }
-
-    storage, err = plg.CreateStorageBackend(config)
-    if err != nil {
-      return nil, err
-    }
-
-    logger.Infof("Using database plugin: %s", config.Storage.Type)
+  storageFactory := plugin.Context.GetStorageBackend(config.Storage.Type)
+  if storageFactory == nil {
+    return nil, fmt.Errorf("no such storage backend: %s", config.Storage.Type)
   }
+  storage, err := storageFactory(config)
+  if err != nil {
+    return nil, fmt.Errorf("failed to initialize storage backend \"%s\": %s", err)
+  }
+  logger.Infof("Using database plugin: %s", config.Storage.Type)
 
   return &Server{
     logger:  logger,
     cfg:     config,
+    plugin:  plugin,
     storage: storage,
   }, nil
 }

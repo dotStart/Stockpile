@@ -19,9 +19,13 @@ package plugin
 import (
   "crypto/sha1"
   "encoding/hex"
+  "runtime"
   "strings"
   "time"
 )
+
+// defines whether plugins are available on the current platform
+const PluginsAvailable = runtime.GOOS == "darwin" || runtime.GOOS == "linux"
 
 // provides a primitive wrapper object which handles expiration in the memory storage backend
 type expirationWrapper struct {
