@@ -1,4 +1,4 @@
-LDFLAGS :=-ldflags "-X github.com/dotStart/Stockpile/metadata.brand=${APPLICATION_BRAND} -X github.com/dotStart/Stockpile/metadata.version=${APPLICATION_VERSION} -X github.com/dotStart/Stockpile/metadata.commitHash=${APPLICATION_COMMIT_HASH} -X \"github.com/dotStart/Stockpile/metadata.timestampRaw=${APPLICATION_TIMESTAMP}\""
+LDFLAGS :=-ldflags "-X github.com/dotStart/Stockpile/metadata.brand=${APPLICATION_BRAND} -X github.com/dotStart/Stockpile/stockpile/metadata.version=${APPLICATION_VERSION} -X github.com/dotStart/Stockpile/stockpile/metadata.commitHash=${APPLICATION_COMMIT_HASH} -X \"github.com/dotStart/Stockpile/stockpile/metadata.timestampRaw=${APPLICATION_TIMESTAMP}\""
 
 build: ../build/mac32/stockpile ../build/mac64/stockpile \
 	   ../build/linux32/stockpile ../build/linux64/stockpile ../build/linuxarm/stockpile \
