@@ -28,6 +28,7 @@ import (
 // represents the metadata associated with a plugin implementation
 type Metadata struct {
   Name    string
+  Version string
   Authors []string
   Website string
 }
