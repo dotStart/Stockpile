@@ -125,7 +125,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   // initialize the shared network listener and mux first so we can detect potential binding errors early on
   listener, err := net.Listen("tcp", *cfg.BindAddress)
   if err != nil {
-    log.Fatalf("Failed to listen on %s (TCP): %s", cfg.BindAddress, err)
+    log.Fatalf("Failed to listen on %s (TCP): %s", *cfg.BindAddress, err)
   }
 
   mux := cmux.New(listener)
