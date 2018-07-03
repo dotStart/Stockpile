@@ -32,10 +32,15 @@ type EncodedStorageBackend struct {
 }
 
 type EncodedStorageBackendInterface interface {
+  // retrieves the data of a previously stored cache entry (given that it exists and is still
+  // considered valid in accordance with its ttl)
   GetCacheEntry(category string, name string, ttl time.Duration) ([]byte, error)
+  // creates or updates a cache entry
   PutCacheEntry(category string, name string, encoded []byte, ttl time.Duration) error
+  // purges a cache entry (if it exists)
   PurgeCacheEntry(category string, name string) error
 
+  // clears all allocated resources
   Close() error
 }
 

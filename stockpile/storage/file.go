@@ -97,8 +97,6 @@ func (f *fileStorageBackendInterface) updateLock() {
   }
 }
 
-// retrieves the data of a previously stored cache entry (given that it exists and is still
-// considered valid in accordance with its ttl)
 func (f *fileStorageBackendInterface) GetCacheEntry(category string, key string, ttl time.Duration) ([]byte, error) {
   path := filepath.Join(f.cfg.Path, category, strings.ToLower(key))
 
@@ -116,7 +114,6 @@ func (f *fileStorageBackendInterface) GetCacheEntry(category string, key string,
   return ioutil.ReadFile(path)
 }
 
-// creates or updates a cache entry
 func (f *fileStorageBackendInterface) PutCacheEntry(category string, key string, data []byte, ttl time.Duration) error {
   dir := filepath.Join(f.cfg.Path, category)
   path := filepath.Join(dir, strings.ToLower(key))
@@ -133,7 +130,6 @@ func (f *fileStorageBackendInterface) PutCacheEntry(category string, key string,
   return ioutil.WriteFile(path, data, filePerms)
 }
 
-// purges a cache entry (if it exists)
 func (f *fileStorageBackendInterface) PurgeCacheEntry(category string, key string) error {
   path := filepath.Join(f.cfg.Path, category, strings.ToLower(key))
 
