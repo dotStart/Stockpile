@@ -18,9 +18,9 @@ package service
 
 import (
   "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
 )
@@ -29,10 +29,10 @@ type ServerServiceImpl struct {
   logger  *logging.Logger
   api     *mojang.MojangAPI
   cfg     *server.Config
-  storage plugin.StorageBackend
+  storage storage.StorageBackend
 }
 
-func NewServerService(api *mojang.MojangAPI, cfg *server.Config, backend plugin.StorageBackend) *ServerServiceImpl {
+func NewServerService(api *mojang.MojangAPI, cfg *server.Config, backend storage.StorageBackend) *ServerServiceImpl {
   return &ServerServiceImpl{
     logger:  logging.MustGetLogger("server-srv"),
     api:     api,

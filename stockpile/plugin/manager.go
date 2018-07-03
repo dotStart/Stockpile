@@ -23,6 +23,7 @@ import (
   "runtime"
   "strings"
 
+  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
 )
 
@@ -40,8 +41,8 @@ func NewManager(path string) *Manager {
   ctx := &Context{
     storage: make(map[string]StorageBackendFactory),
   }
-  ctx.RegisterStorageBackend("mem", NewMemoryStorageBackend)
-  ctx.RegisterStorageBackend("file", NewFileStorageBackend)
+  ctx.RegisterStorageBackend("mem", storage.NewMemoryStorageBackend)
+  ctx.RegisterStorageBackend("file", storage.NewFileStorageBackend)
 
   return &Manager{
     logger:  logging.MustGetLogger("plugin"),

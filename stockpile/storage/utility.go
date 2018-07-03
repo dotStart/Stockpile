@@ -14,11 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package plugin
+package storage
 
 import (
-  "runtime"
+  "crypto/sha1"
+  "encoding/hex"
+  "strings"
+  "time"
 )
 
-// defines whether plugins are available on the current platform
-const PluginsAvailable = runtime.GOOS == "darwin" || runtime.GOOS == "linux"
+// provides a primitive wrapper object which handles expiration in the memory storage backend
+type expirationWrapper struct {
+  content   interface{}
+  createdAt time.Time
+}
+
+// evaluates whether a particular entry is still considered valid
+func (w *expirationWrapper) isValid(ttl time.Duration) bool {
+  return time.Since(w.createdAt) <= ttl
+}
+
+// calculates a unified cache for a given input value (typically for primitive built-in cache types)
+func calculateHash(input string) string {
+  enc := sha1.Sum([]byte(strings.ToLower(input)))
+  return hex.EncodeToString(enc[:])
+}

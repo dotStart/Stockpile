@@ -20,8 +20,8 @@ import (
   "fmt"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
+  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/go-redis/redis"
   "github.com/hashicorp/hcl2/gohcl"
   "github.com/op/go-logging"
@@ -41,7 +41,7 @@ type RedisStorageBackendConfig struct {
   DatabaseId int     `hcl:"database,attr"`
 }
 
-func NewRedisStorageBackend(cfg *server.Config) (plugin.StorageBackend, error) {
+func NewRedisStorageBackend(cfg *server.Config) (storage.StorageBackend, error) {
   redisCfg := &RedisStorageBackendConfig{}
   diag := gohcl.DecodeBody(cfg.Storage.Parameters, nil, redisCfg)
   if diag.HasErrors() {
@@ -63,7 +63,7 @@ func NewRedisStorageBackend(cfg *server.Config) (plugin.StorageBackend, error) {
     return nil, fmt.Errorf("cannot reach configured redis server: %s", err)
   }
 
-  return plugin.NewEncodedStorageBackend(cfg, &redisStorageBackendInterface{
+  return storage.NewEncodedStorageBackend(cfg, &redisStorageBackendInterface{
     logger: logging.MustGetLogger("redis"),
     cfg:    redisCfg,
     client: client,

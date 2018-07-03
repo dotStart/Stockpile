@@ -16,10 +16,13 @@
  */
 package plugin
 
-import "github.com/dotStart/Stockpile/stockpile/server"
+import (
+  "github.com/dotStart/Stockpile/stockpile/server"
+  "github.com/dotStart/Stockpile/stockpile/storage"
+)
 
 // provides an initializer function for plugins
 type Initializer = func(*Context) error
 
 // provides a factory for storage backend instances
-type StorageBackendFactory = func(*server.Config) (StorageBackend, error)
+type StorageBackendFactory = func(*server.Config) (storage.StorageBackend, error)

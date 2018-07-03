@@ -21,9 +21,9 @@ import (
   "time"
 
   "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
 )
@@ -32,10 +32,10 @@ type ProfileServiceImpl struct {
   logger  *logging.Logger
   api     *mojang.MojangAPI
   cfg     *server.Config
-  storage plugin.StorageBackend
+  storage storage.StorageBackend
 }
 
-func NewProfileService(api *mojang.MojangAPI, cfg *server.Config, backend plugin.StorageBackend) (*ProfileServiceImpl) {
+func NewProfileService(api *mojang.MojangAPI, cfg *server.Config, backend storage.StorageBackend) (*ProfileServiceImpl) {
   return &ProfileServiceImpl{
     logger:  logging.MustGetLogger("profile-srv"),
     api:     api,

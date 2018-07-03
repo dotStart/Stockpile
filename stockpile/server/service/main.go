@@ -26,6 +26,7 @@ import (
   "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
   "google.golang.org/grpc"
   "google.golang.org/grpc/reflection"
@@ -36,7 +37,7 @@ type Server struct {
   logger  *logging.Logger
   cfg     *server.Config
   plugin  *plugin.Manager
-  storage plugin.StorageBackend
+  storage storage.StorageBackend
 
   srv *grpc.Server
 }
