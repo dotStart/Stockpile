@@ -22,11 +22,11 @@ import (
   "fmt"
   "net"
 
+  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
-  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
   "google.golang.org/grpc"
   "google.golang.org/grpc/reflection"
@@ -34,10 +34,10 @@ import (
 
 // Represents an RPC server
 type Server struct {
-  logger  *logging.Logger
-  cfg     *server.Config
-  plugin  *plugin.Manager
-  storage storage.StorageBackend
+  logger *logging.Logger
+  cfg    *server.Config
+  plugin *plugin.Manager
+  cache  *cache.Cache
 
   srv *grpc.Server
 }
@@ -60,21 +60,19 @@ func NewServer(config *server.Config) (*Server, error) {
   logger.Infof("Using database plugin: %s", config.Storage.Type)
 
   return &Server{
-    logger:  logger,
-    cfg:     config,
-    plugin:  plugin,
-    storage: storage,
+    logger: logger,
+    cfg:    config,
+    plugin: plugin,
+    cache:  cache.New(mojang.New(), storage),
   }, nil
 }
 
 // Starts listening on an arbitrary socket
 func (s *Server) Listen(listener net.Listener) {
-  api := mojang.New()
-
   s.srv = grpc.NewServer()
   grpc.NewServer()
-  rpc.RegisterProfileServiceServer(s.srv, NewProfileService(api, s.cfg, s.storage))
-  rpc.RegisterServerServiceServer(s.srv, NewServerService(api, s.cfg, s.storage))
+  rpc.RegisterProfileServiceServer(s.srv, NewProfileService(s.cache))
+  rpc.RegisterServerServiceServer(s.srv, NewServerService(s.cache))
   reflection.Register(s.srv)
   s.srv.Serve(listener)
 }
@@ -87,5 +85,5 @@ func (s *Server) Stop() {
 // destroys the server instance permanently
 func (s *Server) Destroy() {
   s.srv.Stop()
-  s.storage.Close()
+  s.cache.Close()
 }

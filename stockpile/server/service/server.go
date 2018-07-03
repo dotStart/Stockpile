@@ -17,57 +17,26 @@
 package service
 
 import (
-  "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/dotStart/Stockpile/stockpile/server"
+  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
-  "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
 )
 
 type ServerServiceImpl struct {
-  logger  *logging.Logger
-  api     *mojang.MojangAPI
-  cfg     *server.Config
-  storage storage.StorageBackend
+  logger *logging.Logger
+  cache  *cache.Cache
 }
 
-func NewServerService(api *mojang.MojangAPI, cfg *server.Config, backend storage.StorageBackend) *ServerServiceImpl {
+func NewServerService(cache *cache.Cache) *ServerServiceImpl {
   return &ServerServiceImpl{
-    logger:  logging.MustGetLogger("server-srv"),
-    api:     api,
-    cfg:     cfg,
-    storage: backend,
+    logger: logging.MustGetLogger("server-srv"),
+    cache:  cache,
   }
-}
-
-func (s *ServerServiceImpl) getBlacklist() (*mojang.Blacklist, error) {
-  blacklist, err := s.storage.GetBlacklist()
-  if err != nil || blacklist == nil {
-    if err != nil {
-      s.logger.Errorf("Failed to retrieve blacklist from storage backend: %s", err)
-    }
-
-    s.logger.Debugf("Cache miss - Requesting update from upstream")
-    blacklist, err = s.api.GetBlacklist()
-    if err != nil {
-      s.logger.Errorf("Failed to retrieve blacklist: %s", err)
-      return nil, err
-    }
-
-    s.logger.Debugf("Updating cached version")
-    err = s.storage.PutBlacklist(blacklist)
-    if err != nil {
-      s.logger.Errorf("Failed to push blacklist to storage backend: %s", err)
-    }
-  }
-
-  return blacklist, err
 }
 
 func (s *ServerServiceImpl) GetBlacklist(context.Context, *rpc.EmptyRequest) (*rpc.Blacklist, error) {
-  s.logger.Debugf("Processing request for complete server blacklist")
-  blacklist, err := s.getBlacklist()
+  blacklist, err := s.cache.GetBlacklist()
   if err != nil {
     return nil, err
   }
@@ -76,8 +45,7 @@ func (s *ServerServiceImpl) GetBlacklist(context.Context, *rpc.EmptyRequest) (*r
 }
 
 func (s *ServerServiceImpl) CheckBlacklist(_ context.Context, req *rpc.CheckBlacklistRequest) (*rpc.CheckBlacklistResponse, error) {
-  s.logger.Debugf("Processing request to check blacklist for %d addresses", len(req.Addresses))
-  blacklist, err := s.getBlacklist()
+  blacklist, err := s.cache.GetBlacklist()
   if err != nil {
     return nil, err
   }
@@ -99,18 +67,10 @@ func (s *ServerServiceImpl) CheckBlacklist(_ context.Context, req *rpc.CheckBlac
 }
 
 func (s *ServerServiceImpl) Login(_ context.Context, req *rpc.LoginRequest) (*rpc.Profile, error) {
-  s.logger.Debugf("Processing request to login user \"%s\" with serverId %s and ip %s", req.DisplayName, req.ServerId, req.Ip)
-  profile, err := s.api.Login(req.DisplayName, req.ServerId, req.Ip)
+  profile, err := s.cache.Login(req.DisplayName, req.ServerId, req.Ip)
   if err != nil {
-    s.logger.Errorf("Failed to perform login: %s", err)
     return nil, err
   }
-
-  err = s.storage.PutProfile(profile)
-  if err != nil {
-    s.logger.Errorf("Failed to push profile to storage backend: %s", err)
-  }
-  // TODO: Update profile mappings
 
   return rpc.ProfileToRpc(profile), nil
 }
