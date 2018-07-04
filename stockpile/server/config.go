@@ -39,11 +39,10 @@ const DefaultPort = 36623
 
 // Represents a server configuration (typically parsed from one or more HCL files)
 type Config struct {
-  PluginDir       *string        `hcl:"plugin-dir"`
-  BindAddress     *string        `hcl:"bind-address,attr"`
-  EnableLegacyApi *bool          `hcl:"legacy-api,attr"`
-  Storage         *StorageConfig `hcl:"storage,block"`
-  Ttl             *TtlConfig     `hcl:"ttl,block"`
+  PluginDir   *string        `hcl:"plugin-dir"`
+  BindAddress *string        `hcl:"bind-address,attr"`
+  Storage     *StorageConfig `hcl:"storage,block"`
+  Ttl         *TtlConfig     `hcl:"ttl,block"`
 }
 
 // Represents a storage backend configuration
@@ -74,12 +73,10 @@ func EmptyConfig() *Config {
 func DefaultConfig() *Config {
   pluginDir := "plugins"
   addr := fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort)
-  legacyEnabled := false
 
   cfg := &Config{
-    PluginDir:       &pluginDir,
-    BindAddress:     &addr,
-    EnableLegacyApi: &legacyEnabled,
+    PluginDir:   &pluginDir,
+    BindAddress: &addr,
     Storage: &StorageConfig{
       Type: "mem",
     },
@@ -102,10 +99,7 @@ func DefaultConfig() *Config {
 }
 
 func DevelopmentConfig() *Config {
-  legacyEnabled := true
-
   return DefaultConfig().Merge(&Config{
-    EnableLegacyApi: &legacyEnabled,
   })
 }
 
@@ -181,10 +175,6 @@ func (c *Config) Merge(other *Config) *Config {
 
   if other.BindAddress != nil {
     c.BindAddress = other.BindAddress
-  }
-
-  if other.EnableLegacyApi != nil {
-    c.EnableLegacyApi = other.EnableLegacyApi
   }
 
   if c.Storage == nil {
