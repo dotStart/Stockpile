@@ -17,6 +17,6 @@ ext = $(word 3, $(temp))
 build: $(PLATFORMS)
 
 $(PLATFORMS):
-	@export GOOS=$(os); export GOARCH=$(arch); export CGO_ENABLED=1; go build -v -buildmode=plugin ${LDFLAGS} -o ../../build/$(os)-$(arch)/plugins/redis.$(ext)
+	@export GOOS=$(os); export GOARCH=$(arch); export CGO_ENABLED=1; $(GO) build -v -buildmode=plugin ${LDFLAGS} -o ../../build/$(os)-$(arch)/plugins/redis.$(ext)
 
 .PHONY: build

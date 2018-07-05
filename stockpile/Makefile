@@ -10,6 +10,6 @@ ext = $(word 3, $(temp))
 build: $(PLATFORMS)
 
 $(PLATFORMS):
-	@export GOOS=$(os); export GOARCH=$(arch); go build -v ${LDFLAGS} -o ../build/$(os)-$(arch)/stockpile$(ext)
+	@export GOOS=$(os); export GOARCH=$(arch); $(GO) build -v ${LDFLAGS} -o ../build/$(os)-$(arch)/stockpile$(ext)
 
 .PHONY: build

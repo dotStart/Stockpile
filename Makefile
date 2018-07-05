@@ -2,11 +2,37 @@ APPLICATION_BRAND := vanilla
 APPLICATION_VERSION := 2.0.0
 APPLICATION_COMMIT_HASH := `git log -1 --pretty=format:"%H"`
 APPLICATION_TIMESTAMP := `date --utc "+%s"`
+
+GIT := $(shell command -v git 2> /dev/null)
+DEP := $(shell command -v dep 2> /dev/null)
+GO := $(shell command -v go 2> /dev/null)
 export
 
 PLUGINS := $(wildcard plugins/*/.)
 
-all: print-config install-dependencies core core-plugins package
+all: check-env print-config install-dependencies core core-plugins package
+
+check-env:
+	@echo "==> Checking prerequisites"
+	@echo -n "Checking for git ... "
+ifndef GIT
+	@echo "Not found"
+	$(error "git is unavailable")
+endif
+	@echo $(GIT)
+	@echo -n "Checking for go ... "
+ifndef GO
+	@echo "Not Found"
+	$(error "go is unavailable")
+endif
+	@echo $(GO)
+	@echo -n "Checking for dep ... "
+ifndef DEP
+	@echo -n "Not Found"
+	$(error "dep is unavailable")
+endif
+	@echo $(DEP)
+	@echo ""
 
 print-config:
 	@echo "==> Build Configuration"
@@ -20,11 +46,11 @@ print-config:
 clean:
 	@echo "==> Clearing previous build data"
 	@rm -rf build/ || true
-	@go clean -cache
+	@$(GO) clean -cache
 
 install-dependencies:
 	@echo "==> Installing dependencies"
-	@dep ensure -v
+	@$(DEP) ensure -v
 	@echo ""
 
 core:
