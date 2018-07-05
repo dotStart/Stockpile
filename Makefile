@@ -50,6 +50,7 @@ clean:
 
 install-dependencies:
 	@echo "==> Installing dependencies"
+	@$(GO) get -u github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs
 	@$(DEP) ensure -v
 	@echo ""
 
