@@ -54,7 +54,7 @@ func (c *Cache) incrementRequestCounter() {
 
 // regularly clears the request counter
 func (c *Cache) resetRequestCounter() {
-  for _ = range c.resetTicker.C {
+  for range c.resetTicker.C {
     atomic.StoreUint64(&c.requestCounter, 0)
   }
 }
