@@ -34,6 +34,7 @@ func (c *Cache) GetBlacklist() (*mojang.Blacklist, error) {
   if blacklist == nil {
     c.logger.Debugf("cache miss - requesting update from upstream")
 
+    c.incrementRequestCounter()
     blacklist, err = c.upstream.GetBlacklist()
     if err != nil {
       return nil, fmt.Errorf("upstream responded with error: %s", err)

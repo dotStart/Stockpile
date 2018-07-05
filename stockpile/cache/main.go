@@ -17,6 +17,9 @@
 package cache
 
 import (
+  "sync/atomic"
+  "time"
+
   "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
@@ -27,17 +30,42 @@ type Cache struct {
   logger   *logging.Logger
   upstream *mojang.MojangAPI
   storage  storage.StorageBackend
+
+  resetTicker    *time.Ticker
+  requestCounter uint64
 }
 
 // creates a new cache client using
 func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
-  return &Cache{
-    logger:   logging.MustGetLogger("cache"),
-    upstream: upstream,
-    storage:  storage,
+  cache := &Cache{
+    logger:      logging.MustGetLogger("cache"),
+    upstream:    upstream,
+    storage:     storage,
+    resetTicker: time.NewTicker(time.Minute),
+  }
+  go cache.resetRequestCounter()
+  return cache
+}
+
+// increments the request counter by one
+func (c *Cache) incrementRequestCounter() {
+  atomic.AddUint64(&c.requestCounter, 1)
+}
+
+// regularly clears the request counter
+func (c *Cache) resetRequestCounter() {
+  for _ = range c.resetTicker.C {
+    atomic.StoreUint64(&c.requestCounter, 0)
   }
 }
 
+// retrieves the amount of requests which have been submitted to the upstream servers within the
+// last minute
+func (c *Cache) GetRateLimitAllocation() uint64 {
+  return atomic.LoadUint64(&c.requestCounter)
+}
+
 func (c *Cache) Close() error {
+  c.resetTicker.Stop()
   return c.storage.Close()
 }

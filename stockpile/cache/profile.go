@@ -37,6 +37,7 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, erro
   if id == nil {
     c.logger.Debugf("cache miss - requesting update from upstream")
 
+    c.incrementRequestCounter()
     id, err = c.upstream.GetId(name, at)
     if err != nil {
       return nil, fmt.Errorf("upstream responded with error: %s", err)
@@ -87,6 +88,7 @@ func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
     return ids, nil
   }
 
+  c.incrementRequestCounter()
   newIds, err := c.upstream.BulkGetId(names)
   if err != nil {
     return nil, fmt.Errorf("upstream responded with error: %s", err)
@@ -115,6 +117,7 @@ func (c *Cache) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) 
   if history == nil {
     c.logger.Debugf("cache miss - requesting update from upstream")
 
+    c.incrementRequestCounter()
     history, err = c.upstream.GetHistory(id)
     if err != nil {
       return nil, fmt.Errorf("upstream responded with error: %s", err)
