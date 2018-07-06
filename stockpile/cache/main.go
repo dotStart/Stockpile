@@ -42,7 +42,7 @@ func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
     logger:      logging.MustGetLogger("cache"),
     upstream:    upstream,
     storage:     storage,
-    resetTicker: time.NewTicker(time.Minute),
+    resetTicker: time.NewTicker(time.Minute * 10),
     Events:      make(chan *Event),
   }
   go cache.resetRequestCounter()
@@ -51,6 +51,7 @@ func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
 
 // increments the request counter by one
 func (c *Cache) incrementRequestCounter() {
+  c.logger.Debugf("Incremented request counter")
   atomic.AddUint64(&c.requestCounter, 1)
 }
 
