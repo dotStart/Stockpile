@@ -16,7 +16,7 @@
  */
 package service
 
-//go:generate protoc -I ../rpc --go_out=plugins=grpc:../rpc common.proto profile.proto server.proto
+//go:generate protoc -I ../rpc --go_out=plugins=grpc:../rpc common.proto events.proto profile.proto server.proto
 
 import (
   "fmt"
@@ -73,6 +73,7 @@ func (s *Server) Listen(listener net.Listener) {
   grpc.NewServer()
   rpc.RegisterProfileServiceServer(s.srv, NewProfileService(s.cache))
   rpc.RegisterServerServiceServer(s.srv, NewServerService(s.cache))
+  rpc.RegisterEventServiceServer(s.srv, NewEventService(s.cache))
   reflection.Register(s.srv)
   s.srv.Serve(listener)
 }

@@ -18,11 +18,18 @@ package rpc
 
 import (
   "errors"
+  "fmt"
   "time"
 
+  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/vendor.orig/github.com/golang/protobuf/proto"
+  "github.com/dotStart/Stockpile/vendor.orig/github.com/golang/protobuf/ptypes"
+  "github.com/golang/protobuf/ptypes/any"
   "github.com/google/uuid"
 )
+
+const MessageTypeBaseUrl = "github.com/dotStart/Stockpile/stockpile/server/rpc/"
 
 // Converts a profileId into its fully parsed representation
 func ProfileIdFromRpc(rpc *ProfileId) (*mojang.ProfileId, error) {
@@ -269,6 +276,203 @@ func BlacklistToRpc(blacklist *mojang.Blacklist) *Blacklist {
 
 func BlacklistFromRpc(blacklist *Blacklist) (*mojang.Blacklist, error) {
   return mojang.NewBlacklist(blacklist.Hashes)
+}
+
+// converts an arbitrary event into its rpc representation
+func EventToRpc(event *cache.Event) (*Event, error) {
+  key, err := EventKeyToRpc(event.Key)
+  if err != nil {
+    return nil, err
+  }
+
+  obj, err := EventPayloadToRpc(event.Object)
+  if err != nil {
+    return nil, err
+  }
+
+  enc, err := ptypes.MarshalAny(obj)
+  if err != nil {
+    return nil, err
+  }
+
+  return &Event{
+    Type:   EventTypeToRpc(event.Type),
+    Key:    key,
+    Object: enc,
+  }, nil
+}
+
+func EventFromRpc(event *Event) (*cache.Event, error) {
+  typ, err := EventTypeFromRpc(event.Type)
+  if err != nil {
+    return nil, err
+  }
+
+  key, err := EventKeyFromRpc(event.Key)
+  if err != nil {
+    return nil, err
+  }
+
+  payload, err := EventPayloadFromRpc(event.Object)
+  if err != nil {
+    return nil, err
+  }
+
+  return &cache.Event{
+    Type:   typ,
+    Key:    key,
+    Object: payload,
+  }, nil
+}
+
+// converts an event type into its rpc representation
+func EventTypeToRpc(typ cache.EventType) EventType {
+  switch typ {
+  case cache.ProfileIdEvent:
+    return EventType_PROFILE_ID
+  case cache.NameHistoryEvent:
+    return EventType_NAME_HISTORY
+  case cache.ProfileEvent:
+    return EventType_PROFILE
+  case cache.BlacklistEvent:
+    return EventType_BLACKLIST
+  default:
+    return -1 // TODO: Unknown?
+  }
+}
+
+// converts an event type from its rpc representation
+func EventTypeFromRpc(typ EventType) (cache.EventType, error) {
+  switch typ {
+  case EventType_PROFILE_ID:
+    return cache.ProfileIdEvent, nil
+  case EventType_NAME_HISTORY:
+    return cache.NameHistoryEvent, nil
+  case EventType_PROFILE:
+    return cache.ProfileEvent, nil
+  case EventType_BLACKLIST:
+    return cache.BlacklistEvent, nil
+  default:
+    return -1, fmt.Errorf("illegal event type: %d", typ)
+  }
+}
+
+// encodes an arbitrary key type into its rpc representation
+func EventKeyToRpc(key interface{}) (*any.Any, error) {
+  // nil key is passed as is as there is no identifying information there
+  if key == nil {
+    return nil, nil
+  }
+
+  profileId, ok := key.(*cache.ProfileIdKey)
+  if ok {
+    return ptypes.MarshalAny(&ProfileIdKey{
+      Name: profileId.Name,
+      At:   profileId.At.Unix(),
+    })
+  }
+
+  id, ok := key.(*uuid.UUID)
+  if ok {
+    return ptypes.MarshalAny(&IdKey{
+      Id: id.String(),
+    })
+  }
+
+  return nil, fmt.Errorf("unknown key type: %v", key)
+}
+
+// decodes an arbitrary key type from its rpc representation
+func EventKeyFromRpc(key *any.Any) (interface{}, error) {
+  if key == nil {
+    return nil, nil
+  }
+
+  obj := &ptypes.DynamicAny{}
+  err := ptypes.UnmarshalAny(key, obj)
+  if err != nil {
+    return nil, err
+  }
+
+  profileId, ok := obj.Message.(*ProfileIdKey)
+  if ok {
+    return &cache.ProfileIdKey{
+      Name: profileId.Name,
+      At:   time.Unix(profileId.At, 0),
+    }, nil
+  }
+
+  id, ok := obj.Message.(*IdKey)
+  if ok {
+    i, err := uuid.Parse(id.Id)
+    return &i, err
+  }
+
+  return nil, fmt.Errorf("unknown key type: %v", obj.Message)
+}
+
+// converts an event payload into its rpc format
+func EventPayloadToRpc(payload interface{}) (proto.Message, error) {
+  if payload == nil {
+    return nil, errors.New("payload cannot be nil")
+  }
+
+  profileId, ok := payload.(*mojang.ProfileId)
+  if ok {
+    return ProfileIdToRpc(profileId), nil
+  }
+
+  history, ok := payload.(*mojang.NameChangeHistory)
+  if ok {
+    return NameHistoryToRpc(history), nil
+  }
+
+  profile, ok := payload.(*mojang.Profile)
+  if ok {
+    return ProfileToRpc(profile), nil
+  }
+
+  blacklist, ok := payload.(*mojang.Blacklist)
+  if ok {
+    return BlacklistToRpc(blacklist), nil
+  }
+
+  return nil, fmt.Errorf("illegal payload value: %v", payload)
+}
+
+// converts an event payload from its rpc format
+func EventPayloadFromRpc(payload *any.Any) (interface{}, error) {
+  if payload == nil {
+    return nil, errors.New("payload cannot be nil")
+  }
+
+  obj := &ptypes.DynamicAny{}
+  err := ptypes.UnmarshalAny(payload, obj)
+  if err != nil {
+    return nil, err
+  }
+
+  profileId, ok := obj.Message.(*ProfileId)
+  if ok {
+    return ProfileIdFromRpc(profileId)
+  }
+
+  history, ok := obj.Message.(*NameHistory)
+  if ok {
+    return NameHistoryFromRpc(history), nil
+  }
+
+  profile, ok := obj.Message.(*Profile)
+  if ok {
+    return ProfileFromRpc(profile)
+  }
+
+  blacklist, ok := obj.Message.(*Blacklist)
+  if ok {
+    return BlacklistFromRpc(blacklist)
+  }
+
+  return nil, fmt.Errorf("illegal payload value: %v", payload)
 }
 
 // evaluates whether the message has been populated with actual data (e.g. whether it is not empty)
