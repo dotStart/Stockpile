@@ -45,8 +45,14 @@ func (c *Cache) GetBlacklist() (*mojang.Blacklist, error) {
       if err != nil {
         return nil, fmt.Errorf("storage backend responded with error: %s", err)
       }
-
       c.logger.Debugf("wrote new data to storage backend")
+
+      c.Events <- &Event{
+        Type:   BlacklistEvent,
+        Key:    nil,
+        Object: blacklist,
+      }
+      c.logger.Debugf("notified event channel")
     } else {
       c.logger.Debugf("cannot find resource on upstream")
     }
@@ -74,7 +80,14 @@ func (c *Cache) Login(displayName string, serverId string, ip string) (*mojang.P
   if err != nil {
     return nil, fmt.Errorf("storage backend responded with error: %s", err)
   }
-
   c.logger.Debugf("wrote new data to storage backend")
+
+  c.Events <- &Event{
+    Type:   ProfileEvent,
+    Key:    profile.Id,
+    Object: profile,
+  }
+  c.logger.Debugf("notified event channel")
+
   return profile, nil
 }

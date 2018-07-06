@@ -33,6 +33,7 @@ type Cache struct {
 
   resetTicker    *time.Ticker
   requestCounter uint64
+  Events         chan *Event
 }
 
 // creates a new cache client using
@@ -42,6 +43,7 @@ func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
     upstream:    upstream,
     storage:     storage,
     resetTicker: time.NewTicker(time.Minute),
+    Events:      make(chan *Event),
   }
   go cache.resetRequestCounter()
   return cache

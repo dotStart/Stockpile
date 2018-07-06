@@ -50,6 +50,16 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, erro
       }
 
       c.logger.Debugf("wrote new data to storage backend")
+
+      c.Events <- &Event{
+        Type:   ProfileIdEvent,
+        Key: &ProfileIdKey{
+          Name: name,
+          At:   at,
+        },
+        Object: id,
+      }
+      c.logger.Debugf("notified event channel")
     } else {
       c.logger.Debugf("cannot find resource on upstream")
     }
@@ -99,9 +109,19 @@ func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
     if err != nil {
       return nil, fmt.Errorf("storage backend responded with error: %s", err)
     }
+
+    c.Events <- &Event{
+      Type:   ProfileIdEvent,
+      Key: &ProfileIdKey{
+        Name: id.Name,
+        At:   at,
+      },
+      Object: id,
+    }
   }
 
   c.logger.Debugf("wrote new data to storage backend")
+  c.logger.Debugf("notified event channel")
   return append(ids, newIds...), nil
 }
 
@@ -128,8 +148,14 @@ func (c *Cache) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) 
       if err != nil {
         return nil, fmt.Errorf("storage backend responded with error: %s", err)
       }
-
       c.logger.Debugf("wrote new data to storage backend")
+
+      c.Events <- &Event{
+        Type:   NameHistoryEvent,
+        Key:    &id,
+        Object: history,
+      }
+      c.logger.Debugf("notified event channel")
     } else {
       c.logger.Debugf("cannot find resource on upstream")
     }
@@ -166,8 +192,14 @@ func (c *Cache) GetProfile(id uuid.UUID) (*mojang.Profile, error) {
       if err != nil {
         return nil, fmt.Errorf("storage backend responded with error: %s", err)
       }
-
       c.logger.Debugf("wrote new data to storage backend")
+
+      c.Events <- &Event{
+        Type:   ProfileEvent,
+        Key:    &id,
+        Object: profile,
+      }
+      c.logger.Debugf("notified event channel")
     } else {
       c.logger.Debugf("cannot find resource on upstream")
     }

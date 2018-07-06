@@ -34,5 +34,14 @@ func (c *Cache) updateNameMapping(profile *mojang.Profile) error {
   mapping.UpdateExpiration(at)
 
   c.storage.PutProfileId(mapping)
+
+  c.Events <- &Event{
+    Type: ProfileIdEvent,
+    Key: &ProfileIdKey{
+      Name: profile.Name,
+      At:   at,
+    },
+    Object: mapping,
+  }
   return nil
 }
