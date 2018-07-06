@@ -153,7 +153,7 @@ func (p *Profile) read(reader io.Reader) error {
     }
 
     p.Textures = &ProfileTextures{
-      Timestamp:   time.Unix(parsedProp.Timestamp, 0),
+      Timestamp:   time.Unix(parsedProp.Timestamp / 1000, parsedProp.Timestamp % 1000 * 1000000),
       ProfileId:   id,
       ProfileName: parsedProp.ProfileName,
       Textures:    textures,

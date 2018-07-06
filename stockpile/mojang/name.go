@@ -323,7 +323,7 @@ func (p *NameChange) read(reader io.Reader) error {
   }
 
   p.Name = parsed.Name
-  p.ChangedToAt = time.Unix(parsed.ChangedToAt, 0)
+  p.ChangedToAt = time.Unix(parsed.ChangedToAt / 1000, parsed.ChangedToAt % 1000 * 1000000)
   p.ValidUntil = CalculateNameGracePeriodEnd(p.ChangedToAt)
   return nil
 }
@@ -337,7 +337,7 @@ func ReadNameChangeArray(reader io.Reader) ([]*NameChange, error) {
 
   res := make([]*NameChange, len(parsed))
   for i, change := range parsed {
-    at := time.Unix(change.ChangedToAt, 0)
+    at := time.Unix(change.ChangedToAt / 1000, change.ChangedToAt % 1000 * 1000000)
 
     res[i] = &NameChange{
       Name:        change.Name,
