@@ -35,6 +35,7 @@ func main() {
   subcommands.Register(&command.HistoryCommand{}, "Client")
   subcommands.Register(&command.ProfileCommand{}, "Client")
   subcommands.Register(&command.BlacklistCommand{}, "Client")
+  subcommands.Register(&command.ListenCommand{}, "Client")
 
   flag.Parse()
   ctx := context.Background()
