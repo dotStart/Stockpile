@@ -174,7 +174,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
     }
 
     // instance currently unused
-    ui.NewServer(httpMux, c.flagCorsOverride, cacheImpl)
+    ui.NewServer(httpMux, c.flagCorsOverride, pluginManager, cacheImpl)
 
     httpSrv := &http.Server{
       Handler: httpMux,

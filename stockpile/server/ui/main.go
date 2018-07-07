@@ -22,6 +22,7 @@ import (
 
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/metadata"
+  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/googollee/go-socket.io"
   "github.com/op/go-logging"
 )
@@ -31,6 +32,7 @@ import (
 type Server struct {
   logger *logging.Logger
   io     *socketio.Server
+  plugin *plugin.Manager
   cache  *cache.Cache
 
   rateLimitTicker *time.Ticker
@@ -38,7 +40,7 @@ type Server struct {
   corsOverride string
 }
 
-func NewServer(httpSrv *http.ServeMux, corsOverride string, cacheImpl *cache.Cache) (*Server, error) {
+func NewServer(httpSrv *http.ServeMux, corsOverride string, plugin *plugin.Manager, cacheImpl *cache.Cache) (*Server, error) {
   io, err := socketio.NewServer(nil)
   if err != nil {
     return nil, err
@@ -47,6 +49,7 @@ func NewServer(httpSrv *http.ServeMux, corsOverride string, cacheImpl *cache.Cac
   srv := &Server{
     logger: logging.MustGetLogger("ui"),
     io:     io,
+    plugin: plugin,
     cache:  cacheImpl,
 
     rateLimitTicker: time.NewTicker(time.Minute),
@@ -107,12 +110,20 @@ func (s *Server) forwardCacheEvents() {
 func (s *Server) onSocketConnect(io socketio.Socket) {
   s.logger.Debugf("client %s (id: %s) established websocket connection", io.Request().RemoteAddr, io.Id())
   io.Join("ui")
+
+  pluginList := make([]*plugin.Metadata, len(s.plugin.Plugins))
+  for i, plugin := range s.plugin.Plugins {
+    pluginList[i] = &plugin.Metadata
+  }
+
   io.Emit(
     "system",
     struct {
-      Version string `json:"version"`
+      Version string             `json:"version"`
+      Plugins []*plugin.Metadata `json:"plugins"`
     }{
       Version: metadata.VersionFull(),
+      Plugins: pluginList,
     },
   )
   io.Emit("rate-limit", s.cache.GetRateLimitAllocation())

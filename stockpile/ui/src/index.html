@@ -24,8 +24,45 @@
       </header>
       <section id="page-body" class="ui vertical segment">
         <div class="ui container">
-          <h2 class="ui dividing header">Cache Events</h2>
-          <event-list :events="events" />
+          <section class="ui vertical very padded segment">
+            <h2 class="ui header">Cache Events</h2>
+            <div v-if="events.length == 0" class="ui icon message">
+              <i class="inbox icon"></i>
+              <div class="content">
+                <div class="header">No Events</div>
+                <p>No cache events have been reported since the start of your session</p>
+              </div>
+            </div>
+            <event-list v-if="events.length != 0" :events="events" />
+          </section>
+          <section class="ui vertical very padded segment">
+            <h2 class="ui header">Plugins ({{ plugins.length }})</h2>
+
+            <div v-if="plugins.length == 0" class="ui icon message">
+              <i class="plug icon"></i>
+              <div class="content">
+                <div class="header">No loaded Plugins</div>
+                <p>No plugins are loaded on this server at the moment</p>
+              </div>
+            </div>
+            <table v-if="plugins.length != 0" class="ui very basic celled table">
+              <thead>
+                <tr>
+                  <th class="collapsing">Name</th>
+                  <th>Version</th>
+                  <th class="collapsing">Author(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="plugin in plugins">
+                  <td v-if="!plugin.Website" class="collapsing">{{ plugin.Name }}</td>
+                  <td v-if="!!plugin.Website" class="collapsing"><a :href="plugin.Website">{{ plugin.Name }}</a></td>
+                  <td>{{ plugin.Version }}</td>
+                  <td class="collapsing"><span v-for="author in plugin.Authors" class="ui label">{{ author }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
         </div>
       </section>
       <footer id="page-footer" class="ui inverted vertical segment">

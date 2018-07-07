@@ -75,6 +75,7 @@ const app = new Vue({
     connected: false,
     rateLimitAllocation: 0,
     version: '',
+    plugins: [],
     events: []
   },
   computed: {
@@ -88,9 +89,12 @@ const app = new Vue({
 });
 
 socket.on('system', (sys) => {
-  console.log('Stockpile v' + sys.version)
-  app.version = sys.version
-})
+  console.log('Stockpile v' + sys.version);
+  console.log('Loaded plugins: ' + sys.plugins.map(
+      plugin => plugin.Name + ' v' + plugin.Version).toString());
+  app.version = sys.version;
+  app.plugins = sys.plugins;
+});
 
 socket.on('rate-limit', (allocation) => {
   console.log('Current rate limit allocation: ' + allocation);
