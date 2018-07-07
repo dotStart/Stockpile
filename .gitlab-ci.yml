@@ -15,7 +15,8 @@ before_script:
   - cd /go/src/github.com/dotStart/Stockpile
 
 after_script:
-  - cp -r build $CI_PROJECT_DIR
+  - cp -r /go/src/github.com/dotStart/Stockpile/build $CI_PROJECT_DIR
+  - cd $CI_PROJECT_DIR
 
 build:
   stage: build
