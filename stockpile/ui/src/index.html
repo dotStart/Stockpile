@@ -36,6 +36,20 @@
             <event-list v-if="events.length != 0" :events="events" />
           </section>
           <section class="ui vertical very padded segment">
+            <h2 class="ui header">Connection Settings</h2>
+
+            <p>
+              This instance is available via <code>{{ address }}</code>. You may pass the following
+              arguments to access this instance via the command line tool:
+            </p>
+
+            <div class="ui secondary segment">
+              <pre class="code">$ stockpile &lt;command&gt; -server-address={{ address }}
+# For instance:
+$ stockpile status -server-address={{ address }}</pre>
+            </div>
+          </section>
+          <section class="ui vertical very padded segment">
             <h2 class="ui header">Plugins ({{ plugins.length }})</h2>
 
             <div v-if="pluginsUnavailable" class="ui icon warning message">

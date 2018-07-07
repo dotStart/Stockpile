@@ -48,3 +48,9 @@ body,
 #page-footer .copyright {
   color: rgba(255, 255, 255, 0.5);
 }
+
+code {
+  background-color: #eee;
+  padding: 2px 5px;
+  border-radius: 5px;
+}

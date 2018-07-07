@@ -82,6 +82,19 @@ const app = new Vue({
     events: []
   },
   computed: {
+    address: function() {
+      const addr = location.host;
+
+      if (addr.indexOf(':') !== -1) {
+        return addr
+      }
+
+      if (location.origin.indexOf('https') !== -1) {
+        return addr + ':443'
+      }
+
+      return addr + ':80'
+    },
     rateLimitLabel: function () {
       return `Rate Limit: ${this.rateLimitAllocation} / 600`
     },
