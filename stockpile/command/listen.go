@@ -25,9 +25,9 @@ import (
 
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/golang/protobuf/ptypes/empty"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
-  empty "github.com/golang/protobuf/ptypes/empty"
 )
 
 type ListenCommand struct {
