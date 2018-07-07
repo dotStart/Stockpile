@@ -8,7 +8,6 @@ cache:
     - /go/src/gopkg.in
 
 before_script:
-  - apt-get update
   - curl -sL https://deb.nodesource.com/setup_10.x | bash -
   - apt-get install -y curl git nodejs
   - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
