@@ -12,7 +12,7 @@ before_script:
   - apt-get install -y curl git nodejs
   - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
   - cp -r $CI_PROJECT_DIR /go/src/github.com/dotStart/Stockpile
-  - ln -s /go/src/github.com/dotStart /go/src/_/builds/dotStart
+  - cd /go/src/github.com/dotStart/Stockpile
 
 build:
   stage: build
