@@ -17,11 +17,11 @@ before_script:
 after_script:
   - cp -r build $CI_PROJECT_DIR
 
-artifacts:
-  paths:
-    - build/*.tar.gz
-
 build:
   stage: build
   script:
     - make
+  artifacts:
+    name: Stockpile
+    paths:
+      - build/*.tar.gz
