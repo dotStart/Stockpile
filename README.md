@@ -12,6 +12,20 @@ Key Features
 * gRPC based (clients may be generated for most popular languages)
 * Completely Open Source
 
+Building
+--------
+
+1. `go get -d -u github.com/dotStart/Stockpile/...`
+2. `cd $(go env GOPATH)/src/github.com/dotStart/Stockpile`
+3. `make`
+
+The resulting binaries will be located in the `build` directory.
+
+**Note:** Binaries built on Windows will not provide support for plugins (nor will they include the
+standard plugins). If you wish to build a version for distribution (or execution in a production
+environment), please build them on Linux (for instance, using the Vagrant configuration included
+within this repository).
+
 License
 -------
 
