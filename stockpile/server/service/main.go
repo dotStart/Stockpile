@@ -16,8 +16,6 @@
  */
 package service
 
-//go:generate protoc -I ../rpc --go_out=plugins=grpc:../rpc common.proto events.proto profile.proto server.proto system.proto
-
 import (
   "net"
 

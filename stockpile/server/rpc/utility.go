@@ -30,6 +30,8 @@ import (
   "github.com/google/uuid"
 )
 
+//go:generate protoc -I . --go_out=plugins=grpc:. common.proto events.proto profile.proto server.proto system.proto
+
 const MessageTypeBaseUrl = "github.com/dotStart/Stockpile/stockpile/server/rpc/"
 
 // Converts a profileId into its fully parsed representation
