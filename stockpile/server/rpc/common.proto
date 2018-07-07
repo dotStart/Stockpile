@@ -4,18 +4,6 @@ package rpc;
 option java_package = "tv.dotstart.stockpile";
 
 /**
- * Used in services where no input parameters are expected.
- */
-message EmptyRequest {
-}
-
-/**
- * Used in services where no outputs are expected.
- */
-message EmptyResponse {
-}
-
-/**
  * Represents a complete user profile.
  */
 message Profile {

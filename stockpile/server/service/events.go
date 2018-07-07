@@ -19,6 +19,7 @@ package service
 import (
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  empty "github.com/golang/protobuf/ptypes/empty"
   "github.com/op/go-logging"
 )
 
@@ -34,7 +35,7 @@ func NewEventService(cache *cache.Cache) (*EventServiceImpl) {
   }
 }
 
-func (s *EventServiceImpl) StreamEvents(_ *rpc.EmptyRequest, srv rpc.EventService_StreamEventsServer) error {
+func (s *EventServiceImpl) StreamEvents(_ *empty.Empty, srv rpc.EventService_StreamEventsServer) error {
   for e := range s.cache.Events {
     enc, err := rpc.EventToRpc(e)
     if err != nil {

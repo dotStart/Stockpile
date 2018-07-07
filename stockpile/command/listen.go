@@ -27,6 +27,7 @@ import (
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
+  empty "github.com/golang/protobuf/ptypes/empty"
 )
 
 type ListenCommand struct {
@@ -61,7 +62,7 @@ func (c *ListenCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
   }
 
   eventService := rpc.NewEventServiceClient(client)
-  stream, err := eventService.StreamEvents(ctx, &rpc.EmptyRequest{})
+  stream, err := eventService.StreamEvents(ctx, &empty.Empty{})
   if err != nil {
     fmt.Fprintf(os.Stderr, "Server responded with error: %s", err)
     return 1

@@ -4,10 +4,10 @@ package rpc;
 option java_package = "tv.dotstart.stockpile";
 
 import "google/protobuf/any.proto";
-import "common.proto";
+import "google/protobuf/empty.proto";
 
 service EventService {
-  rpc StreamEvents (EmptyRequest) returns (stream Event);
+  rpc StreamEvents (google.protobuf.Empty) returns (stream Event);
 }
 
 message Event {

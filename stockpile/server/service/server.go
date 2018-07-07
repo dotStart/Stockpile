@@ -21,6 +21,7 @@ import (
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
+  empty "github.com/golang/protobuf/ptypes/empty"
 )
 
 type ServerServiceImpl struct {
@@ -35,7 +36,7 @@ func NewServerService(cache *cache.Cache) *ServerServiceImpl {
   }
 }
 
-func (s *ServerServiceImpl) GetBlacklist(context.Context, *rpc.EmptyRequest) (*rpc.Blacklist, error) {
+func (s *ServerServiceImpl) GetBlacklist(context.Context, *empty.Empty) (*rpc.Blacklist, error) {
   blacklist, err := s.cache.GetBlacklist()
   if err != nil {
     return nil, err

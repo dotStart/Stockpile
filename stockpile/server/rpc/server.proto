@@ -3,6 +3,7 @@ syntax = "proto3";
 package rpc;
 option java_package = "tv.dotstart.stockpile";
 
+import "google/protobuf/empty.proto";
 import "common.proto";
 
 /**
@@ -13,7 +14,7 @@ service ServerService {
   /**
    * Retrieves a cached version of the entire server blacklist.
    */
-  rpc GetBlacklist (EmptyRequest) returns (Blacklist);
+  rpc GetBlacklist (google.protobuf.Empty) returns (Blacklist);
 
   /**
    * Evaluates whether a given address has been blacklisted.
