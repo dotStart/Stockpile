@@ -38,7 +38,14 @@
           <section class="ui vertical very padded segment">
             <h2 class="ui header">Plugins ({{ plugins.length }})</h2>
 
-            <div v-if="plugins.length == 0" class="ui icon message">
+            <div v-if="pluginsUnavailable" class="ui icon warning message">
+              <i class="plug icon"></i>
+              <div class="content">
+                <div class="header">No Plugin support</div>
+                <p>The server implementation does not support plugins at the moment</p>
+              </div>
+            </div>
+            <div v-if="!pluginsUnavailable && plugins.length == 0" class="ui icon message">
               <i class="plug icon"></i>
               <div class="content">
                 <div class="header">No loaded Plugins</div>

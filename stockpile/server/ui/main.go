@@ -119,11 +119,13 @@ func (s *Server) onSocketConnect(io socketio.Socket) {
   io.Emit(
     "system",
     struct {
-      Version string             `json:"version"`
-      Plugins []*plugin.Metadata `json:"plugins"`
+      Version          string             `json:"version"`
+      PluginsSupported bool               `json:"pluginsSupported"`
+      Plugins          []*plugin.Metadata `json:"plugins"`
     }{
-      Version: metadata.VersionFull(),
-      Plugins: pluginList,
+      Version:          metadata.VersionFull(),
+      PluginsSupported: plugin.PluginsAvailable,
+      Plugins:          pluginList,
     },
   )
   io.Emit("rate-limit", s.cache.GetRateLimitAllocation())

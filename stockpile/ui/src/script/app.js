@@ -73,9 +73,12 @@ const app = new Vue({
   el: '#stockpile',
   data: {
     connected: false,
+
     rateLimitAllocation: 0,
     version: '',
     plugins: [],
+    pluginsUnavailable: false,
+
     events: []
   },
   computed: {
@@ -90,10 +93,16 @@ const app = new Vue({
 
 socket.on('system', (sys) => {
   console.log('Stockpile v' + sys.version);
-  console.log('Loaded plugins: ' + sys.plugins.map(
-      plugin => plugin.Name + ' v' + plugin.Version).toString());
+  if (sys.pluginsSupported) {
+    console.log('Loaded plugins: ' + sys.plugins.map(
+        plugin => plugin.Name + ' v' + plugin.Version).toString());
+    app.plugins = sys.plugins;
+  } else {
+    console.log('Plugins are not supported by server');
+    app.pluginsUnavailable = true
+  }
+
   app.version = sys.version;
-  app.plugins = sys.plugins;
 });
 
 socket.on('rate-limit', (allocation) => {
