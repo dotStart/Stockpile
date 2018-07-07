@@ -92,7 +92,7 @@ func NewFileStorageBackend(cfg *server.Config) (StorageBackend, error) {
 // updates the modification time of the lock file periodically to prevent its automatic expiration
 func (f *fileStorageBackendInterface) updateLock() {
   for range f.lockTicker.C {
-    f.logger.Debugf("Updating database lock")
+    f.logger.Debugf("updating database lock")
     ioutil.WriteFile(f.lockPath, []byte{}, filePerms)
   }
 }

@@ -73,12 +73,12 @@ func (c *IdCommand) SetFlags(f *flag.FlagSet) {
 func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
   client, err := c.createClient()
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
+    fmt.Fprintf(os.Stderr, "failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
     return 1
   }
 
   if f.NArg() == 0 {
-    fmt.Fprintf(os.Stderr, "Illegal command invocation: display-name is required\n")
+    fmt.Fprintf(os.Stderr, "illegal command invocation: display-name is required\n")
     return 1
   }
 
@@ -91,7 +91,7 @@ func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface
     } else {
       timestamp, err = time.Parse(time.RFC3339, c.flagTimestamp)
       if err != nil {
-        fmt.Fprintf(os.Stderr, "Illegal request time \"%s\": %s\n", c.flagTimestamp, err)
+        fmt.Fprintf(os.Stderr, "illegal request time \"%s\": %s\n", c.flagTimestamp, err)
         return 1
       }
     }
@@ -102,18 +102,18 @@ func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface
       Timestamp: timestamp.Unix(),
     })
     if err != nil {
-      fmt.Fprintf(os.Stderr, "Command execution has failed: %s\n", err)
+      fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
       return 1
     }
 
     if !res.IsPopulated() {
-      fmt.Fprintf(os.Stderr, "No such profile\n")
+      fmt.Fprintf(os.Stderr, "no such profile\n")
       return 1
     }
 
     profile, err := rpc.ProfileIdFromRpc(res)
     if err != nil {
-      fmt.Fprintf(os.Stderr, "Failed to convert profile: %s", err)
+      fmt.Fprintf(os.Stderr, "failed to convert profile: %s", err)
       return 1
     }
     writeTable(os.Stdout, *profile)
@@ -125,18 +125,18 @@ func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface
     Names: f.Args(),
   })
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Command execution has failed: %s\n", err)
+    fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
   if !res.IsPopulated() {
-    fmt.Fprintf(os.Stderr, "No such profile")
+    fmt.Fprintf(os.Stderr, "no such profile")
     return 1
   }
 
   profileIds, err := rpc.ProfileIdsFromRpcArray(res.Ids)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Failed to decode one or more profile ids: %s", err)
+    fmt.Fprintf(os.Stderr, "failed to decode one or more profile ids: %s", err)
     return 1
   }
 

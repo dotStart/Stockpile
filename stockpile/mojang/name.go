@@ -359,7 +359,7 @@ func (a *MojangAPI) GetId(name string, at time.Time) (*ProfileId, error) {
   }
 
   if res.StatusCode == 204 {
-    a.logger.Debugf("Server reported no association for name \"%s\" at time %s", name, at)
+    a.logger.Debugf("server reported no association for name \"%s\" at time %s", name, at)
     return nil, nil
   }
 

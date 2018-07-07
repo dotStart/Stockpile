@@ -60,18 +60,18 @@ Available command specific flags:
 func (c *HistoryCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
   client, err := c.createClient()
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
+    fmt.Fprintf(os.Stderr, "failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
     return 1
   }
 
   if f.NArg() != 1 {
-    fmt.Fprintf(os.Stderr, "Illegal command invocation: id is required\n")
+    fmt.Fprintf(os.Stderr, "illegal command invocation: id is required\n")
     return 1
   }
 
   id, err := mojang.ParseId(f.Arg(0))
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Illegal profile id: %s", id)
+    fmt.Fprintf(os.Stderr, "illegal profile id: %s (is this a UUID?)", id)
     return 1
   }
 
@@ -80,12 +80,12 @@ func (c *HistoryCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inte
     Id: id.String(),
   })
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Command execution has failed: %s\n", err)
+    fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
   if !res.IsPopulated() {
-    fmt.Fprintf(os.Stderr, "No such profile")
+    fmt.Fprintf(os.Stderr, "no such profile")
     return 1
   }
 

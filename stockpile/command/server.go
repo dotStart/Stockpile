@@ -87,7 +87,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   if c.flagConfig != "" {
     fileCfg, err := server.LoadConfig(c.flagConfig)
     if err != nil {
-      fmt.Fprintf(os.Stderr, "Error: Failed to read the configuration file(s): %s", err)
+      fmt.Fprintf(os.Stderr, "error: Failed to read the configuration file(s): %s", err)
       return 1
     }
 
@@ -103,7 +103,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
 
   level, err := logging.LogLevel(c.flagLogLevel)
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Error: Illegal log level \"%s\": %s", c.flagLogLevel, err)
+    fmt.Fprintf(os.Stderr, "error: Illegal log level \"%s\": %s", c.flagLogLevel, err)
     return 1
   }
 
@@ -135,7 +135,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   // initialize the shared network listener and mux first so we can detect potential binding errors early on
   listener, err := net.Listen("tcp", *cfg.BindAddress)
   if err != nil {
-    log.Fatalf("Failed to listen on %s (TCP): %s", *cfg.BindAddress, err)
+    log.Fatalf("failed to listen on %s (TCP): %s", *cfg.BindAddress, err)
   }
 
   mux := cmux.New(listener)
@@ -152,7 +152,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   if err != nil {
     log.Fatalf("failed to initialize storage backend \"%s\": %s", err)
   }
-  log.Infof("Using database plugin: %s", cfg.Storage.Type)
+  log.Infof("using database plugin: %s", cfg.Storage.Type)
   cacheImpl := cache.New(mojang.New(), storage)
 
   // initialize the RPC server at all times (only differ between mux policies depending on whether the legacy API or UI
@@ -163,11 +163,11 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   }
   rpcServer, err := service.NewServer(pluginManager, cacheImpl)
   if err != nil {
-    log.Fatalf("Failed to initialize grpc server: %s", err)
+    log.Fatalf("failed to initialize grpc server: %s", err)
   }
   go rpcServer.Listen(mux.Match(rpcPolicy))
   defer rpcServer.Destroy()
-  log.Info("Enabled grpc server")
+  log.Info("grpc server enabled")
 
   if *cfg.UiEnabled {
     httpMux := http.NewServeMux()
@@ -183,7 +183,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
       Handler: httpMux,
     }
     go httpSrv.Serve(mux.Match(cmux.Any()))
-    log.Info("Enabled ui")
+    log.Info("web ui enabled")
   }
 
   mux.Serve()

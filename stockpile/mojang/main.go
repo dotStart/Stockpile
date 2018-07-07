@@ -49,14 +49,14 @@ func (a *MojangAPI) execute(method string, uri string, body io.Reader) (*http.Re
   req.Header.Set("user-agent", fmt.Sprintf("Stockpile/%s (Go/%s; %s; +https://github.com/dotStart/Stockpile)", metadata.VersionFull(), runtime.Version(), metadata.Brand()))
   req.Header.Set("content-type", "application/json")
 
-  a.logger.Debugf("Sending request: %s %s", method, uri)
+  a.logger.Debugf("sending request: %s %s", method, uri)
   res, err := a.http.Do(req)
   if err != nil {
     return nil, err
   }
 
   statusCategory := res.StatusCode / 100
-  a.logger.Debugf("Server responded with status code %d (category %d)", res.StatusCode, statusCategory)
+  a.logger.Debugf("server responded with status code %d (category %d)", res.StatusCode, statusCategory)
 
   if statusCategory == 2 || res.StatusCode == 404 {
     return res, nil

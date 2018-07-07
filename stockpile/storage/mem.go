@@ -57,20 +57,20 @@ func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*mojang.
   m.clearExpiredEntries()
 
   name = strings.ToLower(name)
-  m.logger.Debugf("Checking profile associations for \"%s\" at time %s", name, at)
+  m.logger.Debugf("checking profile associations for \"%s\" at time %s", name, at)
   mappings := m.profileId[name]
   if mappings == nil {
-    m.logger.Debugf("No associations for \"%s\"", name)
+    m.logger.Debugf("no associations for \"%s\"", name)
     return nil, nil
   }
 
   for _, exp := range mappings {
     association := exp.content.(*mojang.ProfileId)
     if association.IsValid(at) {
-      m.logger.Debugf("Association to profile %s matches", association.Id)
+      m.logger.Debugf("association to profile %s matches", association.Id)
       return association, nil
     } else {
-      m.logger.Debugf("Association to profile %s is invalid", association.Id)
+      m.logger.Debugf("association to profile %s is invalid", association.Id)
     }
   }
 
@@ -81,7 +81,7 @@ func (m *MemoryStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
   m.clearExpiredEntries()
 
   name := strings.ToLower(profileId.Name)
-  m.logger.Debugf("Updating association for name \"%s\" to profile %s at time %s (valid until %s)", profileId.Name, profileId.Id, profileId.LastSeenAt, profileId.ValidUntil)
+  m.logger.Debugf("updating association for name \"%s\" to profile %s at time %s (valid until %s)", profileId.Name, profileId.Id, profileId.LastSeenAt, profileId.ValidUntil)
   mappings := m.profileId[name]
   found := false
   if mappings != nil {
@@ -110,7 +110,7 @@ func (m *MemoryStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
 func (m *MemoryStorageBackend) PurgeProfileId(name string, at time.Time) error {
   m.clearExpiredEntries()
 
-  m.logger.Debugf("Purging profile associations for \"%s\" at time %s", name, at)
+  m.logger.Debugf("purging profile associations for \"%s\" at time %s", name, at)
   mappings := m.profileId[name]
   if mappings == nil {
     m.logger.Debugf("No associations for \"%s\"", name)
@@ -127,7 +127,7 @@ func (m *MemoryStorageBackend) PurgeProfileId(name string, at time.Time) error {
     association := exp.content.(*mojang.ProfileId)
 
     if association.IsValid(at) {
-      m.logger.Debugf("Purging association to profile %s", association.Id)
+      m.logger.Debugf("purging association to profile %s", association.Id)
       mappings = append(mappings[:i], mappings[:i+1]...)
       continue
     }
@@ -153,7 +153,7 @@ func (m *MemoryStorageBackend) GetNameHistory(id uuid.UUID) (*mojang.NameChangeH
 func (m *MemoryStorageBackend) PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error {
   m.clearExpiredEntries()
 
-  m.logger.Debugf("Storing history for profile %s (consisting of %d elements)", id, len(history.History))
+  m.logger.Debugf("storing history for profile %s (consisting of %d elements)", id, len(history.History))
   m.nameHistory[id] = &expirationWrapper{
     content:   history,
     createdAt: time.Now(),
@@ -165,7 +165,7 @@ func (m *MemoryStorageBackend) PutNameHistory(id uuid.UUID, history *mojang.Name
 func (m *MemoryStorageBackend) PurgeNameHistory(id uuid.UUID) error {
   m.clearExpiredEntries()
 
-  m.logger.Debugf("Purging history for profile %s", id)
+  m.logger.Debugf("purging history for profile %s", id)
   delete(m.nameHistory, id)
   return nil
 }
@@ -184,7 +184,7 @@ func (m *MemoryStorageBackend) GetProfile(id uuid.UUID) (*mojang.Profile, error)
 func (m *MemoryStorageBackend) PutProfile(profile *mojang.Profile) error {
   m.clearExpiredEntries()
 
-  m.logger.Debugf("Storing profile %s", profile.Id)
+  m.logger.Debugf("storing profile %s", profile.Id)
   m.profile[profile.Id] = &expirationWrapper{
     content:   profile,
     createdAt: time.Now(),
@@ -196,7 +196,7 @@ func (m *MemoryStorageBackend) PutProfile(profile *mojang.Profile) error {
 func (m *MemoryStorageBackend) PurgeProfile(id uuid.UUID) error {
   m.clearExpiredEntries()
 
-  m.logger.Debugf("Purging profile %s", id)
+  m.logger.Debugf("purging profile %s", id)
   delete(m.profile, id)
   return nil
 }
@@ -218,14 +218,14 @@ func (m *MemoryStorageBackend) PutBlacklist(blacklist *mojang.Blacklist) error {
 }
 
 func (m *MemoryStorageBackend) PurgeBlacklist() error {
-  m.logger.Debugf("Purging blacklist")
+  m.logger.Debugf("purging blacklist")
   m.blacklist = nil
   return nil
 }
 
 // clears all expired entries from the database
 func (m *MemoryStorageBackend) clearExpiredEntries() { // TODO: run on a timer instead?
-  m.logger.Debug("Purging expired data")
+  m.logger.Debug("purging expired data")
 
   deletedProfileIds := 0
   deletedNameHistories := 0
@@ -271,5 +271,5 @@ func (m *MemoryStorageBackend) clearExpiredEntries() { // TODO: run on a timer i
     m.blacklist = nil
   }
 
-  m.logger.Debugf("Removed %d profile Ids, %d name histories, %d profiles and %d blacklists from memory", deletedProfileIds, deletedNameHistories, deletedProfiles, deletedBlacklists)
+  m.logger.Debugf("removed %d profile Ids, %d name histories, %d profiles and %d blacklists from memory", deletedProfileIds, deletedNameHistories, deletedProfiles, deletedBlacklists)
 }

@@ -61,12 +61,12 @@ func (c *BlacklistCommand) SetFlags(f *flag.FlagSet) {
 func (c *BlacklistCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
   client, err := c.createClient()
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
+    fmt.Fprintf(os.Stderr, "failed to establish a connection to server \"%s\": %s\n", c.flagServerAddress, err)
     return 1
   }
 
   if f.NArg() == 0 {
-    fmt.Fprintf(os.Stderr, "Illegal command invocation: address is required\n")
+    fmt.Fprintf(os.Stderr, "illegal command invocation: address is required\n")
     return 1
   }
 
@@ -75,12 +75,12 @@ func (c *BlacklistCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...in
     Addresses: f.Args(),
   })
   if err != nil {
-    fmt.Fprintf(os.Stderr, "Command execution has failed: %s\n", err)
+    fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
   if len(res.MatchedAddresses) == 0 {
-    fmt.Fprintf(os.Stderr, "None of the passed addresses match")
+    fmt.Fprintf(os.Stderr, "none of the passed addresses match")
     return 0
   }
 

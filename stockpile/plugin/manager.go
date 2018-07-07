@@ -54,14 +54,14 @@ func NewManager(path string) *Manager {
 // loads all plugins in the plugin directory
 func (m *Manager) LoadAll() error {
   if !PluginsAvailable {
-    m.logger.Warningf("Plugins are unavailable on platform %s - Plugin manager startup has been skipped", runtime.GOOS)
+    m.logger.Warningf("plugins are unavailable on platform %s - Plugin manager startup has been skipped", runtime.GOOS)
     return nil
   }
 
   files, err := ioutil.ReadDir(m.path)
   if err != nil {
     if os.IsNotExist(err) {
-      m.logger.Warningf("Plugin directory \"%s\" does not exist", m.path)
+      m.logger.Warningf("plugin directory \"%s\" does not exist", m.path)
       return nil
     }
 
@@ -84,14 +84,14 @@ func (m *Manager) LoadAll() error {
 func (m *Manager) Load(path string) {
   plugin, err := Load(path)
   if err != nil {
-    m.logger.Errorf("Failed to load plugin from path \"%s\": %s", path, err)
+    m.logger.Errorf("failed to load plugin from path \"%s\": %s", path, err)
   } else {
     m.Plugins = append(m.Plugins, plugin)
     err = m.Context.merge(plugin.Context)
     if err != nil {
-      m.logger.Errorf("Failed to register one or more components of plugin \"%s\" v%s (defined by file \"%s\"): %s", plugin.Metadata.Name, plugin.Metadata.Version, path, err)
+      m.logger.Errorf("failed to register one or more components of plugin \"%s\" v%s (defined by file \"%s\"): %s", plugin.Metadata.Name, plugin.Metadata.Version, path, err)
     }
 
-    m.logger.Infof("Loaded plugin \"%s\" v%s from file %s", plugin.Metadata.Name, plugin.Metadata.Version, path)
+    m.logger.Infof("loaded plugin \"%s\" v%s from file %s", plugin.Metadata.Name, plugin.Metadata.Version, path)
   }
 }

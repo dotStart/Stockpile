@@ -129,7 +129,7 @@ func (b *Blacklist) Contains(hash string) bool {
 // evaluates whether the passed hostname has been blacklisted
 func (b *Blacklist) IsBlacklisted(addr string) (bool, error) {
   hash, err := calculateHash(addr)
-  blacklistLogger.Debugf("Checking address %s (hash: %s) against blacklist", addr, hash)
+  blacklistLogger.Debugf("checking address %s (hash: %s) against blacklist", addr, hash)
   if err != nil {
     return false, err
   }
@@ -150,7 +150,7 @@ func (b *Blacklist) IsBlacklistedIP(ip string) (bool, error) {
   for i := 3; i > 0; i-- {
     addr := strings.Join(elements[:i], ".") + ".*"
     hash, err := calculateHash(addr)
-    blacklistLogger.Debugf("Checking IP %s (hash: %s) against blacklist", addr, hash)
+    blacklistLogger.Debugf("checking IP %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }
@@ -171,7 +171,7 @@ func (b *Blacklist) IsBlacklistedDomain(hostname string) (bool, error) {
   for i := 1; i < length; i++ {
     addr := "*." + strings.Join(elements[i:], ".")
     hash, err := calculateHash(addr)
-    blacklistLogger.Debugf("Checking domain %s (hash: %s) against blacklist", addr, hash)
+    blacklistLogger.Debugf("checking domain %s (hash: %s) against blacklist", addr, hash)
     if err != nil {
       return false, err
     }

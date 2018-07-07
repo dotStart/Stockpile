@@ -39,7 +39,7 @@ func (s *EventServiceImpl) StreamEvents(_ *empty.Empty, srv rpc.EventService_Str
   for e := range s.cache.Events {
     enc, err := rpc.EventToRpc(e)
     if err != nil {
-      s.logger.Errorf("Failed to encode event %v: %s", e, err)
+      s.logger.Errorf("failed to encode event %v: %s", e, err)
       continue
     }
     srv.Send(enc)
