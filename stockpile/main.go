@@ -31,11 +31,13 @@ func main() {
   subcommands.Register(subcommands.CommandsCommand(), "")
   subcommands.Register(&command.ServerCommand{}, "")
 
-  subcommands.Register(&command.IdCommand{}, "Client")
-  subcommands.Register(&command.HistoryCommand{}, "Client")
-  subcommands.Register(&command.ProfileCommand{}, "Client")
   subcommands.Register(&command.BlacklistCommand{}, "Client")
+  subcommands.Register(&command.HistoryCommand{}, "Client")
+  subcommands.Register(&command.IdCommand{}, "Client")
   subcommands.Register(&command.ListenCommand{}, "Client")
+  subcommands.Register(&command.PluginCommand{}, "Client")
+  subcommands.Register(&command.ProfileCommand{}, "Client")
+  subcommands.Register(&command.StatusCommand{}, "Client")
 
   flag.Parse()
   ctx := context.Background()

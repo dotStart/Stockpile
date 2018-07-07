@@ -16,12 +16,13 @@
  */
 package service
 
-//go:generate protoc -I ../rpc --go_out=plugins=grpc:../rpc common.proto events.proto profile.proto server.proto
+//go:generate protoc -I ../rpc --go_out=plugins=grpc:../rpc common.proto events.proto profile.proto server.proto system.proto
 
 import (
   "net"
 
   "github.com/dotStart/Stockpile/stockpile/cache"
+  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server/rpc"
   "github.com/op/go-logging"
   "google.golang.org/grpc"
@@ -31,17 +32,19 @@ import (
 // Represents an RPC server
 type Server struct {
   logger *logging.Logger
+  plugin *plugin.Manager
   cache  *cache.Cache
 
   srv *grpc.Server
 }
 
 // Constructs a new RPC server instance and starts it
-func NewServer(cache *cache.Cache) (*Server, error) {
+func NewServer(plugin *plugin.Manager, cache *cache.Cache) (*Server, error) {
   logger := logging.MustGetLogger("rpc")
 
   return &Server{
     logger: logger,
+    plugin: plugin,
     cache:  cache,
   }, nil
 }
@@ -50,9 +53,10 @@ func NewServer(cache *cache.Cache) (*Server, error) {
 func (s *Server) Listen(listener net.Listener) {
   s.srv = grpc.NewServer()
   grpc.NewServer()
+  rpc.RegisterEventServiceServer(s.srv, NewEventService(s.cache))
   rpc.RegisterProfileServiceServer(s.srv, NewProfileService(s.cache))
   rpc.RegisterServerServiceServer(s.srv, NewServerService(s.cache))
-  rpc.RegisterEventServiceServer(s.srv, NewEventService(s.cache))
+  rpc.RegisterSystemServiceServer(s.srv, NewSystemService(s.plugin))
   reflection.Register(s.srv)
   s.srv.Serve(listener)
 }

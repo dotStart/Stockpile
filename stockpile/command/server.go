@@ -158,7 +158,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   if *cfg.UiEnabled {
     rpcPolicy = cmux.HTTP2HeaderField("content-type", "application/grpc")
   }
-  rpcServer, err := service.NewServer(cacheImpl)
+  rpcServer, err := service.NewServer(pluginManager, cacheImpl)
   if err != nil {
     log.Fatalf("Failed to initialize grpc server: %s", err)
   }

@@ -23,6 +23,7 @@ import (
 
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/ptypes"
   "github.com/golang/protobuf/ptypes/any"
@@ -473,6 +474,42 @@ func EventPayloadFromRpc(payload *any.Any) (interface{}, error) {
   }
 
   return nil, fmt.Errorf("illegal payload value: %v", payload)
+}
+
+func PluginMetadataListToRpc(list []*plugin.Metadata) *PluginList {
+  enc := make([]*Plugin, len(list))
+  for i, metadata := range list {
+    enc[i] = PluginMetadataToRpc(metadata)
+  }
+  return &PluginList{
+    Plugins: enc,
+  }
+}
+
+func PluginMetadataListFromRpc(list *PluginList) []*plugin.Metadata {
+  decoded := make([]*plugin.Metadata, len(list.Plugins))
+  for i, metadata := range list.Plugins {
+    decoded[i] = PluginMetadataFromRpc(metadata)
+  }
+  return decoded
+}
+
+func PluginMetadataToRpc(metadata *plugin.Metadata) *Plugin {
+  return &Plugin{
+    Name:    metadata.Name,
+    Version: metadata.Version,
+    Authors: metadata.Authors,
+    Website: metadata.Website,
+  }
+}
+
+func PluginMetadataFromRpc(metadata *Plugin) *plugin.Metadata {
+  return &plugin.Metadata{
+    Name:    metadata.Name,
+    Version: metadata.Version,
+    Authors: metadata.Authors,
+    Website: metadata.Website,
+  }
 }
 
 // evaluates whether the message has been populated with actual data (e.g. whether it is not empty)
