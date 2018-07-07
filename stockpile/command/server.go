@@ -96,6 +96,9 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
     } else {
       cfg.Merge(fileCfg)
     }
+  } else if !c.flagDevelopment {
+    fmt.Fprintf(os.Stderr, "error: configuration file is required in production mode")
+    return 1
   }
 
   level, err := logging.LogLevel(c.flagLogLevel)
