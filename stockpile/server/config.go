@@ -41,6 +41,7 @@ const DefaultPort = 36623
 type Config struct {
   PluginDir   *string        `hcl:"plugin-dir"`
   BindAddress *string        `hcl:"bind-address,attr"`
+  UiEnabled   *bool          `hcl:"ui,attr"`
   Storage     *StorageConfig `hcl:"storage,block"`
   Ttl         *TtlConfig     `hcl:"ttl,block"`
 }
@@ -73,10 +74,12 @@ func EmptyConfig() *Config {
 func DefaultConfig() *Config {
   pluginDir := "plugins"
   addr := fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort)
+  uiEnabled := false
 
   cfg := &Config{
     PluginDir:   &pluginDir,
     BindAddress: &addr,
+    UiEnabled:   &uiEnabled,
     Storage: &StorageConfig{
       Type: "mem",
     },
@@ -99,7 +102,10 @@ func DefaultConfig() *Config {
 }
 
 func DevelopmentConfig() *Config {
+  uiEnabled := true
+
   return DefaultConfig().Merge(&Config{
+    UiEnabled: &uiEnabled,
   })
 }
 
@@ -175,6 +181,10 @@ func (c *Config) Merge(other *Config) *Config {
 
   if other.BindAddress != nil {
     c.BindAddress = other.BindAddress
+  }
+
+  if other.UiEnabled != nil {
+    c.UiEnabled = other.UiEnabled
   }
 
   if c.Storage == nil {
@@ -258,6 +268,10 @@ func (c *Config) validate() error {
 
   if c.BindAddress == nil {
     return errors.New("missing bind address")
+  }
+
+  if c.UiEnabled == nil {
+    return errors.New("missing ui flag")
   }
 
   if c.Storage == nil {

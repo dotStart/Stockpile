@@ -17,7 +17,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: <<-SHELL
     echo "==> Initializing basic build environment"
     sudo apt-get update
-    sudo apt-get install -y curl git golang make redis-server
+    sudo apt-get install -y curl git golang make nodejs npm redis-server
 
     export GOPATH=/opt/go
     export PATH="$PATH:/opt/go/bin"

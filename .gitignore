@@ -29,5 +29,6 @@ vendor/
 Gopkg.lock
 
 # Stockpile
+*.gen.go
 *.pb.go
 build/

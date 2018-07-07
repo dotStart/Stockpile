@@ -1,6 +1,6 @@
 plugin-dir = "plugins"
 bind-address = "127.0.0.1:36623"
-legacy-api = true
+ui = true
 
 storage "mem" {
 }

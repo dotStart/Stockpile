@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Stockpile UI</title>
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+    <style type="text/css"><%= require('./style/app.css') %></style>
+  </head>
+  <body>
+    <main id="stockpile">
+      <header id="page-header" class="ui orange inverted vertical segment">
+        <div class="ui middle aligned container grid">
+          <div class="twelve wide column">
+            <div class="ui large inverted secondary menu">
+              <span class="header item">Stockpile</span>
+            </div>
+          </div>
+          <div class="right aligned four wide column">
+            <sui-progress indicating inverted :percent="rateLimitPercent" :label="rateLimitLabel" />
+          </div>
+        </div>
+      </header>
+      <section id="page-body" class="ui vertical segment">
+        <div class="ui container">
+          <h2 class="ui dividing header">Cache Events</h2>
+          <event-list :events="events" />
+        </div>
+      </section>
+      <footer id="page-footer" class="ui inverted vertical segment">
+        <div class="ui center aligned container">
+          <p class="copyright">{{ version }}</p>
+          <a class="copyright" href="https://github.com/dotStart/Stockpile">Copyright &copy; 2018 Johannes ".start" Donath</a>
+        </div>
+      </footer>
+    </main>
+
+    <script type="text/x-template" id="cache-event-list">
+      <sui-feed>
+        <template v-for="event in events">
+          <profileId-event v-if="event.Type == 0" :event="event" />
+          <nameHistory-event v-if="event.Type == 1" :event="event" />
+          <profile-event v-if="event.Type == 2" :event="event" />
+          <blacklist-event v-if="event.Type == 3" :event="event" />
+        </template>
+      </sui-feed>
+    </script>
+    <script type="text/x-template" id="cache-event-profileId">
+      <sui-feed-event>
+        <sui-feed-label icon="address card outline" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Display name "{{ event.Object.Name }}" has been associated with
+            profile {{ event.Object.Id }}
+          </sui-feed-summary>
+          <sui-feed-meta>
+            <sui-feed-date>Valid from {{ firstSeenAt }} until {{ validUntil }}</sui-feed-date>
+          </sui-feed-meta>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-nameHistory">
+      <sui-feed-event>
+        <sui-feed-label icon="address book" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Name history for profile {{ event.Key }} has been updated
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-profile">
+      <sui-feed-event>
+        <sui-feed-label icon="address card" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Profile {{ event.Object.Id }} (display name: {{ event.Object.Name }} has been updated
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-blacklist">
+      <sui-feed-event>
+        <sui-feed-label icon="ban" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Updated blacklist (consisting of {{ event.Object.Hashes.length }} elements)
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+  </body>
+</html>

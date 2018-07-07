@@ -23,8 +23,8 @@ import (
 
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/dotStart/Stockpile/vendor.orig/github.com/golang/protobuf/proto"
-  "github.com/dotStart/Stockpile/vendor.orig/github.com/golang/protobuf/ptypes"
+  "github.com/golang/protobuf/proto"
+  "github.com/golang/protobuf/ptypes"
   "github.com/golang/protobuf/ptypes/any"
   "github.com/google/uuid"
 )

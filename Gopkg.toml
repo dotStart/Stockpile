@@ -1,3 +1,9 @@
+required = ["github.com/elazarl/go-bindata-assetfs"]
+
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "github.com/elazarl/go-bindata-assetfs"
+  version = "1.0.0"

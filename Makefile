@@ -6,6 +6,8 @@ APPLICATION_TIMESTAMP := `date --utc "+%s"`
 GIT := $(shell command -v git 2> /dev/null)
 DEP := $(shell command -v dep 2> /dev/null)
 GO := $(shell command -v go 2> /dev/null)
+NODE := $(shell command -v node 2> /dev/null)
+NPM := $(shell command -v npm 2> /dev/null)
 export
 
 PLUGINS := $(wildcard plugins/*/.)
@@ -28,10 +30,22 @@ endif
 	@echo $(GO)
 	@echo -n "Checking for dep ... "
 ifndef DEP
-	@echo -n "Not Found"
+	@echo "Not Found"
 	$(error "dep is unavailable")
 endif
 	@echo $(DEP)
+	@echo -n "Checking for node ... "
+ifndef NODE
+	@echo "Not Found"
+	$(error "node is unavailable")
+endif
+	@echo $(NODE)
+	@echo -n "Checking for npm ... "
+ifndef NPM
+	@echo "Not Found"
+	$(error "npm is unavailable")
+endif
+	@echo $(NPM)
 	@echo ""
 
 print-config:
@@ -51,6 +65,7 @@ clean:
 install-dependencies:
 	@echo "==> Installing dependencies"
 	@$(GO) get -u github.com/elazarl/go-bindata-assetfs/go-bindata-assetfs
+	@$(GO) get -u github.com/jteeuwen/go-bindata/go-bindata
 	@$(DEP) ensure -v
 	@echo ""
 

@@ -21,20 +21,26 @@ import (
   "flag"
   "fmt"
   "net"
+  "net/http"
   "os"
 
+  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/metadata"
+  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/dotStart/Stockpile/stockpile/server/service"
+  "github.com/dotStart/Stockpile/stockpile/server/ui"
   "github.com/google/subcommands"
   "github.com/op/go-logging"
   "github.com/soheilhy/cmux"
 )
 
 type ServerCommand struct {
-  flagConfig      string
-  flagDevelopment bool
-  flagLogLevel    string
+  flagConfig       string
+  flagDevelopment  bool
+  flagLogLevel     string
+  flagCorsOverride string
 }
 
 func (*ServerCommand) Name() string {
@@ -70,6 +76,7 @@ func (c *ServerCommand) SetFlags(f *flag.FlagSet) {
   f.StringVar(&c.flagConfig, "config", "", "specifies a configuration file or directory")
   f.BoolVar(&c.flagDevelopment, "dev", false, "enables development mode")
   f.StringVar(&c.flagLogLevel, "log-level", "info", "specifies a log level")
+  f.StringVar(&c.flagCorsOverride, "cors-override", "", "specifies a host from which CORS requests are permitted")
 }
 
 func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interface{}) subcommands.ExitStatus {
@@ -130,19 +137,51 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
 
   mux := cmux.New(listener)
 
+  // initialize the plugin system and cache manager
+  pluginManager := plugin.NewManager(*cfg.PluginDir)
+  pluginManager.LoadAll()
+
+  storageFactory := pluginManager.Context.GetStorageBackend(cfg.Storage.Type)
+  if storageFactory == nil {
+    log.Fatalf("no such storage backend: %s", cfg.Storage.Type)
+  }
+  storage, err := storageFactory(cfg)
+  if err != nil {
+    log.Fatalf("failed to initialize storage backend \"%s\": %s", err)
+  }
+  log.Infof("Using database plugin: %s", cfg.Storage.Type)
+  cacheImpl := cache.New(mojang.New(), storage)
+
   // initialize the RPC server at all times (only differ between mux policies depending on whether the legacy API or UI
   // is enabled)
   rpcPolicy := cmux.Any()
-  if true { // TODO: UI flag
+  if *cfg.UiEnabled {
     rpcPolicy = cmux.HTTP2HeaderField("content-type", "application/grpc")
   }
-  rpcServer, err := service.NewServer(cfg)
+  rpcServer, err := service.NewServer(cacheImpl)
   if err != nil {
     log.Fatalf("Failed to initialize grpc server: %s", err)
   }
   go rpcServer.Listen(mux.Match(rpcPolicy))
   defer rpcServer.Destroy()
   log.Info("Enabled grpc server")
+
+  if *cfg.UiEnabled {
+    httpMux := http.NewServeMux()
+
+    if c.flagCorsOverride != "" {
+      log.Warningf("CORS override configured: %s", c.flagCorsOverride)
+    }
+
+    // instance currently unused
+    ui.NewServer(httpMux, c.flagCorsOverride, cacheImpl)
+
+    httpSrv := &http.Server{
+      Handler: httpMux,
+    }
+    go httpSrv.Serve(mux.Match(cmux.Any()))
+    log.Info("Enabled ui")
+  }
 
   mux.Serve()
   return 0
