@@ -9,7 +9,8 @@ cache:
 
 before_script:
   - apt-get update
-  - apt-get install curl git nodejs npm
+  - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  - apt-get install -y curl git nodejs
   - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
   - cp -r $CI_PROJECT_DIR /go/src/github.com/dotStart/Stockpile
   - ln -s /go/src/github.com/dotStart /go/src/_/builds/dotStart
