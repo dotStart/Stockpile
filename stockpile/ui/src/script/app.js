@@ -104,6 +104,16 @@ const app = new Vue({
   }
 });
 
+socket.on('connect', () => {
+  console.log('Connection established');
+  app.connected = true;
+});
+
+socket.on('disconnect', () => {
+  console.log('Disconnected');
+  app.connected = false;
+});
+
 socket.on('system', (sys) => {
   console.log('Stockpile v' + sys.version);
   if (sys.pluginsSupported) {
