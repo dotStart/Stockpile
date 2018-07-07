@@ -1,5 +1,12 @@
 image: dotstart/go-dep:1.10.3
 
+cache:
+  paths:
+    - /apt-cache
+    - /go/src/golang.org
+    - /go/src/google.golang.org
+    - /go/src/gopkg.in
+
 before_script:
   - apt-get update
   - apt-get install curl git nodejs npm
