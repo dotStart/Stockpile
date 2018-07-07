@@ -1,13 +1,7 @@
-image: golang:1.10.3
-
-cache:
-  paths:
-    - /apt-cache
-    - /go/src/golang.org
-    - /go/src/google.golang.org
+image: dotStart/go-dep:1.10.3
 
 before_script:
-  - apt-get install curl git make nodejs npm
+  - apt-get install curl git nodejs npm
   - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
   - cp -r $CI_PROJECT_DIR /go/src/github.com/dotStart/Stockpile
   - ln -s /go/src/github.com/dotStart /go/src/_/builds/dotStart
