@@ -9,7 +9,7 @@ cache:
 
 before_script:
   - curl -sL https://deb.nodesource.com/setup_10.x | bash -
-  - apt-get install -y curl git nodejs
+  - apt-get install -y curl git golang-goprotobuf-dev nodejs protobuf-compiler
   - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
   - cp -r $CI_PROJECT_DIR /go/src/github.com/dotStart/Stockpile
   - cd /go/src/github.com/dotStart/Stockpile

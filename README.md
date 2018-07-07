@@ -40,6 +40,7 @@ application from source (some may be omitted if you are willing to skip some of 
 
 * git (latest recommended)
 * go (1.10 or newer)
+* protobuf (including protobuf go plugin)
 * node & npm (latest recommended)
 
 Building
