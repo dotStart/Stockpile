@@ -24,6 +24,11 @@ const NameValidityPeriod = time.Hour * 24 * 37
 // defines the total amount of time that has to pass before a user can choose a new name again
 const NameChangeRateLimitPeriod = time.Hour * 24 * 30
 
+// defines the date and time at which initial account names are set to expired
+// this is set to the time of introduction (4th of January 2015) + 30 days (for safety we will not
+// be using the full 37 grace period here)
+var IntroductoryValidityPeriodEnd = time.Unix(1425600000, 0)
+
 // calculates the beginning of a theoretical grace period
 func CalculateNameGracePeriodBeginning(end time.Time) time.Time {
   return end.Add(-NameValidityPeriod)
@@ -31,6 +36,10 @@ func CalculateNameGracePeriodBeginning(end time.Time) time.Time {
 
 // calculates the end of a theoretical grace period
 func CalculateNameGracePeriodEnd(start time.Time) time.Time {
+  if start.Unix() == 0 {
+    return IntroductoryValidityPeriodEnd
+  }
+
   return start.Add(NameValidityPeriod)
 }
 

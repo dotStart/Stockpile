@@ -28,8 +28,6 @@ import (
   "github.com/google/uuid"
 )
 
-var unixEpoch = time.Unix(0, 0)
-
 // represents a single profile id mapping between a display name and a mapping at a given time
 // note that lastSeenAt and validUntil may be set to UNIX epoch if the initial mapping is requested
 type ProfileId struct {
@@ -129,14 +127,13 @@ func DeserializeProfileIdArray(enc []byte) ([]*ProfileId, error) {
   return res, nil
 }
 
-func (p *ProfileId) read(reader io.Reader) error {
+func (p *ProfileId) read(reader io.Reader, at time.Time) error {
   parsed := restProfileId{}
   err := json.NewDecoder(reader).Decode(&parsed)
   if err != nil {
     return err
   }
 
-  at := time.Now()
   id, err := ParseId(parsed.Id)
   if err != nil {
     return err
@@ -146,7 +143,7 @@ func (p *ProfileId) read(reader io.Reader) error {
   p.Name = parsed.Name
   p.FirstSeenAt = at
   p.LastSeenAt = at
-  p.ValidUntil = CalculateNameGracePeriodEnd(time.Now())
+  p.ValidUntil = CalculateNameGracePeriodEnd(at)
   return nil
 }
 
@@ -323,7 +320,7 @@ func (p *NameChange) read(reader io.Reader) error {
   }
 
   p.Name = parsed.Name
-  p.ChangedToAt = time.Unix(parsed.ChangedToAt / 1000, parsed.ChangedToAt % 1000 * 1000000)
+  p.ChangedToAt = time.Unix(parsed.ChangedToAt/1000, parsed.ChangedToAt%1000*1000000)
   p.ValidUntil = CalculateNameGracePeriodEnd(p.ChangedToAt)
   return nil
 }
@@ -337,7 +334,7 @@ func ReadNameChangeArray(reader io.Reader) ([]*NameChange, error) {
 
   res := make([]*NameChange, len(parsed))
   for i, change := range parsed {
-    at := time.Unix(change.ChangedToAt / 1000, change.ChangedToAt % 1000 * 1000000)
+    at := time.Unix(change.ChangedToAt/1000, change.ChangedToAt%1000*1000000)
 
     res[i] = &NameChange{
       Name:        change.Name,
@@ -365,7 +362,7 @@ func (a *MojangAPI) GetId(name string, at time.Time) (*ProfileId, error) {
 
   profile := &ProfileId{}
   defer res.Body.Close()
-  err = profile.read(res.Body)
+  err = profile.read(res.Body, at)
   return profile, err
 }
 
