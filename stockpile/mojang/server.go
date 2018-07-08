@@ -63,7 +63,10 @@ func (a *MojangAPI) GetBlacklist() (*Blacklist, error) {
 
 // performs the server-side phase of the online handshake
 func (a *MojangAPI) Login(displayName string, serverId string, ip string) (*Profile, error) {
-  res, err := a.execute("GET", fmt.Sprintf("https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%s&serverId=%s&ip=%s", url.QueryEscape(displayName), url.QueryEscape(serverId), url.QueryEscape(ip)), nil)
+  if ip != "" {
+    ip = "&ip=" + url.QueryEscape(ip)
+  }
+  res, err := a.execute("GET", fmt.Sprintf("https://sessionserver.mojang.com/session/minecraft/hasJoined?username=%s&serverId=%s%s", url.QueryEscape(displayName), url.QueryEscape(serverId), ip), nil)
   if err != nil {
     return nil, err
   }
