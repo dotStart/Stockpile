@@ -1,0 +1,20 @@
+baseurl: "" # the subpath of your site, e.g. /blog
+repository: dotStart/Stockpile
+doc-version: 2.0
+
+markdown: kramdown
+highlighter: rouge
+plugins:
+  - "jekyll-github-metadata"
+
+# Exclude from processing.
+# The following items will not be processed, by default. Create a custom list
+# to override the default setting.
+# exclude:
+#   - Gemfile
+#   - Gemfile.lock
+#   - node_modules
+#   - vendor/bundle/
+#   - vendor/cache/
+#   - vendor/gems/
+#   - vendor/ruby/

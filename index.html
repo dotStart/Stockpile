@@ -1,0 +1,183 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include head.html %}
+    <link rel="stylesheet" type="text/css" href="{{ "/assets/styles/landing.css" | relative_url }}"
+  </head>
+  <body>
+    <header id="page-header" class="ui vertical inverted very padded orange segment">
+      <section class="ui container">
+        <a href="https://github.com/dotStart/Stockpile" class="ribbon">Fork me on <i class="github icon"></i></a>
+
+        <section id="jumbotron" class="ui center aligned middle aligned grid">
+          <div class="ten wide column">
+            <h1 class="ui inverted header">
+              Stockpile
+              <div class="sub header">{{ site.description }}</div>
+            </h2>
+            <div class="ui equal width center aligned grid">
+              {% assign releases1 = site.github.releases | where_exp:"release", "release.tag_name contains 'v1'" %}
+              {% assign releases2 = site.github.releases | where_exp:"release", "release.tag_name contains 'v2'" %}
+              <div class="column">
+                {% assign release2 = releases2[0] %}
+                <a href="{{ release2.html_url }}" class="ui massive fluid inverted{% unless release2 %} disabled{% endunless %} button">Download Stockpile 2.0</a>
+                {% if release2 %}
+                  <p><small>Latest Release: {{ release2.tag_name }}</small><p>
+                {% endif %}
+              </div>
+              <div class="column">
+                {% assign release1 = releases1[0] %}
+                <a href="{{ release1.html_url }}" class="ui massive fluid inverted{% unless release1 %} disabled{% endunless %} button">Download Stockpile 1.0</a>
+                {% if release1 %}
+                  <p><small>Latest Release: {{ release1.tag_name }}</small><p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="ui center aligned basic segment">
+          <a data-scroll href="#version-comparison" class="ui huge circular inverted icon button"><i class="angle double down icon"></i></a>
+        </section>
+      </section>
+    </header>
+    <main id="version-comparison" class="ui vertical very padded segment">
+      <section class="ui container">
+        <h2 class="ui center aligned header">Version Comparison</h2>
+
+        <div class="ui center aligned grid">
+          <div class="eight wide column">
+            <table class="ui celled definition table">
+              <thead class="full-width">
+                <tr>
+                  <th class="collapsing"></th>
+                  <th class="center aligned">Stockpile v1</th>
+                  <th class="center aligned">Stockpile v2</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="collapsing">Language</td>
+                  <td class="center aligned">Java</td>
+                  <td class="center aligned">Go</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Profile Caching</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Name Caching</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Customizable TTL</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Command Line Interface</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Web Interface</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">REST API <sup>1</sup></td>
+                  <td class="center aligned positive">&#x2714;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">gRPC API</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Plugin API</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Event API</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Relational Database support</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                  <td class="center aligned negative">&#x2718; <sup>2</sup></td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Redis support</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+                <tr>
+                  <td class="collapsing">Actively Maintained</td>
+                  <td class="center aligned negative">&#x2718;</td>
+                  <td class="center aligned positive">&#x2714;</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>
+              <small><sup>1</sup> The REST API has been deprecated and will be removed in a future version</small><br />
+              <small><sup>2</sup> Support for relational databases may be available via third party plugins</small>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+    <main class="ui vertical inverted very padded center aligned segment">
+      <div class="ui center aligned grid">
+        <div class="five wide column">
+          <h2 class="ui inverted header">Documentation</h2>
+          <p>
+            To get you started as fast as possible, we've written up an entire
+            wiki on various topics regarding the setup and maintenance of
+            Stockpile instances of varying sizes.
+          </p>
+          <a href="{{ "/docs" | relative_url }}" class="ui inverted large button">
+            <i class="life ring icon"></i>
+            Read the Documentation
+          </a>
+        </div>
+      </div>
+    </main>
+    <main class="ui vertical very padded center aligned segment">
+      <h2 class="ui header">Contributors</h2>
+
+      <div class="ui center aligned grid">
+        <div class="ten wide column">
+          <div class="ui seven center aligned cards">
+            {% for contributor in site.github.contributors %}
+              <a class="ui card" href="{{ contributor.html_url }}">
+                <div class="image">
+                  <img src="{{ contributor.avatar_url }}" alt="" />
+                </div>
+                <div class="content">
+                  {% if contributor.name %}
+                    <span class="header">{{ contributor.name }}</span>
+                    <div class="meta">{{ contributor.login }}</div>
+                  {% else %}
+                    <span class="header">{{ contributor.login }}</span>
+                  {% endif %}
+                  <div class="description">
+                    <p>{{ contributor.bio }}</p>
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </main>
+    {% include footer.html %}
+  </body>
+</html>

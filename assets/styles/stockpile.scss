@@ -1,0 +1,53 @@
+---
+---
+
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+#page-body {
+  flex-grow: 1;
+}
+
+#page-footer .copyright {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+#page-footer .copyright a {
+  color: rgba(255, 255, 255, .5);
+  transition: color ease 250ms;
+
+  &:hover {
+    color: #d87532;
+  }
+}
+
+.ui.cards.center.aligned {
+  justify-content: center;
+}
+
+code,
+pre {
+  border-radius: 5px;
+  background-color: #eee;
+}
+
+code {
+  padding: 3px 5px;
+}
+
+pre {
+  padding: 8px 12px;
+}
+
+.highlight > code {
+  background-color: transparent;
+  color: #fff;
+}

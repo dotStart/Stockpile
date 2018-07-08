@@ -1,0 +1,30 @@
+- pages:
+    - name: Intro
+      url: /docs/index.html
+
+- name: Getting Started
+  pages:
+    - name: Installation
+      url: /docs/getting-started/installation.html
+    - name: Development Server
+      url: /docs/getting-started/dev-server.html
+    - name: Your first Requests
+      url: /docs/getting-started/first-requests.html
+    - name: Configuration
+      url: /docs/getting-started/configuration.html
+    - name: Storage Backends
+      url: /docs/getting-started/storage-backend.html
+
+- name: Redis Plugin
+  pages:
+    - name: Installation
+      url: /docs/plugin-redis/installation.html
+    - name: Configuration
+      url: /docs/plugin-redis/configuration.html
+
+- name: Plugin Development
+  pages:
+    - name: Getting Started
+      url: /docs/plugin-dev/getting-started.html
+    - name: Storage Backends
+      url: /docs/plugin-dev/storage-backend.html

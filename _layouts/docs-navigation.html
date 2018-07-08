@@ -1,0 +1,47 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include head.html %}
+    <link rel="stylesheet" type="text/css" href="{{ "/assets/styles/documentation.css" | relative_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ "/assets/styles/highlight.css" | relative_url }}" />
+  </head>
+  <body>
+    <header id="page-header" class="ui vertical inverted very padded orange segment">
+      <section class="ui container">
+        <div class="ui large inverted secondary menu">
+          <a class="ui header item" href="{{ "/" | relative_url }}">Stockpile</a>
+
+          <div class="right menu">
+            <span class="text item">v{{ site.doc-version }}</span>
+          </div>
+        </div>
+      </section>
+    </header>
+    <main id="page-body" class="ui vertical very padded segment">
+      <section class="ui container">
+        <div class="ui divided grid">
+          <div class="row">
+            <div class="three wide column">
+              <div class="ui vertical text menu">
+                {% for category in site.data.docs %}
+                  {% if category.name %}
+                    <div class="header item">{{ category.name }}</div>
+                  {% endif %}
+                  {% for page in category.pages %}
+                    <a href="{{ page.url | relative_url }}" class="{% if page.url == page.url %}active {% endif %}item">{{ page.name }}</a>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            </div>
+            <div class="thirteen wide column">
+              {{ content }}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    {% include footer.html %}
+  </body>
+</html>
