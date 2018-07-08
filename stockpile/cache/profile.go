@@ -175,7 +175,7 @@ func (c *Cache) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) 
 // purges a name history from the cache
 func (c *Cache) PurgeNameHistory(id uuid.UUID) error {
   c.logger.Debugf("purging name history for profile %s", id)
-  c.storage.PurgeNameHistory(id)
+  return c.storage.PurgeNameHistory(id)
 }
 
 // retrieves a single profile

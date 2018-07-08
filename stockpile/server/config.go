@@ -37,13 +37,18 @@ const DefaultAddress = "0.0.0.0"
 // defines the default port to listen on when none is given
 const DefaultPort = 36623
 
+// utility variables
+var featureEnabled = true
+var featureDisabled = false
+
 // Represents a server configuration (typically parsed from one or more HCL files)
 type Config struct {
-  PluginDir   *string        `hcl:"plugin-dir"`
-  BindAddress *string        `hcl:"bind-address,attr"`
-  UiEnabled   *bool          `hcl:"ui,attr"`
-  Storage     *StorageConfig `hcl:"storage,block"`
-  Ttl         *TtlConfig     `hcl:"ttl,block"`
+  PluginDir        *string        `hcl:"plugin-dir"`
+  BindAddress      *string        `hcl:"bind-address,attr"`
+  UiEnabled        *bool          `hcl:"ui,attr"`
+  LegacyApiEnabled *bool          `hcl:"legacy-api,attr"`
+  Storage          *StorageConfig `hcl:"storage,block"`
+  Ttl              *TtlConfig     `hcl:"ttl,block"`
 }
 
 // Represents a storage backend configuration
@@ -74,12 +79,12 @@ func EmptyConfig() *Config {
 func DefaultConfig() *Config {
   pluginDir := "plugins"
   addr := fmt.Sprintf("%s:%d", "127.0.0.1", DefaultPort)
-  uiEnabled := false
 
   cfg := &Config{
-    PluginDir:   &pluginDir,
-    BindAddress: &addr,
-    UiEnabled:   &uiEnabled,
+    PluginDir:        &pluginDir,
+    BindAddress:      &addr,
+    UiEnabled:        &featureDisabled,
+    LegacyApiEnabled: &featureDisabled,
     Storage: &StorageConfig{
       Type: "mem",
     },
@@ -102,10 +107,9 @@ func DefaultConfig() *Config {
 }
 
 func DevelopmentConfig() *Config {
-  uiEnabled := true
-
   return DefaultConfig().Merge(&Config{
-    UiEnabled: &uiEnabled,
+    UiEnabled:        &featureEnabled,
+    LegacyApiEnabled: &featureEnabled,
   })
 }
 
@@ -185,6 +189,10 @@ func (c *Config) Merge(other *Config) *Config {
 
   if other.UiEnabled != nil {
     c.UiEnabled = other.UiEnabled
+  }
+
+  if other.LegacyApiEnabled != nil {
+    c.LegacyApiEnabled = other.LegacyApiEnabled
   }
 
   if c.Storage == nil {

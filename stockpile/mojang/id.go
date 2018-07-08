@@ -18,10 +18,16 @@ package mojang
 
 import (
   "fmt"
+  "regexp"
   "strings"
 
   "github.com/google/uuid"
 )
+
+// this is just a rudimentary regex for standardized and Mojang UUIDs and will not verify whether
+// the version and variant bits are set correctly
+// TODO: This is only used by the legacy api
+var idRegex, _ = regexp.Compile("^([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})|([a-fA-F0-9]{8}[a-fA-F0-9]{4}[a-fA-F0-9]{4}[a-fA-F0-9]{4}[a-fA-F0-9]{12})$")
 
 // Parses an identifier (regardless of whether it is supplied in its Mojang or standard format)
 func ParseId(id string) (uuid.UUID, error) {
@@ -30,6 +36,12 @@ func ParseId(id string) (uuid.UUID, error) {
   }
 
   return uuid.Parse(id)
+}
+
+// evaluates whether the passed string is a profileId
+// TODO: This is only used by the legacy API
+func IsProfileId(id string) bool {
+  return idRegex.MatchString(id)
 }
 
 // Evaluates whether the passed ID is a mojang identifier

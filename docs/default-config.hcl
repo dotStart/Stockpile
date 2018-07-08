@@ -1,6 +1,7 @@
 plugin-dir = "plugins"
 bind-address = "0.0.0.0:36623"
-ui = true
+ui = false
+legacy-api = false
 
 // no storage backend in default - required for actual operation
 // example:

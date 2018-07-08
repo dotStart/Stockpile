@@ -29,6 +29,7 @@ import (
   "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/dotStart/Stockpile/stockpile/server"
+  "github.com/dotStart/Stockpile/stockpile/server/legacy"
   "github.com/dotStart/Stockpile/stockpile/server/service"
   "github.com/dotStart/Stockpile/stockpile/server/ui"
   "github.com/google/subcommands"
@@ -169,21 +170,27 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   defer rpcServer.Destroy()
   log.Info("grpc server enabled")
 
-  if *cfg.UiEnabled {
+  if *cfg.UiEnabled || *cfg.LegacyApiEnabled {
     httpMux := http.NewServeMux()
 
     if c.flagCorsOverride != "" {
       log.Warningf("CORS override configured: %s", c.flagCorsOverride)
     }
 
-    // instance currently unused
-    ui.NewServer(httpMux, c.flagCorsOverride, pluginManager, cacheImpl)
+    // instances currently unused
+    if *cfg.LegacyApiEnabled {
+      legacy.NewServer(httpMux, cacheImpl)
+      log.Warningf("legacy api enabled")
+    }
+    if *cfg.UiEnabled {
+      ui.NewServer(httpMux, c.flagCorsOverride, pluginManager, cacheImpl)
+      log.Info("web ui enabled")
+    }
 
     httpSrv := &http.Server{
       Handler: httpMux,
     }
     go httpSrv.Serve(mux.Match(cmux.Any()))
-    log.Info("web ui enabled")
   }
 
   mux.Serve()
