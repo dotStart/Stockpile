@@ -153,13 +153,29 @@ func (p *Profile) read(reader io.Reader) error {
     }
 
     p.Textures = &ProfileTextures{
-      Timestamp:   time.Unix(parsedProp.Timestamp / 1000, parsedProp.Timestamp % 1000 * 1000000),
+      Timestamp:   time.Unix(parsedProp.Timestamp/1000, parsedProp.Timestamp%1000*1000000),
       ProfileId:   id,
       ProfileName: parsedProp.ProfileName,
       Textures:    textures,
     }
   }
   return nil
+}
+
+// converts a profile into its original REST representation
+// TODO: this implementation is used purely for the legacy API and should be removed once the legacy
+// API has been removed
+func (p *Profile) Mojang() ([]byte, error) {
+  enc := restProfile{}
+
+  enc.Id = ToMojangId(p.Id)
+  enc.Name = p.Name
+  enc.Properties = make([]*ProfileProperty, 0)
+  for _, property := range p.Properties {
+    enc.Properties = append(enc.Properties, property)
+  }
+
+  return json.Marshal(enc)
 }
 
 type ProfileProperty struct {
