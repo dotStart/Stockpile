@@ -62,6 +62,11 @@ func (c *Cache) GetBlacklist() (*mojang.Blacklist, error) {
   return blacklist, nil
 }
 
+func (c *Cache) PurgeBlacklist() error {
+  c.logger.Debugf("purging blacklist")
+  return c.storage.PurgeBlacklist()
+}
+
 // performs a cache assisted server login
 func (c *Cache) Login(displayName string, serverId string, ip string) (*mojang.Profile, error) {
   c.logger.Debugf("processing login for user \"%s\" on server \"%s\" (with address \"%s\")", displayName, serverId, ip)

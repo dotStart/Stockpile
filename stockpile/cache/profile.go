@@ -52,7 +52,7 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, erro
       c.logger.Debugf("wrote new data to storage backend")
 
       c.Events <- &Event{
-        Type:   ProfileIdEvent,
+        Type: ProfileIdEvent,
         Key: &ProfileIdKey{
           Name: name,
           At:   at,
@@ -69,6 +69,7 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, erro
   return id, nil
 }
 
+// resolves multiple profile associations at the current time
 func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
   c.logger.Debugf("processing query for profile Ids associated with names %s", strings.Join(names, ", "))
 
@@ -111,7 +112,7 @@ func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
     }
 
     c.Events <- &Event{
-      Type:   ProfileIdEvent,
+      Type: ProfileIdEvent,
       Key: &ProfileIdKey{
         Name: id.Name,
         At:   at,
@@ -123,6 +124,12 @@ func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
   c.logger.Debugf("wrote new data to storage backend")
   c.logger.Debugf("notified event channel")
   return append(ids, newIds...), nil
+}
+
+// purges the profile association of a given name at a given time
+func (c *Cache) PurgeProfileId(name string, at time.Time) error {
+  c.logger.Debugf("purging name association for name \"%s\" at time %s", name, at)
+  return c.storage.PurgeProfileId(name, at)
 }
 
 // retrieves the name history of a given profile
@@ -163,6 +170,12 @@ func (c *Cache) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) 
     c.logger.Debugf("query fulfilled using cached data")
   }
   return history, nil
+}
+
+// purges a name history from the cache
+func (c *Cache) PurgeNameHistory(id uuid.UUID) error {
+  c.logger.Debugf("purging name history for profile %s", id)
+  c.storage.PurgeNameHistory(id)
 }
 
 // retrieves a single profile
@@ -207,4 +220,10 @@ func (c *Cache) GetProfile(id uuid.UUID) (*mojang.Profile, error) {
     c.logger.Debugf("query fulfilled using cached data")
   }
   return profile, nil
+}
+
+// purges a specific profile from the cache
+func (c *Cache) PurgeProfile(id uuid.UUID) error {
+  c.logger.Debugf("purging profile with id %s", id)
+  return c.storage.PurgeProfile(id)
 }
