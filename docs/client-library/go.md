@@ -19,7 +19,10 @@ The base of the client is the `github.com/dotStart/Stockpile/client.Stockpile`
 struct which may be initialized using the `New` function:
 
 ```go
-import "github.com/dotStart/Stockpile/client"
+import (
+  "fmt"
+  "github.com/dotStart/Stockpile/client"
+)
 
 func main() {
   client, err := client.New("localhost:36623")
