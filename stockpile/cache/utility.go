@@ -35,9 +35,9 @@ func (c *Cache) updateNameMapping(profile *entity.Profile) error {
 
   c.storage.PutProfileId(mapping)
 
-  c.Events <- &Event{
-    Type: ProfileIdEvent,
-    Key: &ProfileIdKey{
+  c.Events <- &entity.Event{
+    Type: entity.ProfileIdEvent,
+    Key: &entity.ProfileIdKey{
       Name: profile.Name,
       At:   at,
     },

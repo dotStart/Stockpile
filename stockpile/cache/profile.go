@@ -207,8 +207,8 @@ func (c *Cache) GetProfile(id uuid.UUID) (*entity.Profile, error) {
       }
       c.logger.Debugf("wrote new data to storage backend")
 
-      c.Events <- &Event{
-        Type:   ProfileEvent,
+      c.Events <- &entity.Event{
+        Type:   entity.ProfileEvent,
         Key:    &id,
         Object: profile,
       }

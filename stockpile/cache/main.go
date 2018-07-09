@@ -20,6 +20,7 @@ import (
   "sync/atomic"
   "time"
 
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/storage"
   "github.com/op/go-logging"
@@ -33,7 +34,7 @@ type Cache struct {
 
   resetTicker    *time.Ticker
   requestCounter uint64
-  Events         chan *Event
+  Events         chan *entity.Event
 }
 
 // creates a new cache client using
@@ -43,7 +44,7 @@ func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
     upstream:    upstream,
     storage:     storage,
     resetTicker: time.NewTicker(time.Minute * 10),
-    Events:      make(chan *Event),
+    Events:      make(chan *entity.Event),
   }
   go cache.resetRequestCounter()
   return cache

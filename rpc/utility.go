@@ -22,7 +22,6 @@ import (
   "time"
 
   "github.com/dotStart/Stockpile/entity"
-  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/ptypes"
@@ -282,7 +281,7 @@ func BlacklistFromRpc(blacklist *Blacklist) (*entity.Blacklist, error) {
 }
 
 // converts an arbitrary event into its rpc representation
-func EventToRpc(event *cache.Event) (*Event, error) {
+func EventToRpc(event *entity.Event) (*Event, error) {
   key, err := EventKeyToRpc(event.Key)
   if err != nil {
     return nil, err
@@ -305,7 +304,7 @@ func EventToRpc(event *cache.Event) (*Event, error) {
   }, nil
 }
 
-func EventFromRpc(event *Event) (*cache.Event, error) {
+func EventFromRpc(event *Event) (*entity.Event, error) {
   typ, err := EventTypeFromRpc(event.Type)
   if err != nil {
     return nil, err
@@ -321,7 +320,7 @@ func EventFromRpc(event *Event) (*cache.Event, error) {
     return nil, err
   }
 
-  return &cache.Event{
+  return &entity.Event{
     Type:   typ,
     Key:    key,
     Object: payload,
@@ -329,15 +328,15 @@ func EventFromRpc(event *Event) (*cache.Event, error) {
 }
 
 // converts an event type into its rpc representation
-func EventTypeToRpc(typ cache.EventType) EventType {
+func EventTypeToRpc(typ entity.EventType) EventType {
   switch typ {
-  case cache.ProfileIdEvent:
+  case entity.ProfileIdEvent:
     return EventType_PROFILE_ID
-  case cache.NameHistoryEvent:
+  case entity.NameHistoryEvent:
     return EventType_NAME_HISTORY
-  case cache.ProfileEvent:
+  case entity.ProfileEvent:
     return EventType_PROFILE
-  case cache.BlacklistEvent:
+  case entity.BlacklistEvent:
     return EventType_BLACKLIST
   default:
     return -1 // TODO: Unknown?
@@ -345,16 +344,16 @@ func EventTypeToRpc(typ cache.EventType) EventType {
 }
 
 // converts an event type from its rpc representation
-func EventTypeFromRpc(typ EventType) (cache.EventType, error) {
+func EventTypeFromRpc(typ EventType) (entity.EventType, error) {
   switch typ {
   case EventType_PROFILE_ID:
-    return cache.ProfileIdEvent, nil
+    return entity.ProfileIdEvent, nil
   case EventType_NAME_HISTORY:
-    return cache.NameHistoryEvent, nil
+    return entity.NameHistoryEvent, nil
   case EventType_PROFILE:
-    return cache.ProfileEvent, nil
+    return entity.ProfileEvent, nil
   case EventType_BLACKLIST:
-    return cache.BlacklistEvent, nil
+    return entity.BlacklistEvent, nil
   default:
     return -1, fmt.Errorf("illegal event type: %d", typ)
   }
@@ -367,7 +366,7 @@ func EventKeyToRpc(key interface{}) (*any.Any, error) {
     return nil, nil
   }
 
-  profileId, ok := key.(*cache.ProfileIdKey)
+  profileId, ok := key.(*entity.ProfileIdKey)
   if ok {
     return ptypes.MarshalAny(&ProfileIdKey{
       Name: profileId.Name,
@@ -399,7 +398,7 @@ func EventKeyFromRpc(key *any.Any) (interface{}, error) {
 
   profileId, ok := obj.Message.(*ProfileIdKey)
   if ok {
-    return &cache.ProfileIdKey{
+    return &entity.ProfileIdKey{
       Name: profileId.Name,
       At:   time.Unix(profileId.At, 0),
     }, nil
