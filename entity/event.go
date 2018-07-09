@@ -20,7 +20,6 @@ import (
   "errors"
   "time"
 
-  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
@@ -31,36 +30,36 @@ type Event struct {
   Object interface{}
 }
 
-func (e *Event) ProfileIdPayload() (*entity.ProfileId, error) {
+func (e *Event) ProfileIdPayload() (*ProfileId, error) {
   if e.Type != ProfileIdEvent {
     return nil, errors.New("cannot convert event payload to ProfileId")
   }
 
-  return e.Object.(*entity.ProfileId), nil
+  return e.Object.(*ProfileId), nil
 }
 
-func (e *Event) NameChangeHistoryPayload() (*entity.NameChangeHistory, error) {
+func (e *Event) NameChangeHistoryPayload() (*NameChangeHistory, error) {
   if e.Type != NameHistoryEvent {
     return nil, errors.New("cannot convert event payload to NameChangeHistory")
   }
 
-  return e.Object.(*entity.NameChangeHistory), nil
+  return e.Object.(*NameChangeHistory), nil
 }
 
-func (e *Event) ProfilePayload() (*entity.Profile, error) {
+func (e *Event) ProfilePayload() (*Profile, error) {
   if e.Type != ProfileEvent {
     return nil, errors.New("cannot convert event payload to Profile")
   }
 
-  return e.Object.(*entity.Profile), nil
+  return e.Object.(*Profile), nil
 }
 
-func (e *Event) BlacklistPayload() (*entity.Blacklist, error) {
+func (e *Event) BlacklistPayload() (*Blacklist, error) {
   if e.Type != BlacklistEvent {
     return nil, errors.New("cannot convert event payload to Blacklist")
   }
 
-  return e.Object.(*entity.Blacklist), nil
+  return e.Object.(*Blacklist), nil
 }
 
 func (e *Event) ProfileIdKey() (*ProfileIdKey, error) {
