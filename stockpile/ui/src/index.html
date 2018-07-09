@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Stockpile UI</title>
+    <meta name="robots" content="noindex,follow">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+
+    <style type="text/css"><%= require('./style/app.css') %></style>
+  </head>
+  <body>
+    <main id="stockpile">
+      <sui-dimmer basic :active="!connected">
+        <sui-loader content="Establishing connection with Stockpile server" />
+      </sui-dimmer>
+
+      <header id="page-header" class="ui orange inverted vertical segment">
+        <div class="ui middle aligned container grid">
+          <div class="twelve wide column">
+            <div class="ui large inverted secondary menu">
+              <span class="header item">Stockpile</span>
+            </div>
+          </div>
+          <div class="right aligned four wide column">
+            <sui-progress indicating inverted :percent="rateLimitPercent" :label="rateLimitLabel" />
+          </div>
+        </div>
+      </header>
+      <section id="page-body" class="ui vertical segment">
+        <div class="ui container">
+          <section class="ui vertical very padded segment">
+            <h2 class="ui header">Cache Events</h2>
+            <div v-if="events.length == 0" class="ui icon message">
+              <i class="inbox icon"></i>
+              <div class="content">
+                <div class="header">No Events</div>
+                <p>No cache events have been reported since the start of your session</p>
+              </div>
+            </div>
+            <event-list v-if="events.length != 0" :events="events" />
+          </section>
+          <section class="ui vertical very padded segment">
+            <h2 class="ui header">Connection Settings</h2>
+
+            <p>
+              This instance is available via <code>{{ address }}</code>. You may pass the following
+              arguments to access this instance via the command line tool:
+            </p>
+
+            <div class="ui secondary segment">
+            <pre class="code">$ stockpile &lt;command&gt; -server-address={{ address }}
+# For instance:
+$ stockpile status -server-address={{ address }}</pre>
+            </div>
+          </section>
+          <section class="ui vertical very padded segment">
+            <h2 class="ui header">Plugins ({{ plugins.length }})</h2>
+
+            <div v-if="pluginsUnavailable" class="ui icon warning message">
+              <i class="plug icon"></i>
+              <div class="content">
+                <div class="header">No Plugin support</div>
+                <p>The server implementation does not support plugins at the moment</p>
+              </div>
+            </div>
+            <div v-if="!pluginsUnavailable && plugins.length == 0" class="ui icon message">
+              <i class="plug icon"></i>
+              <div class="content">
+                <div class="header">No loaded Plugins</div>
+                <p>No plugins are loaded on this server at the moment</p>
+              </div>
+            </div>
+            <table v-if="plugins.length != 0" class="ui celled table">
+              <thead>
+                <tr>
+                  <th class="collapsing">Name</th>
+                  <th>Version</th>
+                  <th class="collapsing">Author(s)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="plugin in plugins">
+                  <td v-if="!plugin.Website" class="collapsing">{{ plugin.Name }}</td>
+                  <td v-if="!!plugin.Website" class="collapsing"><a :href="plugin.Website">{{ plugin.Name }}</a></td>
+                  <td>{{ plugin.Version }}</td>
+                  <td class="collapsing"><span v-for="author in plugin.Authors" class="ui label">{{ author }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+      </section>
+      <footer id="page-footer" class="ui inverted vertical segment">
+        <div class="ui center aligned container">
+          <p class="copyright">{{ version }}</p>
+          <a class="copyright" href="https://github.com/dotStart/Stockpile">Copyright &copy; 2018 Johannes ".start" Donath</a>
+        </div>
+      </footer>
+    </main>
+
+    <script type="text/x-template" id="cache-event-list">
+      <sui-feed>
+        <template v-for="event in events">
+          <profileId-event v-if="event.Type == 0" :event="event" />
+          <nameHistory-event v-if="event.Type == 1" :event="event" />
+          <profile-event v-if="event.Type == 2" :event="event" />
+          <blacklist-event v-if="event.Type == 3" :event="event" />
+        </template>
+      </sui-feed>
+    </script>
+    <script type="text/x-template" id="cache-event-profileId">
+      <sui-feed-event>
+        <sui-feed-label icon="address card outline" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Display name "{{ event.Object.Name }}" has been associated with
+            profile {{ event.Object.Id }}
+          </sui-feed-summary>
+          <sui-feed-meta>
+            <sui-feed-date>Valid from {{ firstSeenAt }} until {{ validUntil }}</sui-feed-date>
+          </sui-feed-meta>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-nameHistory">
+      <sui-feed-event>
+        <sui-feed-label icon="address book" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Name history for profile {{ event.Key }} has been updated
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-profile">
+      <sui-feed-event>
+        <sui-feed-label icon="address card" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Profile {{ event.Object.Id }} (display name: {{ event.Object.Name }} has been updated
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+    <script type="text/x-template" id="cache-event-blacklist">
+      <sui-feed-event>
+        <sui-feed-label icon="ban" />
+        <sui-feed-content>
+          <sui-feed-summary>
+            Updated blacklist (consisting of {{ event.Object.Hashes.length }} elements)
+          </sui-feed-summary>
+        </sui-feed-content>
+      </sui-feed-event>
+    </script>
+  </body>
+</html>

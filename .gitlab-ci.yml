@@ -1,0 +1,28 @@
+image: dotstart/go-dep:1.10.3
+
+cache:
+  paths:
+    - /apt-cache
+    - /go/src/golang.org
+    - /go/src/google.golang.org
+    - /go/src/gopkg.in
+
+before_script:
+  - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  - apt-get install -y curl git golang-goprotobuf-dev libprotobuf-dev nodejs protobuf-compiler
+  - mkdir -p /go/src/github.com/dotStart /go/src/_/builds
+  - cp -r $CI_PROJECT_DIR /go/src/github.com/dotStart/Stockpile
+  - cd /go/src/github.com/dotStart/Stockpile
+
+after_script:
+  - cp -r /go/src/github.com/dotStart/Stockpile/build $CI_PROJECT_DIR
+  - cd $CI_PROJECT_DIR
+
+build:
+  stage: build
+  script:
+    - make
+  artifacts:
+    name: Stockpile
+    paths:
+      - build/*.tar.gz

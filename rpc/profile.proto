@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package rpc;
+option java_package = "tv.dotstart.stockpile";
+
+import "common.proto";
+
+/**
+ * Exposes cached (and slightly more consistent) versions of the Mojang profile APIs.
+ */
+service ProfileService {
+  /**
+   * Resolves the profile identifier and correct casing of a given name.
+   *
+   * When unix epoch (e.g. zero) is passed instead of an actual timestamp, the
+   * original user of a name will be resolved (e.g. associations prior to name
+   * changing support).
+   *
+   * If no profile has been associated with the specified name, an unpopulated
+   * object is returned instead.
+   */
+  rpc GetId (GetIdRequest) returns (ProfileId);
+
+  /**
+   * Retrieves a complete history of name changes for the profile associated
+   * with a given identifier.
+   *
+   * Names which have been changed to at unix epoch (e.g. zero) refer to the
+   * original account name.
+   *
+   * When no profile with the specified identifier exists, an unpopulated object
+   * is returned instead.
+   */
+  rpc GetNameHistory (IdRequest) returns (NameHistory);
+
+  /**
+   * Resolves the profile identifiers and correct casings of multiple names at
+   * once.
+   *
+   * If a name cannot be found, its association will be omitted from the
+   * resulting array.
+   *
+   * Bulk requests do not accept timestamps and will always resolve associations
+   * at the current time.
+   */
+  rpc BulkGetId (BulkIdRequest) returns (BulkIdResponse);
+
+  /**
+   * Retrieves a profile based on its associated identifier.
+   *
+   * If no profile with the specified identifier exists, an unpopulated object
+   * is returned instead.
+   */
+  rpc GetProfile (IdRequest) returns (Profile);
+}
+
+/**
+ * Used to transmit Mojang or RFC formatted UUIDs as the sole parameter.
+ */
+message IdRequest {
+  string id = 1;
+}
+
+/**
+ * Stores the parameters for id requests (based on the respective display name and timestamp)
+ */
+message GetIdRequest {
+  string name = 1;
+  int64 timestamp = 2;
+}
+
+/**
+ * Represents a profile <-> name mapping at a specified time.
+ */
+message ProfileId {
+  string id = 1;
+  string name = 2;
+  int64 validUntil = 5;
+  int64 firstSeenAt = 6;
+  int64 lastSeenAt = 7;
+}
+
+/**
+ * Represents a complete name history.
+ */
+message NameHistory {
+  repeated NameHistoryEntry history = 1;
+  int64 validUntil = 2;
+}
+
+/**
+ * Represents a single entry in the name history.
+ */
+message NameHistoryEntry {
+  string name = 1;
+  int64 changedToAt = 2;
+  int64 validUntil = 3;
+}
+
+/**
+ * Stores the parameters for bulk id requests.
+ */
+message BulkIdRequest {
+  repeated string names = 1;
+}
+
+/**
+ * Represents a list of bulk id responses.
+ */
+message BulkIdResponse {
+  repeated ProfileId ids = 1;
+}

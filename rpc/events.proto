@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package rpc;
+option java_package = "tv.dotstart.stockpile";
+
+import "google/protobuf/any.proto";
+import "google/protobuf/empty.proto";
+
+service EventService {
+  rpc StreamEvents (google.protobuf.Empty) returns (stream Event);
+}
+
+message Event {
+  EventType type = 1;
+  EventAction action = 2;
+  google.protobuf.Any key = 3;
+  google.protobuf.Any object = 4;
+}
+
+enum EventType {
+  PROFILE_ID = 0;
+  NAME_HISTORY = 1;
+  PROFILE = 2;
+  BLACKLIST = 3;
+}
+
+enum EventAction {
+  POPULATED = 0;
+  UPDATED = 1;
+}
+
+message ProfileIdKey { // TODO: Replace keys with common representation
+  string name = 1;
+  int64 at = 2;
+}
+
+message IdKey {
+  string id = 1;
+}

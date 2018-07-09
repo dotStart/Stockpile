@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package rpc;
+option java_package = "tv.dotstart.stockpile";
+
+import "google/protobuf/empty.proto";
+
+service SystemService {
+  rpc GetStatus (google.protobuf.Empty) returns (Status);
+  rpc GetPlugins (google.protobuf.Empty) returns (PluginList);
+}
+
+message Status {
+  string Brand = 1;
+  string Version = 2;
+  string VersionFull = 3;
+  string CommitHash = 4;
+  int64 BuildTimestamp = 5;
+}
+
+message PluginList {
+  repeated Plugin Plugins = 1;
+}
+
+message Plugin {
+  string Name = 1;
+  string Version = 2;
+  repeated string Authors = 3;
+  string Website = 4;
+}
