@@ -51,9 +51,9 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*entity.ProfileId, erro
 
       c.logger.Debugf("wrote new data to storage backend")
 
-      c.Events <- &Event{
-        Type: ProfileIdEvent,
-        Key: &ProfileIdKey{
+      c.Events <- &entity.Event{
+        Type: entity.ProfileIdEvent,
+        Key: &entity.ProfileIdKey{
           Name: name,
           At:   at,
         },
@@ -111,9 +111,9 @@ func (c *Cache) BulkGetProfileId(names []string) ([]*entity.ProfileId, error) {
       return nil, fmt.Errorf("storage backend responded with error: %s", err)
     }
 
-    c.Events <- &Event{
-      Type: ProfileIdEvent,
-      Key: &ProfileIdKey{
+    c.Events <- &entity.Event{
+      Type: entity.ProfileIdEvent,
+      Key: &entity.ProfileIdKey{
         Name: id.Name,
         At:   at,
       },
@@ -157,8 +157,8 @@ func (c *Cache) GetNameHistory(id uuid.UUID) (*entity.NameChangeHistory, error) 
       }
       c.logger.Debugf("wrote new data to storage backend")
 
-      c.Events <- &Event{
-        Type:   NameHistoryEvent,
+      c.Events <- &entity.Event{
+        Type:   entity.NameHistoryEvent,
         Key:    &id,
         Object: history,
       }
