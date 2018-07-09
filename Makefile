@@ -1,5 +1,5 @@
 APPLICATION_BRAND := vanilla
-APPLICATION_VERSION := 2.0.0
+APPLICATION_VERSION := 2.0-alpha
 APPLICATION_COMMIT_HASH := `git log -1 --pretty=format:"%H"`
 APPLICATION_TIMESTAMP := `date --utc "+%s"`
 
