@@ -17,10 +17,11 @@
 package service
 
 import (
-  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/rpc"
-  empty "github.com/golang/protobuf/ptypes/empty"
+  "github.com/dotStart/Stockpile/stockpile/cache"
+  "github.com/golang/protobuf/ptypes/empty"
   "github.com/op/go-logging"
+  "google.golang.org/grpc/peer"
 )
 
 type EventServiceImpl struct {
@@ -36,13 +37,26 @@ func NewEventService(cache *cache.Cache) (*EventServiceImpl) {
 }
 
 func (s *EventServiceImpl) StreamEvents(_ *empty.Empty, srv rpc.EventService_StreamEventsServer) error {
+  p, ok := peer.FromContext(srv.Context())
+  if ok {
+    s.logger.Debugf("beginning to stream events to rpc client %s", p.Addr)
+  }
+
   for e := range s.cache.Events {
+    if ok {
+      s.logger.Debugf("forwarding event of type %T (using key %T) to rpc client %s", e.Object, e.Key, p.Addr)
+    }
+
     enc, err := rpc.EventToRpc(e)
     if err != nil {
       s.logger.Errorf("failed to encode event %v: %s", e, err)
       continue
     }
     srv.Send(enc)
+  }
+
+  if ok {
+    s.logger.Debugf("event stream has ended - closing session with %s", p.Addr)
   }
   return nil
 }
