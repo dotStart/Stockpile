@@ -21,7 +21,7 @@ import (
   "fmt"
   "os"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
@@ -69,7 +69,7 @@ func (c *HistoryCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inte
     return 1
   }
 
-  id, err := mojang.ParseId(f.Arg(0))
+  id, err := entity.ParseId(f.Arg(0))
   if err != nil {
     fmt.Fprintf(os.Stderr, "illegal profile id: %s (is this a UUID?)", id)
     return 1

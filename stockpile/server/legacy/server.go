@@ -23,7 +23,7 @@ import (
   "net/http"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
@@ -99,7 +99,7 @@ func (s *Server) handleLogin(w http.ResponseWriter, req *http.Request) {
     return
   }
 
-  props := make([]*mojang.ProfileProperty, 0)
+  props := make([]*entity.ProfileProperty, 0)
   for _, prop := range profile.Properties {
     props = append(props, prop)
   }
@@ -108,7 +108,7 @@ func (s *Server) handleLogin(w http.ResponseWriter, req *http.Request) {
     CacheTimestamp int64                     `json:"cacheTimestamp"`
     Identifier     uuid.UUID                 `json:"identifier"`
     Name           string                    `json:"name"`
-    Properties     []*mojang.ProfileProperty `json:"properties"`
+    Properties     []*entity.ProfileProperty `json:"properties"`
   }{
     CacheTimestamp: time.Now().Unix(), // unsupported in this environment, substitute a valid value
     Identifier:     profile.Id,

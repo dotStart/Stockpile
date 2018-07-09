@@ -20,7 +20,7 @@ import (
   "errors"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
@@ -31,36 +31,36 @@ type Event struct {
   Object interface{}
 }
 
-func (e *Event) ProfileIdPayload() (*mojang.ProfileId, error) {
+func (e *Event) ProfileIdPayload() (*entity.ProfileId, error) {
   if e.Type != ProfileIdEvent {
     return nil, errors.New("cannot convert event payload to ProfileId")
   }
 
-  return e.Object.(*mojang.ProfileId), nil
+  return e.Object.(*entity.ProfileId), nil
 }
 
-func (e *Event) NameChangeHistoryPayload() (*mojang.NameChangeHistory, error) {
+func (e *Event) NameChangeHistoryPayload() (*entity.NameChangeHistory, error) {
   if e.Type != NameHistoryEvent {
     return nil, errors.New("cannot convert event payload to NameChangeHistory")
   }
 
-  return e.Object.(*mojang.NameChangeHistory), nil
+  return e.Object.(*entity.NameChangeHistory), nil
 }
 
-func (e *Event) ProfilePayload() (*mojang.Profile, error) {
+func (e *Event) ProfilePayload() (*entity.Profile, error) {
   if e.Type != ProfileEvent {
     return nil, errors.New("cannot convert event payload to Profile")
   }
 
-  return e.Object.(*mojang.Profile), nil
+  return e.Object.(*entity.Profile), nil
 }
 
-func (e *Event) BlacklistPayload() (*mojang.Blacklist, error) {
+func (e *Event) BlacklistPayload() (*entity.Blacklist, error) {
   if e.Type != BlacklistEvent {
     return nil, errors.New("cannot convert event payload to Blacklist")
   }
 
-  return e.Object.(*mojang.Blacklist), nil
+  return e.Object.(*entity.Blacklist), nil
 }
 
 func (e *Event) ProfileIdKey() (*ProfileIdKey, error) {

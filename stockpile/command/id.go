@@ -22,7 +22,7 @@ import (
   "os"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
@@ -143,7 +143,7 @@ func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface
   writeTable(
     os.Stdout,
     struct {
-      Ids []*mojang.ProfileId
+      Ids []*entity.ProfileId
     }{
       profileIds,
     },

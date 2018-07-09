@@ -21,8 +21,8 @@ import (
   "fmt"
   "time"
 
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/stockpile/cache"
-  "github.com/dotStart/Stockpile/stockpile/mojang"
   "github.com/dotStart/Stockpile/stockpile/plugin"
   "github.com/golang/protobuf/proto"
   "github.com/golang/protobuf/ptypes"
@@ -35,7 +35,7 @@ import (
 const MessageTypeBaseUrl = "github.com/dotStart/Stockpile/stockpile/server/rpc/"
 
 // Converts a profileId into its fully parsed representation
-func ProfileIdFromRpc(rpc *ProfileId) (*mojang.ProfileId, error) {
+func ProfileIdFromRpc(rpc *ProfileId) (*entity.ProfileId, error) {
   if !rpc.IsPopulated() {
     return nil, nil
   }
@@ -45,7 +45,7 @@ func ProfileIdFromRpc(rpc *ProfileId) (*mojang.ProfileId, error) {
     return nil, err
   }
 
-  return &mojang.ProfileId{
+  return &entity.ProfileId{
     Id:          id,
     Name:        rpc.Name,
     FirstSeenAt: time.Unix(rpc.FirstSeenAt, 0),
@@ -55,8 +55,8 @@ func ProfileIdFromRpc(rpc *ProfileId) (*mojang.ProfileId, error) {
 }
 
 // Converts an array of profileIds into their fully parsed representation
-func ProfileIdsFromRpcArray(rpc []*ProfileId) ([]*mojang.ProfileId, error) {
-  arr := make([]*mojang.ProfileId, len(rpc))
+func ProfileIdsFromRpcArray(rpc []*ProfileId) ([]*entity.ProfileId, error) {
+  arr := make([]*entity.ProfileId, len(rpc))
   for i, encoded := range rpc {
     profileId, err := ProfileIdFromRpc(encoded)
     if err != nil {
@@ -71,7 +71,7 @@ func ProfileIdsFromRpcArray(rpc []*ProfileId) ([]*mojang.ProfileId, error) {
 }
 
 // Converts a profileId into its rpc representation
-func ProfileIdToRpc(profileId *mojang.ProfileId) *ProfileId {
+func ProfileIdToRpc(profileId *entity.ProfileId) *ProfileId {
   return &ProfileId{
     Id:          profileId.Id.String(),
     Name:        profileId.Name,
@@ -82,7 +82,7 @@ func ProfileIdToRpc(profileId *mojang.ProfileId) *ProfileId {
 }
 
 // Converts an array of profileIds into their rpc representation
-func ProfileIdsToRpcArray(profileIds []*mojang.ProfileId) []*ProfileId {
+func ProfileIdsToRpcArray(profileIds []*entity.ProfileId) []*ProfileId {
   arr := make([]*ProfileId, len(profileIds))
   for i, profileId := range profileIds {
     arr[i] = ProfileIdToRpc(profileId)
@@ -91,7 +91,7 @@ func ProfileIdsToRpcArray(profileIds []*mojang.ProfileId) []*ProfileId {
 }
 
 // converts a name change into its rpc representation
-func NameChangeToRpc(change *mojang.NameChange) *NameHistoryEntry {
+func NameChangeToRpc(change *entity.NameChange) *NameHistoryEntry {
   return &NameHistoryEntry{
     Name:        change.Name,
     ChangedToAt: change.ChangedToAt.Unix(),
@@ -100,7 +100,7 @@ func NameChangeToRpc(change *mojang.NameChange) *NameHistoryEntry {
 }
 
 // converts an array of name changes into their rpc representation
-func NameChangesToRpcArray(changes []*mojang.NameChange) []*NameHistoryEntry {
+func NameChangesToRpcArray(changes []*entity.NameChange) []*NameHistoryEntry {
   arr := make([]*NameHistoryEntry, len(changes))
   for i, change := range changes {
     arr[i] = NameChangeToRpc(change)
@@ -109,8 +109,8 @@ func NameChangesToRpcArray(changes []*mojang.NameChange) []*NameHistoryEntry {
 }
 
 // converts a name change from its rpc representation
-func NameChangeFromRpc(rpc *NameHistoryEntry) *mojang.NameChange {
-  return &mojang.NameChange{
+func NameChangeFromRpc(rpc *NameHistoryEntry) *entity.NameChange {
+  return &entity.NameChange{
     Name:        rpc.Name,
     ChangedToAt: time.Unix(rpc.ChangedToAt, 0),
     ValidUntil:  time.Unix(rpc.ValidUntil, 0),
@@ -118,8 +118,8 @@ func NameChangeFromRpc(rpc *NameHistoryEntry) *mojang.NameChange {
 }
 
 // converts an array of name changes from their rpc representation
-func NameChangesFromRpcArray(rpc []*NameHistoryEntry) []*mojang.NameChange {
-  arr := make([]*mojang.NameChange, len(rpc))
+func NameChangesFromRpcArray(rpc []*NameHistoryEntry) []*entity.NameChange {
+  arr := make([]*entity.NameChange, len(rpc))
   for i, change := range rpc {
     arr[i] = NameChangeFromRpc(change)
   }
@@ -127,7 +127,7 @@ func NameChangesFromRpcArray(rpc []*NameHistoryEntry) []*mojang.NameChange {
 }
 
 // converts a name history element into its rpc representation
-func NameHistoryToRpc(history *mojang.NameChangeHistory) *NameHistory {
+func NameHistoryToRpc(history *entity.NameChangeHistory) *NameHistory {
   if history == nil || len(history.History) == 0 {
     return &NameHistory{}
   }
@@ -138,18 +138,18 @@ func NameHistoryToRpc(history *mojang.NameChangeHistory) *NameHistory {
 }
 
 // converts a name history from its rpc representation
-func NameHistoryFromRpc(history *NameHistory) *mojang.NameChangeHistory {
+func NameHistoryFromRpc(history *NameHistory) *entity.NameChangeHistory {
   if !history.IsPopulated() {
     return nil
   }
 
-  return &mojang.NameChangeHistory{
+  return &entity.NameChangeHistory{
     History: NameChangesFromRpcArray(history.History),
   }
 }
 
 // converts the result of a bulk id resolve operation into its rpc representation
-func BulkIdsToRpc(ids []*mojang.ProfileId) *BulkIdResponse {
+func BulkIdsToRpc(ids []*entity.ProfileId) *BulkIdResponse {
   if ids == nil || len(ids) == 0 {
     return &BulkIdResponse{}
   }
@@ -160,7 +160,7 @@ func BulkIdsToRpc(ids []*mojang.ProfileId) *BulkIdResponse {
 }
 
 // converts the result of a bulk id resolve operation from its rpc representation
-func BulkIdsFromRpc(rpc *BulkIdResponse) ([]*mojang.ProfileId, error) {
+func BulkIdsFromRpc(rpc *BulkIdResponse) ([]*entity.ProfileId, error) {
   if !rpc.IsPopulated() {
     return nil, nil
   }
@@ -169,7 +169,7 @@ func BulkIdsFromRpc(rpc *BulkIdResponse) ([]*mojang.ProfileId, error) {
 }
 
 // converts a profile into its rpc representation
-func ProfileToRpc(profile *mojang.Profile) *Profile {
+func ProfileToRpc(profile *entity.Profile) *Profile {
   var tex *ProfileTextures = nil
   if profile.Textures != nil {
     tex = ProfileTexturesToRpc(profile.Textures)
@@ -184,13 +184,13 @@ func ProfileToRpc(profile *mojang.Profile) *Profile {
 }
 
 // converts a profile from its rpc representation
-func ProfileFromRpc(rpc *Profile) (*mojang.Profile, error) {
+func ProfileFromRpc(rpc *Profile) (*entity.Profile, error) {
   id, err := uuid.Parse(rpc.Id)
   if err != nil {
     return nil, err
   }
 
-  var tex *mojang.ProfileTextures
+  var tex *entity.ProfileTextures
   if rpc.Textures != nil {
     tex, err = ProfileTexturesFromRpc(rpc.Textures)
     if err != nil {
@@ -198,7 +198,7 @@ func ProfileFromRpc(rpc *Profile) (*mojang.Profile, error) {
     }
   }
 
-  return &mojang.Profile{
+  return &entity.Profile{
     Id:         id,
     Name:       rpc.Name,
     Properties: ProfilePropertiesFromRpcArray(rpc.Properties),
@@ -207,7 +207,7 @@ func ProfileFromRpc(rpc *Profile) (*mojang.Profile, error) {
 }
 
 // converts a map of profile properties into their rpc representation
-func ProfilePropertiesToRpcArray(props map[string]*mojang.ProfileProperty) []*ProfileProperty {
+func ProfilePropertiesToRpcArray(props map[string]*entity.ProfileProperty) []*ProfileProperty {
   arr := make([]*ProfileProperty, 0)
   for _, prop := range props {
     arr = append(arr, ProfilePropertyToRpc(prop))
@@ -216,8 +216,8 @@ func ProfilePropertiesToRpcArray(props map[string]*mojang.ProfileProperty) []*Pr
 }
 
 // converts an array of profile properties from their rpc representation
-func ProfilePropertiesFromRpcArray(rpc []*ProfileProperty) map[string]*mojang.ProfileProperty {
-  arr := make(map[string]*mojang.ProfileProperty)
+func ProfilePropertiesFromRpcArray(rpc []*ProfileProperty) map[string]*entity.ProfileProperty {
+  arr := make(map[string]*entity.ProfileProperty)
   for _, prop := range rpc {
     arr[prop.Name] = ProfilePropertyFromRpc(prop)
   }
@@ -225,7 +225,7 @@ func ProfilePropertiesFromRpcArray(rpc []*ProfileProperty) map[string]*mojang.Pr
 }
 
 // converts a profile property into its rpc representation
-func ProfilePropertyToRpc(prop *mojang.ProfileProperty) *ProfileProperty {
+func ProfilePropertyToRpc(prop *entity.ProfileProperty) *ProfileProperty {
   return &ProfileProperty{
     Name:      prop.Name,
     Value:     prop.Value,
@@ -234,8 +234,8 @@ func ProfilePropertyToRpc(prop *mojang.ProfileProperty) *ProfileProperty {
 }
 
 // converts a profile property from its rpc representation
-func ProfilePropertyFromRpc(rpc *ProfileProperty) *mojang.ProfileProperty {
-  return &mojang.ProfileProperty{
+func ProfilePropertyFromRpc(rpc *ProfileProperty) *entity.ProfileProperty {
+  return &entity.ProfileProperty{
     Name:      rpc.Name,
     Value:     rpc.Value,
     Signature: rpc.Signature,
@@ -243,7 +243,7 @@ func ProfilePropertyFromRpc(rpc *ProfileProperty) *mojang.ProfileProperty {
 }
 
 // converts a profile textures attribute into its rpc representation
-func ProfileTexturesToRpc(tex *mojang.ProfileTextures) *ProfileTextures {
+func ProfileTexturesToRpc(tex *entity.ProfileTextures) *ProfileTextures {
   return &ProfileTextures{
     ProfileId:   tex.ProfileId.String(),
     ProfileName: tex.ProfileName,
@@ -253,7 +253,7 @@ func ProfileTexturesToRpc(tex *mojang.ProfileTextures) *ProfileTextures {
   }
 }
 
-func ProfileTexturesFromRpc(rpc *ProfileTextures) (*mojang.ProfileTextures, error) {
+func ProfileTexturesFromRpc(rpc *ProfileTextures) (*entity.ProfileTextures, error) {
   id, err := uuid.Parse(rpc.ProfileId)
   if err != nil {
     return nil, err
@@ -263,7 +263,7 @@ func ProfileTexturesFromRpc(rpc *ProfileTextures) (*mojang.ProfileTextures, erro
   textures["SKIN"] = rpc.SkinUrl
   textures["CAPE"] = rpc.CapeUrl
 
-  return &mojang.ProfileTextures{
+  return &entity.ProfileTextures{
     Timestamp:   time.Unix(rpc.Timestamp, 0),
     ProfileId:   id,
     ProfileName: rpc.ProfileName,
@@ -271,14 +271,14 @@ func ProfileTexturesFromRpc(rpc *ProfileTextures) (*mojang.ProfileTextures, erro
   }, nil
 }
 
-func BlacklistToRpc(blacklist *mojang.Blacklist) *Blacklist {
+func BlacklistToRpc(blacklist *entity.Blacklist) *Blacklist {
   return &Blacklist{
     Hashes: blacklist.Hashes,
   }
 }
 
-func BlacklistFromRpc(blacklist *Blacklist) (*mojang.Blacklist, error) {
-  return mojang.NewBlacklist(blacklist.Hashes)
+func BlacklistFromRpc(blacklist *Blacklist) (*entity.Blacklist, error) {
+  return entity.NewBlacklist(blacklist.Hashes)
 }
 
 // converts an arbitrary event into its rpc representation
@@ -420,22 +420,22 @@ func EventPayloadToRpc(payload interface{}) (proto.Message, error) {
     return nil, errors.New("payload cannot be nil")
   }
 
-  profileId, ok := payload.(*mojang.ProfileId)
+  profileId, ok := payload.(*entity.ProfileId)
   if ok {
     return ProfileIdToRpc(profileId), nil
   }
 
-  history, ok := payload.(*mojang.NameChangeHistory)
+  history, ok := payload.(*entity.NameChangeHistory)
   if ok {
     return NameHistoryToRpc(history), nil
   }
 
-  profile, ok := payload.(*mojang.Profile)
+  profile, ok := payload.(*entity.Profile)
   if ok {
     return ProfileToRpc(profile), nil
   }
 
-  blacklist, ok := payload.(*mojang.Blacklist)
+  blacklist, ok := payload.(*entity.Blacklist)
   if ok {
     return BlacklistToRpc(blacklist), nil
   }

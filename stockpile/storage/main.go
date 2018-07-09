@@ -19,7 +19,7 @@ package storage
 import (
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
@@ -28,18 +28,18 @@ type StorageBackend interface {
   Close() error
 
   // Profile Data
-  GetProfileId(name string, at time.Time) (*mojang.ProfileId, error)
-  PutProfileId(profileId *mojang.ProfileId) error
+  GetProfileId(name string, at time.Time) (*entity.ProfileId, error)
+  PutProfileId(profileId *entity.ProfileId) error
   PurgeProfileId(name string, at time.Time) error
-  GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error)
-  PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error
+  GetNameHistory(id uuid.UUID) (*entity.NameChangeHistory, error)
+  PutNameHistory(id uuid.UUID, history *entity.NameChangeHistory) error
   PurgeNameHistory(id uuid.UUID) error
-  GetProfile(id uuid.UUID) (*mojang.Profile, error)
-  PutProfile(profile *mojang.Profile) error
+  GetProfile(id uuid.UUID) (*entity.Profile, error)
+  PutProfile(profile *entity.Profile) error
   PurgeProfile(id uuid.UUID) error
 
   // Server Data
-  GetBlacklist() (*mojang.Blacklist, error)
-  PutBlacklist(blacklist *mojang.Blacklist) error
+  GetBlacklist() (*entity.Blacklist, error)
+  PutBlacklist(blacklist *entity.Blacklist) error
   PurgeBlacklist() error
 }

@@ -19,7 +19,7 @@ package storage
 import (
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/google/uuid"
 )
@@ -51,7 +51,7 @@ func NewEncodedStorageBackend(cfg *server.Config, impl EncodedStorageBackendInte
   }
 }
 
-func (f *EncodedStorageBackend) GetProfileId(name string, at time.Time) (*mojang.ProfileId, error) {
+func (f *EncodedStorageBackend) GetProfileId(name string, at time.Time) (*entity.ProfileId, error) {
   enc, err := f.impl.GetCacheEntry("name", calculateHash(name), f.cfg.Ttl.Name)
   if err != nil {
     return nil, err
@@ -60,7 +60,7 @@ func (f *EncodedStorageBackend) GetProfileId(name string, at time.Time) (*mojang
     return nil, nil
   }
 
-  ids, err := mojang.DeserializeProfileIdArray(enc)
+  ids, err := entity.DeserializeProfileIdArray(enc)
   if err != nil {
     return nil, err
   }
@@ -74,16 +74,16 @@ func (f *EncodedStorageBackend) GetProfileId(name string, at time.Time) (*mojang
   return nil, nil
 }
 
-func (f *EncodedStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
+func (f *EncodedStorageBackend) PutProfileId(profileId *entity.ProfileId) error {
   key := calculateHash(profileId.Name)
   enc, err := f.impl.GetCacheEntry("name", key, f.cfg.Ttl.Name)
   if err != nil {
     return err
   }
-  var entries []*mojang.ProfileId
+  var entries []*entity.ProfileId
   found := false
   if enc != nil {
-    entries, err = mojang.DeserializeProfileIdArray(enc)
+    entries, err = entity.DeserializeProfileIdArray(enc)
     if err != nil {
       return err
     }
@@ -98,7 +98,7 @@ func (f *EncodedStorageBackend) PutProfileId(profileId *mojang.ProfileId) error 
       }
     }
   } else {
-    entries = make([]*mojang.ProfileId, 0)
+    entries = make([]*entity.ProfileId, 0)
     found = false
   }
 
@@ -106,7 +106,7 @@ func (f *EncodedStorageBackend) PutProfileId(profileId *mojang.ProfileId) error 
     entries = append(entries, profileId)
   }
 
-  enc, err = mojang.SerializeProfileIdArray(entries)
+  enc, err = entity.SerializeProfileIdArray(entries)
   if err != nil {
     return err
   }
@@ -123,7 +123,7 @@ func (f *EncodedStorageBackend) PurgeProfileId(name string, at time.Time) error 
     return nil
   }
 
-  entries, err := mojang.DeserializeProfileIdArray(enc)
+  entries, err := entity.DeserializeProfileIdArray(enc)
   if err != nil {
     return err
   }
@@ -142,14 +142,14 @@ func (f *EncodedStorageBackend) PurgeProfileId(name string, at time.Time) error 
     return nil
   }
 
-  enc, err = mojang.SerializeProfileIdArray(entries)
+  enc, err = entity.SerializeProfileIdArray(entries)
   if err != nil {
     return err
   }
   return f.impl.PutCacheEntry("name", key, enc, f.cfg.Ttl.Name)
 }
 
-func (f *EncodedStorageBackend) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) {
+func (f *EncodedStorageBackend) GetNameHistory(id uuid.UUID) (*entity.NameChangeHistory, error) {
   enc, err := f.impl.GetCacheEntry("history", id.String(), f.cfg.Ttl.NameHistory)
   if err != nil {
     return nil, err
@@ -158,12 +158,12 @@ func (f *EncodedStorageBackend) GetNameHistory(id uuid.UUID) (*mojang.NameChange
     return nil, nil
   }
 
-  history := &mojang.NameChangeHistory{}
+  history := &entity.NameChangeHistory{}
   err = history.Deserialize(enc)
   return history, err
 }
 
-func (f *EncodedStorageBackend) PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error {
+func (f *EncodedStorageBackend) PutNameHistory(id uuid.UUID, history *entity.NameChangeHistory) error {
   enc, err := history.Serialize()
   if err != nil {
     return err
@@ -176,7 +176,7 @@ func (f *EncodedStorageBackend) PurgeNameHistory(id uuid.UUID) error {
   return f.impl.PurgeCacheEntry("history", id.String())
 }
 
-func (f *EncodedStorageBackend) GetProfile(id uuid.UUID) (*mojang.Profile, error) {
+func (f *EncodedStorageBackend) GetProfile(id uuid.UUID) (*entity.Profile, error) {
   enc, err := f.impl.GetCacheEntry("profile", id.String(), f.cfg.Ttl.Profile)
   if err != nil {
     return nil, err
@@ -185,12 +185,12 @@ func (f *EncodedStorageBackend) GetProfile(id uuid.UUID) (*mojang.Profile, error
     return nil, nil
   }
 
-  profile := &mojang.Profile{}
+  profile := &entity.Profile{}
   err = profile.Deserialize(enc)
   return profile, err
 }
 
-func (f *EncodedStorageBackend) PutProfile(profile *mojang.Profile) error {
+func (f *EncodedStorageBackend) PutProfile(profile *entity.Profile) error {
   enc, err := profile.Serialize()
   if err != nil {
     return err
@@ -204,7 +204,7 @@ func (f *EncodedStorageBackend) PurgeProfile(id uuid.UUID) error {
 }
 
 // Server Data
-func (f *EncodedStorageBackend) GetBlacklist() (*mojang.Blacklist, error) {
+func (f *EncodedStorageBackend) GetBlacklist() (*entity.Blacklist, error) {
   enc, err := f.impl.GetCacheEntry("misc", "blacklist", f.cfg.Ttl.Blacklist)
   if err != nil {
     return nil, err
@@ -213,12 +213,12 @@ func (f *EncodedStorageBackend) GetBlacklist() (*mojang.Blacklist, error) {
     return nil, nil
   }
 
-  blacklist := &mojang.Blacklist{}
+  blacklist := &entity.Blacklist{}
   err = blacklist.Deserialize(enc)
   return blacklist, err
 }
 
-func (f *EncodedStorageBackend) PutBlacklist(blacklist *mojang.Blacklist) error {
+func (f *EncodedStorageBackend) PutBlacklist(blacklist *entity.Blacklist) error {
   enc, err := blacklist.Serialize()
   if err != nil {
     return err

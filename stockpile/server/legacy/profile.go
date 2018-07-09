@@ -24,7 +24,7 @@ import (
   "strings"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
@@ -124,8 +124,8 @@ func (s *Server) handleProfile(w http.ResponseWriter, req *http.Request) {
 
   var err error
   var id uuid.UUID
-  if mojang.IsProfileId(query) {
-    id, err = mojang.ParseId(query)
+  if entity.IsProfileId(query) {
+    id, err = entity.ParseId(query)
     if err != nil {
       http.Error(w, fmt.Sprintf("failed to decode id: %s", err), http.StatusBadRequest)
       return
@@ -161,7 +161,7 @@ func (s *Server) handleProfile(w http.ResponseWriter, req *http.Request) {
     return
   }
 
-  props := make([]*mojang.ProfileProperty, 0)
+  props := make([]*entity.ProfileProperty, 0)
   for _, prop := range profile.Properties {
     props = append(props, prop)
   }
@@ -170,7 +170,7 @@ func (s *Server) handleProfile(w http.ResponseWriter, req *http.Request) {
     CacheTimestamp int64                     `json:"cacheTimestamp"`
     Identifier     uuid.UUID                 `json:"identifier"`
     Name           string                    `json:"name"`
-    Properties     []*mojang.ProfileProperty `json:"properties"`
+    Properties     []*entity.ProfileProperty `json:"properties"`
   }{
     CacheTimestamp: time.Now().Unix(), // unsupported in this environment, substitute a valid value
     Identifier:     profile.Id,

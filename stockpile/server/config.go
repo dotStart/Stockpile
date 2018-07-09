@@ -25,7 +25,7 @@ import (
   "strings"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/hashicorp/hcl2/gohcl"
   "github.com/hashicorp/hcl2/hcl"
   "github.com/hashicorp/hcl2/hclparse"
@@ -89,8 +89,8 @@ func DefaultConfig() *Config {
       Type: "mem",
     },
     Ttl: &TtlConfig{
-      Name:        mojang.NameValidityPeriod,            // Full Mojang limit
-      NameHistory: mojang.NameChangeRateLimitPeriod / 4, // 1/4th of the Mojang limit
+      Name:        entity.NameValidityPeriod,            // Full Mojang limit
+      NameHistory: entity.NameChangeRateLimitPeriod / 4, // 1/4th of the Mojang limit
       Profile:     time.Hour * 24 * 7,                   // 7 days
       Blacklist:   time.Hour * 24 * 7,                   // 7 days
     },

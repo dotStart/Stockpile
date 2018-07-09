@@ -19,14 +19,14 @@ package cache
 import (
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
 )
 
 // adjusts the name associations for the data discovered through a profile request
-func (c *Cache) updateNameMapping(profile *mojang.Profile) error {
+func (c *Cache) updateNameMapping(profile *entity.Profile) error {
   at := time.Now()
 
-  mapping := &mojang.ProfileId{
+  mapping := &entity.ProfileId{
     Id:          profile.Id,
     Name:        profile.Name,
     FirstSeenAt: at,

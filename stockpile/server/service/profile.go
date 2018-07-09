@@ -20,9 +20,9 @@ import (
   "errors"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/cache"
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/rpc"
+  "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
 )
@@ -66,7 +66,7 @@ func (s *ProfileServiceImpl) BulkGetId(_ context.Context, req *rpc.BulkIdRequest
 }
 
 func (s *ProfileServiceImpl) GetNameHistory(_ context.Context, req *rpc.IdRequest) (*rpc.NameHistory, error) {
-  id, err := mojang.ParseId(req.Id)
+  id, err := entity.ParseId(req.Id)
   if err != nil {
     return nil, err
   }
@@ -80,7 +80,7 @@ func (s *ProfileServiceImpl) GetNameHistory(_ context.Context, req *rpc.IdReques
 }
 
 func (s *ProfileServiceImpl) GetProfile(_ context.Context, req *rpc.IdRequest) (*rpc.Profile, error) {
-  id, err := mojang.ParseId(req.Id)
+  id, err := entity.ParseId(req.Id)
   if err != nil {
     return nil, err
   }

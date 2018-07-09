@@ -20,7 +20,7 @@ import (
   "strings"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/dotStart/Stockpile/stockpile/server"
   "github.com/google/uuid"
   "github.com/op/go-logging"
@@ -53,7 +53,7 @@ func (m *MemoryStorageBackend) Close() error {
   return nil
 }
 
-func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*mojang.ProfileId, error) {
+func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*entity.ProfileId, error) {
   m.clearExpiredEntries()
 
   name = strings.ToLower(name)
@@ -65,7 +65,7 @@ func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*mojang.
   }
 
   for _, exp := range mappings {
-    association := exp.content.(*mojang.ProfileId)
+    association := exp.content.(*entity.ProfileId)
     if association.IsValid(at) {
       m.logger.Debugf("association to profile %s matches", association.Id)
       return association, nil
@@ -77,7 +77,7 @@ func (m *MemoryStorageBackend) GetProfileId(name string, at time.Time) (*mojang.
   return nil, nil
 }
 
-func (m *MemoryStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
+func (m *MemoryStorageBackend) PutProfileId(profileId *entity.ProfileId) error {
   m.clearExpiredEntries()
 
   name := strings.ToLower(profileId.Name)
@@ -86,7 +86,7 @@ func (m *MemoryStorageBackend) PutProfileId(profileId *mojang.ProfileId) error {
   found := false
   if mappings != nil {
     for _, e := range mappings {
-      entry := e.content.(*mojang.ProfileId)
+      entry := e.content.(*entity.ProfileId)
       if entry.IsOverlappingWith(profileId) {
         entry.UpdateExpiration(profileId.LastSeenAt)
         found = true
@@ -124,7 +124,7 @@ func (m *MemoryStorageBackend) PurgeProfileId(name string, at time.Time) error {
 
   for i := 0; i < len(mappings); {
     exp := mappings[i]
-    association := exp.content.(*mojang.ProfileId)
+    association := exp.content.(*entity.ProfileId)
 
     if association.IsValid(at) {
       m.logger.Debugf("purging association to profile %s", association.Id)
@@ -139,7 +139,7 @@ func (m *MemoryStorageBackend) PurgeProfileId(name string, at time.Time) error {
   return nil
 }
 
-func (m *MemoryStorageBackend) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) {
+func (m *MemoryStorageBackend) GetNameHistory(id uuid.UUID) (*entity.NameChangeHistory, error) {
   m.clearExpiredEntries()
 
   exp := m.nameHistory[id]
@@ -147,10 +147,10 @@ func (m *MemoryStorageBackend) GetNameHistory(id uuid.UUID) (*mojang.NameChangeH
     return nil, nil
   }
 
-  return exp.content.(*mojang.NameChangeHistory), nil
+  return exp.content.(*entity.NameChangeHistory), nil
 }
 
-func (m *MemoryStorageBackend) PutNameHistory(id uuid.UUID, history *mojang.NameChangeHistory) error {
+func (m *MemoryStorageBackend) PutNameHistory(id uuid.UUID, history *entity.NameChangeHistory) error {
   m.clearExpiredEntries()
 
   m.logger.Debugf("storing history for profile %s (consisting of %d elements)", id, len(history.History))
@@ -170,7 +170,7 @@ func (m *MemoryStorageBackend) PurgeNameHistory(id uuid.UUID) error {
   return nil
 }
 
-func (m *MemoryStorageBackend) GetProfile(id uuid.UUID) (*mojang.Profile, error) {
+func (m *MemoryStorageBackend) GetProfile(id uuid.UUID) (*entity.Profile, error) {
   m.clearExpiredEntries()
 
   exp := m.profile[id]
@@ -178,10 +178,10 @@ func (m *MemoryStorageBackend) GetProfile(id uuid.UUID) (*mojang.Profile, error)
     return nil, nil
   }
 
-  return exp.content.(*mojang.Profile), nil
+  return exp.content.(*entity.Profile), nil
 }
 
-func (m *MemoryStorageBackend) PutProfile(profile *mojang.Profile) error {
+func (m *MemoryStorageBackend) PutProfile(profile *entity.Profile) error {
   m.clearExpiredEntries()
 
   m.logger.Debugf("storing profile %s", profile.Id)
@@ -201,15 +201,15 @@ func (m *MemoryStorageBackend) PurgeProfile(id uuid.UUID) error {
   return nil
 }
 
-func (m *MemoryStorageBackend) GetBlacklist() (*mojang.Blacklist, error) {
+func (m *MemoryStorageBackend) GetBlacklist() (*entity.Blacklist, error) {
   if m.blacklist == nil {
     return nil, nil
   }
 
-  return m.blacklist.content.(*mojang.Blacklist), nil
+  return m.blacklist.content.(*entity.Blacklist), nil
 }
 
-func (m *MemoryStorageBackend) PutBlacklist(blacklist *mojang.Blacklist) error {
+func (m *MemoryStorageBackend) PutBlacklist(blacklist *entity.Blacklist) error {
   m.blacklist = &expirationWrapper{
     content:   blacklist,
     createdAt: time.Now(),

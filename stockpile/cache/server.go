@@ -19,11 +19,11 @@ package cache
 import (
   "fmt"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
 )
 
 // retrieves the current server blacklist
-func (c *Cache) GetBlacklist() (*mojang.Blacklist, error) {
+func (c *Cache) GetBlacklist() (*entity.Blacklist, error) {
   c.logger.Debugf("processing query for server blacklist")
 
   blacklist, err := c.storage.GetBlacklist()
@@ -68,7 +68,7 @@ func (c *Cache) PurgeBlacklist() error {
 }
 
 // performs a cache assisted server login
-func (c *Cache) Login(displayName string, serverId string, ip string) (*mojang.Profile, error) {
+func (c *Cache) Login(displayName string, serverId string, ip string) (*entity.Profile, error) {
   c.logger.Debugf("processing login for user \"%s\" on server \"%s\" (with address \"%s\")", displayName, serverId, ip)
 
   profile, err := c.upstream.Login(displayName, serverId, ip)

@@ -21,12 +21,12 @@ import (
   "strings"
   "time"
 
-  "github.com/dotStart/Stockpile/stockpile/mojang"
+  "github.com/dotStart/Stockpile/entity"
   "github.com/google/uuid"
 )
 
 // retrieves the profile to which a given display name has been assigned at a specific time
-func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, error) {
+func (c *Cache) GetProfileId(name string, at time.Time) (*entity.ProfileId, error) {
   c.logger.Debugf("processing query for profile Id associated with name \"%s\" at time %s", name, at)
 
   id, err := c.storage.GetProfileId(name, at)
@@ -70,10 +70,10 @@ func (c *Cache) GetProfileId(name string, at time.Time) (*mojang.ProfileId, erro
 }
 
 // resolves multiple profile associations at the current time
-func (c *Cache) BulkGetProfileId(names []string) ([]*mojang.ProfileId, error) {
+func (c *Cache) BulkGetProfileId(names []string) ([]*entity.ProfileId, error) {
   c.logger.Debugf("processing query for profile Ids associated with names %s", strings.Join(names, ", "))
 
-  ids := make([]*mojang.ProfileId, 0)
+  ids := make([]*entity.ProfileId, 0)
   at := time.Now()
 
   for i := 0; i < len(names); {
@@ -133,7 +133,7 @@ func (c *Cache) PurgeProfileId(name string, at time.Time) error {
 }
 
 // retrieves the name history of a given profile
-func (c *Cache) GetNameHistory(id uuid.UUID) (*mojang.NameChangeHistory, error) {
+func (c *Cache) GetNameHistory(id uuid.UUID) (*entity.NameChangeHistory, error) {
   c.logger.Debugf("processing query for name history of profile %s", id)
 
   history, err := c.storage.GetNameHistory(id)
@@ -179,7 +179,7 @@ func (c *Cache) PurgeNameHistory(id uuid.UUID) error {
 }
 
 // retrieves a single profile
-func (c *Cache) GetProfile(id uuid.UUID) (*mojang.Profile, error) {
+func (c *Cache) GetProfile(id uuid.UUID) (*entity.Profile, error) {
   c.logger.Debugf("processing query for profile %s", id)
 
   profile, err := c.storage.GetProfile(id)
