@@ -16,7 +16,7 @@ Installation & Setup
 --------------------
 
 1. Download a binary release from the [releases page](https://github.com/dotStart/Stockpile/releases)
-or [build from source](#Building)
+or [build from source](#building)
 2. Extract or copy the Stockpile executable and plugin directory (if applicable) to a custom
 directory (convention for Linux systems is `/opt/stockpile`)
 3. Create a configuration file (for examples, refer to the `docs` directory in the source
