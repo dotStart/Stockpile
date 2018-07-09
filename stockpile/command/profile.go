@@ -22,7 +22,6 @@ import (
   "os"
 
   "github.com/dotStart/Stockpile/entity"
-  "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -73,26 +72,16 @@ func (c *ProfileCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inte
     return 1
   }
 
-  profileService := rpc.NewProfileServiceClient(client)
-  res, err := profileService.GetProfile(ctx, &rpc.IdRequest{
-    Id: id.String(),
-  })
+  profile, err := client.GetProfile(id)
   if err != nil {
     fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
-  if !res.IsPopulated() {
+  if profile == nil {
     fmt.Fprintf(os.Stderr, "no such profile")
     return 1
   }
-
-  profile, err := rpc.ProfileFromRpc(res)
-  if err != nil {
-    fmt.Fprintf(os.Stderr, "failed to decode profile: %s", err)
-    return 1
-  }
-
   writeTable(os.Stdout, *profile)
   return 0
 }

@@ -21,8 +21,6 @@ import (
   "fmt"
   "os"
 
-  "github.com/dotStart/Stockpile/rpc"
-  "github.com/golang/protobuf/ptypes/empty"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -58,16 +56,13 @@ func (c *PluginCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
     return 1
   }
 
-  systemService := rpc.NewSystemServiceClient(client)
-  res, err := systemService.GetPlugins(ctx, &empty.Empty{})
+  pluginList, err := client.GetPluginList()
   if err != nil {
-    fmt.Fprintf(os.Stderr, "server responded with error: %s", err)
+    fmt.Fprintf(os.Stderr, "failed to execute command: %s", err)
     return 1
   }
 
-  pluginList := rpc.PluginMetadataListFromRpc(res)
   fmt.Fprintf(os.Stdout, "server has %d plugin(s) loaded:\n\n", len(pluginList))
-
   for _, plugin := range pluginList {
     writeTable(os.Stdout, *plugin)
     fmt.Fprintf(os.Stdout, "\n")

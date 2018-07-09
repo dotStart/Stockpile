@@ -21,8 +21,6 @@ import (
   "fmt"
   "os"
 
-  "github.com/dotStart/Stockpile/rpc"
-  "github.com/golang/protobuf/ptypes/empty"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -58,8 +56,7 @@ func (c *StatusCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inter
     return 1
   }
 
-  systemService := rpc.NewSystemServiceClient(client)
-  status, err := systemService.GetStatus(ctx, &empty.Empty{})
+  status, err := client.GetStatus()
   if err != nil {
     fmt.Fprintf(os.Stderr, "server responded with error: %s", err)
     return 1

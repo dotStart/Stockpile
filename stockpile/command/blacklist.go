@@ -21,7 +21,6 @@ import (
   "fmt"
   "os"
 
-  "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -70,21 +69,18 @@ func (c *BlacklistCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...in
     return 1
   }
 
-  serverService := rpc.NewServerServiceClient(client)
-  res, err := serverService.CheckBlacklist(ctx, &rpc.CheckBlacklistRequest{
-    Addresses: f.Args(),
-  })
+  matchedAddresses, err := client.CheckBlacklist(f.Args())
   if err != nil {
     fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
-  if len(res.MatchedAddresses) == 0 {
+  if len(matchedAddresses) == 0 {
     fmt.Fprintf(os.Stderr, "none of the passed addresses match")
     return 0
   }
 
-  for _, match := range res.MatchedAddresses {
+  for _, match := range matchedAddresses {
     fmt.Printf("%s matches the blacklist\n", match)
   }
   return 0

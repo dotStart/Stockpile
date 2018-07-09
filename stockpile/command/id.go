@@ -23,7 +23,6 @@ import (
   "time"
 
   "github.com/dotStart/Stockpile/entity"
-  "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -96,48 +95,29 @@ func (c *IdCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...interface
       }
     }
 
-    profileService := rpc.NewProfileServiceClient(client)
-    res, err := profileService.GetId(ctx, &rpc.GetIdRequest{
-      Name:      f.Arg(0),
-      Timestamp: timestamp.Unix(),
-    })
+    profileId, err := client.GetProfileId(f.Arg(0), timestamp)
     if err != nil {
       fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
       return 1
     }
 
-    if !res.IsPopulated() {
+    if profileId == nil {
       fmt.Fprintf(os.Stderr, "no such profile\n")
       return 1
     }
-
-    profile, err := rpc.ProfileIdFromRpc(res)
-    if err != nil {
-      fmt.Fprintf(os.Stderr, "failed to convert profile: %s", err)
-      return 1
-    }
-    writeTable(os.Stdout, *profile)
+    writeTable(os.Stdout, *profileId)
     return 0
   }
 
-  profileService := rpc.NewProfileServiceClient(client)
-  res, err := profileService.BulkGetId(ctx, &rpc.BulkIdRequest{
-    Names: f.Args(),
-  })
+  profileIds, err := client.BulkGetProfileId(f.Args())
   if err != nil {
     fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
-  if !res.IsPopulated() {
-    fmt.Fprintf(os.Stderr, "no such profile")
-    return 1
-  }
-
-  profileIds, err := rpc.ProfileIdsFromRpcArray(res.Ids)
-  if err != nil {
-    fmt.Fprintf(os.Stderr, "failed to decode one or more profile ids: %s", err)
-    return 1
+  if len(profileIds) == 0 {
+    fmt.Fprintf(os.Stderr, "no profiles found")
+    return 0
   }
 
   writeTable(

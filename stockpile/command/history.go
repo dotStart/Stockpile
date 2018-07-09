@@ -22,7 +22,6 @@ import (
   "os"
 
   "github.com/dotStart/Stockpile/entity"
-  "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )
@@ -75,21 +74,16 @@ func (c *HistoryCommand) Execute(ctx context.Context, f *flag.FlagSet, _ ...inte
     return 1
   }
 
-  profileService := rpc.NewProfileServiceClient(client)
-  res, err := profileService.GetNameHistory(ctx, &rpc.IdRequest{
-    Id: id.String(),
-  })
+  history, err := client.GetNameHistory(id)
   if err != nil {
     fmt.Fprintf(os.Stderr, "command execution has failed: %s\n", err)
     return 1
   }
 
-  if !res.IsPopulated() {
+  if history == nil {
     fmt.Fprintf(os.Stderr, "no such profile")
     return 1
   }
-
-  history := rpc.NameHistoryFromRpc(res)
   writeTable(os.Stdout, *history)
   return 0
 }

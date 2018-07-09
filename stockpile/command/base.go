@@ -20,8 +20,8 @@ import (
   "flag"
   "fmt"
 
+  "github.com/dotStart/Stockpile/client"
   "github.com/dotStart/Stockpile/stockpile/server"
-  "google.golang.org/grpc"
 )
 
 type ClientCommand struct {
@@ -29,13 +29,13 @@ type ClientCommand struct {
 }
 
 // creates a new grpc client using the command configuration
-func (c *ClientCommand) createClient() (*grpc.ClientConn, error) {
-  client, err := grpc.Dial(c.flagServerAddress, grpc.WithInsecure())
+func (c *ClientCommand) createClient() (*client.Stockpile, error) {
+  cl, err := client.New(c.flagServerAddress)
   if err != nil {
     return nil, err
   }
 
-  return client, nil
+  return cl, nil
 }
 
 func (c *ClientCommand) SetFlags(f *flag.FlagSet) {
