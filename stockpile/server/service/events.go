@@ -42,7 +42,10 @@ func (s *EventServiceImpl) StreamEvents(_ *empty.Empty, srv rpc.EventService_Str
     s.logger.Debugf("beginning to stream events to rpc client %s", p.Addr)
   }
 
-  for e := range s.cache.Events {
+  listener := s.cache.NewListener()
+  defer listener.Close()
+
+  for e := range listener.C {
     if ok {
       s.logger.Debugf("forwarding event of type %T (using key %T) to rpc client %s", e.Object, e.Key, p.Addr)
     }

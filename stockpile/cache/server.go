@@ -47,7 +47,7 @@ func (c *Cache) GetBlacklist() (*entity.Blacklist, error) {
       }
       c.logger.Debugf("wrote new data to storage backend")
 
-      c.Events <- &entity.Event{
+      c.events <- &entity.Event{
         Type:   entity.BlacklistEvent,
         Key:    nil,
         Object: blacklist,
@@ -87,7 +87,7 @@ func (c *Cache) Login(displayName string, serverId string, ip string) (*entity.P
   }
   c.logger.Debugf("wrote new data to storage backend")
 
-  c.Events <- &entity.Event{
+  c.events <- &entity.Event{
     Type:   entity.ProfileEvent,
     Key:    profile.Id,
     Object: profile,

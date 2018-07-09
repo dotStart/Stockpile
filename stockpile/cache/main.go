@@ -17,6 +17,7 @@
 package cache
 
 import (
+  "sync"
   "sync/atomic"
   "time"
 
@@ -34,18 +35,24 @@ type Cache struct {
 
   resetTicker    *time.Ticker
   requestCounter uint64
-  Events         chan *entity.Event
+  events         chan *entity.Event
+
+  listenerMutex *sync.Mutex
+  listeners     []*Listener
 }
 
 // creates a new cache client using
 func New(upstream *mojang.MojangAPI, storage storage.StorageBackend) *Cache {
   cache := &Cache{
-    logger:      logging.MustGetLogger("cache"),
-    upstream:    upstream,
-    storage:     storage,
-    resetTicker: time.NewTicker(time.Minute * 10),
-    Events:      make(chan *entity.Event),
+    logger:        logging.MustGetLogger("cache"),
+    upstream:      upstream,
+    storage:       storage,
+    resetTicker:   time.NewTicker(time.Minute * 10),
+    events:        make(chan *entity.Event),
+    listenerMutex: &sync.Mutex{},
+    listeners:     make([]*Listener, 0),
   }
+  go cache.deliverEvents()
   go cache.resetRequestCounter()
   return cache
 }

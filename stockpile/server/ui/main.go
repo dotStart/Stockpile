@@ -30,10 +30,11 @@ import (
 //go:generate go-bindata-assetfs -pkg ui -o data.gen.go -prefix ../../ui/dist -ignore semantic.(js|css|min.js) ../../ui/dist/...
 
 type Server struct {
-  logger *logging.Logger
-  io     *socketio.Server
-  plugin *plugin.Manager
-  cache  *cache.Cache
+  logger   *logging.Logger
+  io       *socketio.Server
+  plugin   *plugin.Manager
+  cache    *cache.Cache
+  listener *cache.Listener
 
   rateLimitTicker *time.Ticker
 
@@ -47,10 +48,11 @@ func NewServer(httpSrv *http.ServeMux, corsOverride string, plugin *plugin.Manag
   }
 
   srv := &Server{
-    logger: logging.MustGetLogger("ui"),
-    io:     io,
-    plugin: plugin,
-    cache:  cacheImpl,
+    logger:   logging.MustGetLogger("ui"),
+    io:       io,
+    plugin:   plugin,
+    cache:    cacheImpl,
+    listener: cacheImpl.NewListener(),
 
     rateLimitTicker: time.NewTicker(time.Minute),
 
@@ -96,7 +98,7 @@ func (s *Server) forwardRateLimit() {
 
 // forwards all cache events to connected clients
 func (s *Server) forwardCacheEvents() {
-  for e := range s.cache.Events {
+  for e := range s.listener.C {
     // TODO: socket.io eats serialization errors here - use this to debug until this issue is fixed
     /*_, err := json.Marshal(e)
     if err != nil {
