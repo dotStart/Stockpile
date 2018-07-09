@@ -33,6 +33,8 @@ import (
 
 const MessageTypeBaseUrl = "github.com/dotStart/Stockpile/stockpile/server/rpc/"
 
+// TODO: Consider moving some of these to the entity package to remove the client -> plugin dependency
+
 // Converts a profileId into its fully parsed representation
 func ProfileIdFromRpc(rpc *ProfileId) (*entity.ProfileId, error) {
   if !rpc.IsPopulated() {
@@ -475,6 +477,16 @@ func EventPayloadFromRpc(payload *any.Any) (interface{}, error) {
   }
 
   return nil, fmt.Errorf("illegal payload value: %v", payload)
+}
+
+func StatusFromRpc(rpc *Status) *entity.Status {
+  return &entity.Status{
+    Brand:          rpc.Brand,
+    Version:        rpc.Version,
+    VersionFull:    rpc.VersionFull,
+    CommitHash:     rpc.CommitHash,
+    BuildTimestamp: time.Unix(rpc.BuildTimestamp, 0),
+  }
 }
 
 func PluginMetadataListToRpc(list []*plugin.Metadata) *PluginList {
