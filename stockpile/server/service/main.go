@@ -19,9 +19,9 @@ package service
 import (
   "net"
 
+  "github.com/dotStart/Stockpile/rpc"
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/plugin"
-  "github.com/dotStart/Stockpile/rpc"
   "github.com/op/go-logging"
   "google.golang.org/grpc"
   "google.golang.org/grpc/reflection"
@@ -66,6 +66,10 @@ func (s *Server) Stop() {
 
 // destroys the server instance permanently
 func (s *Server) Destroy() {
-  s.srv.Stop()
-  s.cache.Close()
+  if s.srv != nil {
+    s.srv.Stop()
+  }
+  if s.cache != nil {
+    s.cache.Close()
+  }
 }
