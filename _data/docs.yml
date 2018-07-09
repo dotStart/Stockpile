@@ -22,6 +22,11 @@
     - name: Configuration
       url: /docs/plugin-redis/configuration.html
 
+- name: Client Libraries
+  pages:
+    - name: Go
+      url: /docs/client-library/go.html
+
 - name: Plugin Development
   pages:
     - name: Getting Started
