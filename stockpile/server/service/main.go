@@ -21,7 +21,7 @@ import (
 
   "github.com/dotStart/Stockpile/stockpile/cache"
   "github.com/dotStart/Stockpile/stockpile/plugin"
-  "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/rpc"
   "github.com/op/go-logging"
   "google.golang.org/grpc"
   "google.golang.org/grpc/reflection"

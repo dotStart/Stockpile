@@ -23,7 +23,7 @@ import (
   "time"
 
   "github.com/dotStart/Stockpile/stockpile/mojang"
-  "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/rpc"
   "github.com/google/subcommands"
   "golang.org/x/net/context"
 )

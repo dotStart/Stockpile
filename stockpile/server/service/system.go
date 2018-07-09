@@ -19,7 +19,7 @@ package service
 import (
   "github.com/dotStart/Stockpile/stockpile/metadata"
   "github.com/dotStart/Stockpile/stockpile/plugin"
-  "github.com/dotStart/Stockpile/stockpile/server/rpc"
+  "github.com/dotStart/Stockpile/rpc"
   "github.com/golang/protobuf/ptypes/empty"
   "github.com/op/go-logging"
   "golang.org/x/net/context"
