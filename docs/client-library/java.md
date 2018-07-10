@@ -15,7 +15,6 @@ which provides multiple constructors for various different scenarios:
 
 ```java
 import io.github.dotstart.stockpile.Stockpile;
-import io.github.dotstart.stockpile.entity.system.Status;
 import io.github.dotstart.stockpile.entity.profile.ProfileId;
 import java.time.Instant;
 
@@ -26,24 +25,5 @@ public class MyApplication {
       System.out.println("ProfileId: " + profileId.getId())
     }
   }
-}
-
-import (
-  "fmt"
-  "github.com/dotStart/Stockpile/client"
-)
-
-func main() {
-  client, err := client.New("localhost:36623")
-  if err != nil {
-    panic(err)
-  }
-
-  profileId, err := client.GetProfileId("dotStart", time.Now())
-  if err != nil {
-    panic(err)
-  }
-
-  fmt.Printf("ProfileId: %s\n", profileId.Id)
 }
 ```
