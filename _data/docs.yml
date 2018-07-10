@@ -26,6 +26,8 @@
   pages:
     - name: Go
       url: /docs/client-library/go.html
+    - name: Java
+      url: /docs/client-library/java.html
 
 - name: Plugin Development
   pages:
