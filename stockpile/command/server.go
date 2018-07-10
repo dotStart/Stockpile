@@ -159,7 +159,7 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
   // initialize the RPC server at all times (only differ between mux policies depending on whether the legacy API or UI
   // is enabled)
   rpcPolicy := cmux.Any()
-  if *cfg.UiEnabled {
+  if *cfg.UiEnabled || *cfg.LegacyApiEnabled {
     rpcPolicy = cmux.HTTP2HeaderField("content-type", "application/grpc")
   }
   rpcServer, err := service.NewServer(pluginManager, cacheImpl)
