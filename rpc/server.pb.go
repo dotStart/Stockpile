@@ -6,7 +6,7 @@ package rpc
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import empty "github.com/golang/protobuf/ptypes/empty"
+import google_protobuf1 "github.com/golang/protobuf/ptypes/empty"
 
 import (
 	context "golang.org/x/net/context"
@@ -18,44 +18,16 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
-// proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
-
 // *
 // Represents the current server blacklist.
 type Blacklist struct {
-	Hashes               []string `protobuf:"bytes,1,rep,name=hashes,proto3" json:"hashes,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Hashes []string `protobuf:"bytes,1,rep,name=hashes" json:"hashes,omitempty"`
 }
 
-func (m *Blacklist) Reset()         { *m = Blacklist{} }
-func (m *Blacklist) String() string { return proto.CompactTextString(m) }
-func (*Blacklist) ProtoMessage()    {}
-func (*Blacklist) Descriptor() ([]byte, []int) {
-	return fileDescriptor_server_050d061dc2043499, []int{0}
-}
-func (m *Blacklist) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Blacklist.Unmarshal(m, b)
-}
-func (m *Blacklist) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Blacklist.Marshal(b, m, deterministic)
-}
-func (dst *Blacklist) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Blacklist.Merge(dst, src)
-}
-func (m *Blacklist) XXX_Size() int {
-	return xxx_messageInfo_Blacklist.Size(m)
-}
-func (m *Blacklist) XXX_DiscardUnknown() {
-	xxx_messageInfo_Blacklist.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Blacklist proto.InternalMessageInfo
+func (m *Blacklist) Reset()                    { *m = Blacklist{} }
+func (m *Blacklist) String() string            { return proto.CompactTextString(m) }
+func (*Blacklist) ProtoMessage()               {}
+func (*Blacklist) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
 
 func (m *Blacklist) GetHashes() []string {
 	if m != nil {
@@ -68,35 +40,13 @@ func (m *Blacklist) GetHashes() []string {
 // Represents a request which evaluates whether the passed hostnames or ip
 // addresses match the server blacklist
 type CheckBlacklistRequest struct {
-	Addresses            []string `protobuf:"bytes,1,rep,name=addresses,proto3" json:"addresses,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Addresses []string `protobuf:"bytes,1,rep,name=addresses" json:"addresses,omitempty"`
 }
 
-func (m *CheckBlacklistRequest) Reset()         { *m = CheckBlacklistRequest{} }
-func (m *CheckBlacklistRequest) String() string { return proto.CompactTextString(m) }
-func (*CheckBlacklistRequest) ProtoMessage()    {}
-func (*CheckBlacklistRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_server_050d061dc2043499, []int{1}
-}
-func (m *CheckBlacklistRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CheckBlacklistRequest.Unmarshal(m, b)
-}
-func (m *CheckBlacklistRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CheckBlacklistRequest.Marshal(b, m, deterministic)
-}
-func (dst *CheckBlacklistRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CheckBlacklistRequest.Merge(dst, src)
-}
-func (m *CheckBlacklistRequest) XXX_Size() int {
-	return xxx_messageInfo_CheckBlacklistRequest.Size(m)
-}
-func (m *CheckBlacklistRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_CheckBlacklistRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CheckBlacklistRequest proto.InternalMessageInfo
+func (m *CheckBlacklistRequest) Reset()                    { *m = CheckBlacklistRequest{} }
+func (m *CheckBlacklistRequest) String() string            { return proto.CompactTextString(m) }
+func (*CheckBlacklistRequest) ProtoMessage()               {}
+func (*CheckBlacklistRequest) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{1} }
 
 func (m *CheckBlacklistRequest) GetAddresses() []string {
 	if m != nil {
@@ -108,35 +58,13 @@ func (m *CheckBlacklistRequest) GetAddresses() []string {
 // *
 // represents a response to a prior blacklist check
 type CheckBlacklistResponse struct {
-	MatchedAddresses     []string `protobuf:"bytes,1,rep,name=matchedAddresses,proto3" json:"matchedAddresses,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	MatchedAddresses []string `protobuf:"bytes,1,rep,name=matchedAddresses" json:"matchedAddresses,omitempty"`
 }
 
-func (m *CheckBlacklistResponse) Reset()         { *m = CheckBlacklistResponse{} }
-func (m *CheckBlacklistResponse) String() string { return proto.CompactTextString(m) }
-func (*CheckBlacklistResponse) ProtoMessage()    {}
-func (*CheckBlacklistResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_server_050d061dc2043499, []int{2}
-}
-func (m *CheckBlacklistResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CheckBlacklistResponse.Unmarshal(m, b)
-}
-func (m *CheckBlacklistResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CheckBlacklistResponse.Marshal(b, m, deterministic)
-}
-func (dst *CheckBlacklistResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CheckBlacklistResponse.Merge(dst, src)
-}
-func (m *CheckBlacklistResponse) XXX_Size() int {
-	return xxx_messageInfo_CheckBlacklistResponse.Size(m)
-}
-func (m *CheckBlacklistResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_CheckBlacklistResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_CheckBlacklistResponse proto.InternalMessageInfo
+func (m *CheckBlacklistResponse) Reset()                    { *m = CheckBlacklistResponse{} }
+func (m *CheckBlacklistResponse) String() string            { return proto.CompactTextString(m) }
+func (*CheckBlacklistResponse) ProtoMessage()               {}
+func (*CheckBlacklistResponse) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{2} }
 
 func (m *CheckBlacklistResponse) GetMatchedAddresses() []string {
 	if m != nil {
@@ -146,37 +74,15 @@ func (m *CheckBlacklistResponse) GetMatchedAddresses() []string {
 }
 
 type LoginRequest struct {
-	DisplayName          string   `protobuf:"bytes,1,opt,name=displayName,proto3" json:"displayName,omitempty"`
-	ServerId             string   `protobuf:"bytes,2,opt,name=serverId,proto3" json:"serverId,omitempty"`
-	Ip                   string   `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	DisplayName string `protobuf:"bytes,1,opt,name=displayName" json:"displayName,omitempty"`
+	ServerId    string `protobuf:"bytes,2,opt,name=serverId" json:"serverId,omitempty"`
+	Ip          string `protobuf:"bytes,3,opt,name=ip" json:"ip,omitempty"`
 }
 
-func (m *LoginRequest) Reset()         { *m = LoginRequest{} }
-func (m *LoginRequest) String() string { return proto.CompactTextString(m) }
-func (*LoginRequest) ProtoMessage()    {}
-func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_server_050d061dc2043499, []int{3}
-}
-func (m *LoginRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_LoginRequest.Unmarshal(m, b)
-}
-func (m *LoginRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_LoginRequest.Marshal(b, m, deterministic)
-}
-func (dst *LoginRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_LoginRequest.Merge(dst, src)
-}
-func (m *LoginRequest) XXX_Size() int {
-	return xxx_messageInfo_LoginRequest.Size(m)
-}
-func (m *LoginRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_LoginRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_LoginRequest proto.InternalMessageInfo
+func (m *LoginRequest) Reset()                    { *m = LoginRequest{} }
+func (m *LoginRequest) String() string            { return proto.CompactTextString(m) }
+func (*LoginRequest) ProtoMessage()               {}
+func (*LoginRequest) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{3} }
 
 func (m *LoginRequest) GetDisplayName() string {
 	if m != nil {
@@ -214,13 +120,12 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// ServerServiceClient is the client API for ServerService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+// Client API for ServerService service
+
 type ServerServiceClient interface {
 	// *
 	// Retrieves a cached version of the entire server blacklist.
-	GetBlacklist(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*Blacklist, error)
+	GetBlacklist(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*Blacklist, error)
 	// *
 	// Evaluates whether a given address has been blacklisted.
 	//
@@ -245,9 +150,9 @@ func NewServerServiceClient(cc *grpc.ClientConn) ServerServiceClient {
 	return &serverServiceClient{cc}
 }
 
-func (c *serverServiceClient) GetBlacklist(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*Blacklist, error) {
+func (c *serverServiceClient) GetBlacklist(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*Blacklist, error) {
 	out := new(Blacklist)
-	err := c.cc.Invoke(ctx, "/rpc.ServerService/GetBlacklist", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ServerService/GetBlacklist", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -256,7 +161,7 @@ func (c *serverServiceClient) GetBlacklist(ctx context.Context, in *empty.Empty,
 
 func (c *serverServiceClient) CheckBlacklist(ctx context.Context, in *CheckBlacklistRequest, opts ...grpc.CallOption) (*CheckBlacklistResponse, error) {
 	out := new(CheckBlacklistResponse)
-	err := c.cc.Invoke(ctx, "/rpc.ServerService/CheckBlacklist", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ServerService/CheckBlacklist", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -265,18 +170,19 @@ func (c *serverServiceClient) CheckBlacklist(ctx context.Context, in *CheckBlack
 
 func (c *serverServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Profile, error) {
 	out := new(Profile)
-	err := c.cc.Invoke(ctx, "/rpc.ServerService/Login", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ServerService/Login", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ServerServiceServer is the server API for ServerService service.
+// Server API for ServerService service
+
 type ServerServiceServer interface {
 	// *
 	// Retrieves a cached version of the entire server blacklist.
-	GetBlacklist(context.Context, *empty.Empty) (*Blacklist, error)
+	GetBlacklist(context.Context, *google_protobuf1.Empty) (*Blacklist, error)
 	// *
 	// Evaluates whether a given address has been blacklisted.
 	//
@@ -298,7 +204,7 @@ func RegisterServerServiceServer(s *grpc.Server, srv ServerServiceServer) {
 }
 
 func _ServerService_GetBlacklist_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(empty.Empty)
+	in := new(google_protobuf1.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -310,7 +216,7 @@ func _ServerService_GetBlacklist_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/rpc.ServerService/GetBlacklist",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServerServiceServer).GetBlacklist(ctx, req.(*empty.Empty))
+		return srv.(ServerServiceServer).GetBlacklist(ctx, req.(*google_protobuf1.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -372,9 +278,9 @@ var _ServerService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "server.proto",
 }
 
-func init() { proto.RegisterFile("server.proto", fileDescriptor_server_050d061dc2043499) }
+func init() { proto.RegisterFile("server.proto", fileDescriptor3) }
 
-var fileDescriptor_server_050d061dc2043499 = []byte{
+var fileDescriptor3 = []byte{
 	// 325 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x90, 0xcf, 0x4b, 0xc3, 0x30,
 	0x14, 0xc7, 0xe9, 0x86, 0xc3, 0x3e, 0xeb, 0xd0, 0x80, 0xa3, 0x64, 0x1e, 0x4a, 0xbd, 0x0c, 0x0f,

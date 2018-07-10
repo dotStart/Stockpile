@@ -6,7 +6,7 @@ package rpc
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import empty "github.com/golang/protobuf/ptypes/empty"
+import google_protobuf1 "github.com/golang/protobuf/ptypes/empty"
 
 import (
 	context "golang.org/x/net/context"
@@ -18,46 +18,18 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
-// proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
-
 type Status struct {
-	Brand                string   `protobuf:"bytes,1,opt,name=Brand,proto3" json:"Brand,omitempty"`
-	Version              string   `protobuf:"bytes,2,opt,name=Version,proto3" json:"Version,omitempty"`
-	VersionFull          string   `protobuf:"bytes,3,opt,name=VersionFull,proto3" json:"VersionFull,omitempty"`
-	CommitHash           string   `protobuf:"bytes,4,opt,name=CommitHash,proto3" json:"CommitHash,omitempty"`
-	BuildTimestamp       int64    `protobuf:"varint,5,opt,name=BuildTimestamp,proto3" json:"BuildTimestamp,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Brand          string `protobuf:"bytes,1,opt,name=Brand,json=brand" json:"Brand,omitempty"`
+	Version        string `protobuf:"bytes,2,opt,name=Version,json=version" json:"Version,omitempty"`
+	VersionFull    string `protobuf:"bytes,3,opt,name=VersionFull,json=versionFull" json:"VersionFull,omitempty"`
+	CommitHash     string `protobuf:"bytes,4,opt,name=CommitHash,json=commitHash" json:"CommitHash,omitempty"`
+	BuildTimestamp int64  `protobuf:"varint,5,opt,name=BuildTimestamp,json=buildTimestamp" json:"BuildTimestamp,omitempty"`
 }
 
-func (m *Status) Reset()         { *m = Status{} }
-func (m *Status) String() string { return proto.CompactTextString(m) }
-func (*Status) ProtoMessage()    {}
-func (*Status) Descriptor() ([]byte, []int) {
-	return fileDescriptor_system_fe1ad3210343ce4b, []int{0}
-}
-func (m *Status) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Status.Unmarshal(m, b)
-}
-func (m *Status) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Status.Marshal(b, m, deterministic)
-}
-func (dst *Status) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Status.Merge(dst, src)
-}
-func (m *Status) XXX_Size() int {
-	return xxx_messageInfo_Status.Size(m)
-}
-func (m *Status) XXX_DiscardUnknown() {
-	xxx_messageInfo_Status.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Status proto.InternalMessageInfo
+func (m *Status) Reset()                    { *m = Status{} }
+func (m *Status) String() string            { return proto.CompactTextString(m) }
+func (*Status) ProtoMessage()               {}
+func (*Status) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
 
 func (m *Status) GetBrand() string {
 	if m != nil {
@@ -95,35 +67,13 @@ func (m *Status) GetBuildTimestamp() int64 {
 }
 
 type PluginList struct {
-	Plugins              []*Plugin `protobuf:"bytes,1,rep,name=Plugins,proto3" json:"Plugins,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
-	XXX_unrecognized     []byte    `json:"-"`
-	XXX_sizecache        int32     `json:"-"`
+	Plugins []*Plugin `protobuf:"bytes,1,rep,name=Plugins,json=plugins" json:"Plugins,omitempty"`
 }
 
-func (m *PluginList) Reset()         { *m = PluginList{} }
-func (m *PluginList) String() string { return proto.CompactTextString(m) }
-func (*PluginList) ProtoMessage()    {}
-func (*PluginList) Descriptor() ([]byte, []int) {
-	return fileDescriptor_system_fe1ad3210343ce4b, []int{1}
-}
-func (m *PluginList) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PluginList.Unmarshal(m, b)
-}
-func (m *PluginList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PluginList.Marshal(b, m, deterministic)
-}
-func (dst *PluginList) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PluginList.Merge(dst, src)
-}
-func (m *PluginList) XXX_Size() int {
-	return xxx_messageInfo_PluginList.Size(m)
-}
-func (m *PluginList) XXX_DiscardUnknown() {
-	xxx_messageInfo_PluginList.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_PluginList proto.InternalMessageInfo
+func (m *PluginList) Reset()                    { *m = PluginList{} }
+func (m *PluginList) String() string            { return proto.CompactTextString(m) }
+func (*PluginList) ProtoMessage()               {}
+func (*PluginList) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
 
 func (m *PluginList) GetPlugins() []*Plugin {
 	if m != nil {
@@ -133,38 +83,16 @@ func (m *PluginList) GetPlugins() []*Plugin {
 }
 
 type Plugin struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`
-	Version              string   `protobuf:"bytes,2,opt,name=Version,proto3" json:"Version,omitempty"`
-	Authors              []string `protobuf:"bytes,3,rep,name=Authors,proto3" json:"Authors,omitempty"`
-	Website              string   `protobuf:"bytes,4,opt,name=Website,proto3" json:"Website,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Name    string   `protobuf:"bytes,1,opt,name=Name,json=name" json:"Name,omitempty"`
+	Version string   `protobuf:"bytes,2,opt,name=Version,json=version" json:"Version,omitempty"`
+	Authors []string `protobuf:"bytes,3,rep,name=Authors,json=authors" json:"Authors,omitempty"`
+	Website string   `protobuf:"bytes,4,opt,name=Website,json=website" json:"Website,omitempty"`
 }
 
-func (m *Plugin) Reset()         { *m = Plugin{} }
-func (m *Plugin) String() string { return proto.CompactTextString(m) }
-func (*Plugin) ProtoMessage()    {}
-func (*Plugin) Descriptor() ([]byte, []int) {
-	return fileDescriptor_system_fe1ad3210343ce4b, []int{2}
-}
-func (m *Plugin) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Plugin.Unmarshal(m, b)
-}
-func (m *Plugin) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Plugin.Marshal(b, m, deterministic)
-}
-func (dst *Plugin) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Plugin.Merge(dst, src)
-}
-func (m *Plugin) XXX_Size() int {
-	return xxx_messageInfo_Plugin.Size(m)
-}
-func (m *Plugin) XXX_DiscardUnknown() {
-	xxx_messageInfo_Plugin.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Plugin proto.InternalMessageInfo
+func (m *Plugin) Reset()                    { *m = Plugin{} }
+func (m *Plugin) String() string            { return proto.CompactTextString(m) }
+func (*Plugin) ProtoMessage()               {}
+func (*Plugin) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
 
 func (m *Plugin) GetName() string {
 	if m != nil {
@@ -208,12 +136,11 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// SystemServiceClient is the client API for SystemService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+// Client API for SystemService service
+
 type SystemServiceClient interface {
-	GetStatus(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*Status, error)
-	GetPlugins(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*PluginList, error)
+	GetStatus(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*Status, error)
+	GetPlugins(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*PluginList, error)
 }
 
 type systemServiceClient struct {
@@ -224,28 +151,29 @@ func NewSystemServiceClient(cc *grpc.ClientConn) SystemServiceClient {
 	return &systemServiceClient{cc}
 }
 
-func (c *systemServiceClient) GetStatus(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*Status, error) {
+func (c *systemServiceClient) GetStatus(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
-	err := c.cc.Invoke(ctx, "/rpc.SystemService/GetStatus", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.SystemService/GetStatus", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *systemServiceClient) GetPlugins(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*PluginList, error) {
+func (c *systemServiceClient) GetPlugins(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*PluginList, error) {
 	out := new(PluginList)
-	err := c.cc.Invoke(ctx, "/rpc.SystemService/GetPlugins", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.SystemService/GetPlugins", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// SystemServiceServer is the server API for SystemService service.
+// Server API for SystemService service
+
 type SystemServiceServer interface {
-	GetStatus(context.Context, *empty.Empty) (*Status, error)
-	GetPlugins(context.Context, *empty.Empty) (*PluginList, error)
+	GetStatus(context.Context, *google_protobuf1.Empty) (*Status, error)
+	GetPlugins(context.Context, *google_protobuf1.Empty) (*PluginList, error)
 }
 
 func RegisterSystemServiceServer(s *grpc.Server, srv SystemServiceServer) {
@@ -253,7 +181,7 @@ func RegisterSystemServiceServer(s *grpc.Server, srv SystemServiceServer) {
 }
 
 func _SystemService_GetStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(empty.Empty)
+	in := new(google_protobuf1.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -265,13 +193,13 @@ func _SystemService_GetStatus_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/rpc.SystemService/GetStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SystemServiceServer).GetStatus(ctx, req.(*empty.Empty))
+		return srv.(SystemServiceServer).GetStatus(ctx, req.(*google_protobuf1.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _SystemService_GetPlugins_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(empty.Empty)
+	in := new(google_protobuf1.Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -283,7 +211,7 @@ func _SystemService_GetPlugins_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/rpc.SystemService/GetPlugins",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SystemServiceServer).GetPlugins(ctx, req.(*empty.Empty))
+		return srv.(SystemServiceServer).GetPlugins(ctx, req.(*google_protobuf1.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -305,29 +233,30 @@ var _SystemService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "system.proto",
 }
 
-func init() { proto.RegisterFile("system.proto", fileDescriptor_system_fe1ad3210343ce4b) }
+func init() { proto.RegisterFile("system.proto", fileDescriptor4) }
 
-var fileDescriptor_system_fe1ad3210343ce4b = []byte{
-	// 331 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x51, 0x5d, 0x4b, 0xf3, 0x30,
-	0x14, 0xa6, 0x6f, 0xf7, 0xc1, 0xce, 0xde, 0xf7, 0x15, 0x82, 0x48, 0x98, 0x20, 0xa5, 0xa0, 0xec,
-	0x2a, 0x93, 0x0d, 0x7f, 0x80, 0x13, 0x9d, 0x17, 0x22, 0xb2, 0x89, 0x5e, 0xb7, 0x5d, 0xec, 0xa2,
-	0xcd, 0x52, 0x92, 0x13, 0x71, 0x7f, 0xc7, 0x5f, 0x2a, 0x4d, 0x52, 0x18, 0x82, 0xde, 0x9d, 0xe7,
-	0x23, 0xe1, 0x3c, 0xe7, 0x81, 0xbf, 0x66, 0x67, 0x90, 0x4b, 0x56, 0x6b, 0x85, 0x8a, 0xc4, 0xba,
-	0x2e, 0x46, 0xc7, 0xa5, 0x52, 0x65, 0xc5, 0x27, 0x8e, 0xca, 0xed, 0xcb, 0x84, 0xcb, 0x1a, 0x77,
-	0xde, 0x91, 0x7e, 0x46, 0xd0, 0x5b, 0x61, 0x86, 0xd6, 0x90, 0x43, 0xe8, 0xce, 0x75, 0xb6, 0x5d,
-	0xd3, 0x28, 0x89, 0xc6, 0x83, 0xa5, 0x07, 0x84, 0x42, 0xff, 0x89, 0x6b, 0x23, 0xd4, 0x96, 0xfe,
-	0x71, 0x7c, 0x0b, 0x49, 0x02, 0xc3, 0x30, 0xde, 0xd8, 0xaa, 0xa2, 0xb1, 0x53, 0xf7, 0x29, 0x72,
-	0x02, 0x70, 0xa5, 0xa4, 0x14, 0x78, 0x9b, 0x99, 0x0d, 0xed, 0x38, 0xc3, 0x1e, 0x43, 0xce, 0xe0,
-	0xff, 0xdc, 0x8a, 0x6a, 0xfd, 0x28, 0x24, 0x37, 0x98, 0xc9, 0x9a, 0x76, 0x93, 0x68, 0x1c, 0x2f,
-	0xbf, 0xb1, 0xe9, 0x0c, 0xe0, 0xa1, 0xb2, 0xa5, 0xd8, 0xde, 0x09, 0x83, 0xe4, 0x14, 0xfa, 0x1e,
-	0x19, 0x1a, 0x25, 0xf1, 0x78, 0x38, 0x1d, 0x32, 0x5d, 0x17, 0xcc, 0x73, 0xcb, 0x56, 0x4b, 0x5f,
-	0xa1, 0xe7, 0x47, 0x42, 0xa0, 0x73, 0x9f, 0x49, 0x1e, 0x72, 0xb9, 0xf9, 0x97, 0x58, 0x14, 0xfa,
-	0x97, 0x16, 0x37, 0x4a, 0x1b, 0x1a, 0x27, 0x71, 0xa3, 0x04, 0xd8, 0x28, 0xcf, 0x3c, 0x37, 0x02,
-	0x79, 0xc8, 0xd2, 0xc2, 0xe9, 0x07, 0xfc, 0x5b, 0xb9, 0xbb, 0xaf, 0xb8, 0x7e, 0x17, 0x05, 0x27,
-	0xe7, 0x30, 0x58, 0x70, 0x0c, 0x87, 0x3d, 0x62, 0xbe, 0x01, 0xd6, 0x36, 0xc0, 0xae, 0x9b, 0x06,
-	0x46, 0x7e, 0xef, 0x60, 0xba, 0x00, 0x58, 0x70, 0x0c, 0xcb, 0xff, 0xf8, 0xe4, 0x60, 0x2f, 0x6a,
-	0x73, 0x8c, 0x79, 0x0a, 0x89, 0x50, 0xac, 0x14, 0xb8, 0xb1, 0x39, 0x5b, 0x2b, 0x34, 0x98, 0x69,
-	0x64, 0x06, 0x55, 0xf1, 0x56, 0x8b, 0x8a, 0x37, 0xf6, 0xbc, 0xe7, 0x3e, 0x99, 0x7d, 0x05, 0x00,
-	0x00, 0xff, 0xff, 0x6b, 0x5c, 0xa4, 0x35, 0x1c, 0x02, 0x00, 0x00,
+var fileDescriptor4 = []byte{
+	// 345 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x91, 0x5f, 0x4b, 0xf3, 0x30,
+	0x18, 0xc5, 0xe9, 0xdb, 0x6d, 0x65, 0x4f, 0x5f, 0x27, 0x04, 0x91, 0x30, 0x41, 0x4a, 0x41, 0xd9,
+	0x55, 0x26, 0x1b, 0x7e, 0x00, 0x27, 0x3a, 0x2f, 0x44, 0x64, 0x13, 0xbd, 0x4e, 0xbb, 0xd8, 0x45,
+	0x9b, 0xa6, 0x24, 0x4f, 0xa7, 0xfb, 0x3a, 0x7e, 0x52, 0x69, 0x53, 0xff, 0x5d, 0xe8, 0xe5, 0xf9,
+	0x9d, 0xd3, 0x92, 0xf3, 0x1c, 0xf8, 0x6f, 0xb7, 0x16, 0x85, 0x62, 0xa5, 0xd1, 0xa8, 0x89, 0x6f,
+	0xca, 0x74, 0x78, 0x90, 0x69, 0x9d, 0xe5, 0x62, 0xdc, 0xa0, 0xa4, 0x7a, 0x1c, 0x0b, 0x55, 0xe2,
+	0xd6, 0x25, 0xe2, 0x37, 0x0f, 0x7a, 0x4b, 0xe4, 0x58, 0x59, 0xb2, 0x07, 0xdd, 0x99, 0xe1, 0xc5,
+	0x8a, 0x7a, 0x91, 0x37, 0xea, 0x2f, 0xba, 0x49, 0x2d, 0x08, 0x85, 0xe0, 0x5e, 0x18, 0x2b, 0x75,
+	0x41, 0xff, 0x35, 0x3c, 0xd8, 0x38, 0x49, 0x22, 0x08, 0x5b, 0xe7, 0xb2, 0xca, 0x73, 0xea, 0x37,
+	0x6e, 0xb8, 0xf9, 0x42, 0xe4, 0x10, 0xe0, 0x5c, 0x2b, 0x25, 0xf1, 0x8a, 0xdb, 0x35, 0xed, 0x34,
+	0x01, 0x48, 0x3f, 0x09, 0x39, 0x86, 0xc1, 0xac, 0x92, 0xf9, 0xea, 0x4e, 0x2a, 0x61, 0x91, 0xab,
+	0x92, 0x76, 0x23, 0x6f, 0xe4, 0x2f, 0x06, 0xc9, 0x0f, 0x1a, 0x4f, 0x01, 0x6e, 0xf3, 0x2a, 0x93,
+	0xc5, 0xb5, 0xb4, 0x48, 0x8e, 0x20, 0x70, 0xca, 0x52, 0x2f, 0xf2, 0x47, 0xe1, 0x24, 0x64, 0xa6,
+	0x4c, 0x99, 0x63, 0x8b, 0xa0, 0x74, 0x5e, 0xfc, 0x04, 0x3d, 0x87, 0x08, 0x81, 0xce, 0x0d, 0x57,
+	0xa2, 0xed, 0xd5, 0x29, 0xb8, 0x12, 0x7f, 0xd4, 0xa2, 0x10, 0x9c, 0x55, 0xb8, 0xd6, 0xc6, 0x52,
+	0x3f, 0xf2, 0x6b, 0x87, 0x3b, 0x59, 0x3b, 0x0f, 0x22, 0xb1, 0x12, 0x45, 0xdb, 0x25, 0x78, 0x71,
+	0x72, 0xf2, 0x0a, 0x3b, 0xcb, 0xe6, 0xee, 0x4b, 0x61, 0x36, 0x32, 0x15, 0xe4, 0x04, 0xfa, 0x73,
+	0x81, 0xed, 0x61, 0xf7, 0x99, 0x5b, 0x80, 0x7d, 0x2c, 0xc0, 0x2e, 0xea, 0x05, 0x86, 0xee, 0xdd,
+	0x6d, 0xe8, 0x14, 0x60, 0x2e, 0xb0, 0x2d, 0xf6, 0xeb, 0x27, 0xbb, 0xdf, 0xaa, 0xd6, 0xc7, 0x98,
+	0xc5, 0x10, 0x49, 0xcd, 0x32, 0x89, 0xeb, 0x2a, 0x61, 0x2b, 0x8d, 0x16, 0xb9, 0x41, 0x66, 0x51,
+	0xa7, 0xcf, 0xa5, 0xcc, 0x45, 0x1d, 0x4f, 0x7a, 0xcd, 0x4f, 0xa6, 0xef, 0x01, 0x00, 0x00, 0xff,
+	0xff, 0x9d, 0x1a, 0x72, 0x8d, 0x1c, 0x02, 0x00, 0x00,
 }

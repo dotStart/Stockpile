@@ -6,8 +6,8 @@ package rpc
 import proto "github.com/golang/protobuf/proto"
 import fmt "fmt"
 import math "math"
-import any "github.com/golang/protobuf/ptypes/any"
-import empty "github.com/golang/protobuf/ptypes/empty"
+import google_protobuf "github.com/golang/protobuf/ptypes/any"
+import google_protobuf1 "github.com/golang/protobuf/ptypes/empty"
 
 import (
 	context "golang.org/x/net/context"
@@ -18,12 +18,6 @@ import (
 var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
-
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
-// proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
 
 type EventType int32
 
@@ -50,9 +44,7 @@ var EventType_value = map[string]int32{
 func (x EventType) String() string {
 	return proto.EnumName(EventType_name, int32(x))
 }
-func (EventType) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_events_7fc8f1e8a43494b7, []int{0}
-}
+func (EventType) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
 
 type EventAction int32
 
@@ -73,43 +65,19 @@ var EventAction_value = map[string]int32{
 func (x EventAction) String() string {
 	return proto.EnumName(EventAction_name, int32(x))
 }
-func (EventAction) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_events_7fc8f1e8a43494b7, []int{1}
-}
+func (EventAction) EnumDescriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 type Event struct {
-	Type                 EventType   `protobuf:"varint,1,opt,name=type,proto3,enum=rpc.EventType" json:"type,omitempty"`
-	Action               EventAction `protobuf:"varint,2,opt,name=action,proto3,enum=rpc.EventAction" json:"action,omitempty"`
-	Key                  *any.Any    `protobuf:"bytes,3,opt,name=key,proto3" json:"key,omitempty"`
-	Object               *any.Any    `protobuf:"bytes,4,opt,name=object,proto3" json:"object,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
-	XXX_unrecognized     []byte      `json:"-"`
-	XXX_sizecache        int32       `json:"-"`
+	Type   EventType            `protobuf:"varint,1,opt,name=type,enum=rpc.EventType" json:"type,omitempty"`
+	Action EventAction          `protobuf:"varint,2,opt,name=action,enum=rpc.EventAction" json:"action,omitempty"`
+	Key    *google_protobuf.Any `protobuf:"bytes,3,opt,name=key" json:"key,omitempty"`
+	Object *google_protobuf.Any `protobuf:"bytes,4,opt,name=object" json:"object,omitempty"`
 }
 
-func (m *Event) Reset()         { *m = Event{} }
-func (m *Event) String() string { return proto.CompactTextString(m) }
-func (*Event) ProtoMessage()    {}
-func (*Event) Descriptor() ([]byte, []int) {
-	return fileDescriptor_events_7fc8f1e8a43494b7, []int{0}
-}
-func (m *Event) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Event.Unmarshal(m, b)
-}
-func (m *Event) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Event.Marshal(b, m, deterministic)
-}
-func (dst *Event) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Event.Merge(dst, src)
-}
-func (m *Event) XXX_Size() int {
-	return xxx_messageInfo_Event.Size(m)
-}
-func (m *Event) XXX_DiscardUnknown() {
-	xxx_messageInfo_Event.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_Event proto.InternalMessageInfo
+func (m *Event) Reset()                    { *m = Event{} }
+func (m *Event) String() string            { return proto.CompactTextString(m) }
+func (*Event) ProtoMessage()               {}
+func (*Event) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
 
 func (m *Event) GetType() EventType {
 	if m != nil {
@@ -125,14 +93,14 @@ func (m *Event) GetAction() EventAction {
 	return EventAction_POPULATED
 }
 
-func (m *Event) GetKey() *any.Any {
+func (m *Event) GetKey() *google_protobuf.Any {
 	if m != nil {
 		return m.Key
 	}
 	return nil
 }
 
-func (m *Event) GetObject() *any.Any {
+func (m *Event) GetObject() *google_protobuf.Any {
 	if m != nil {
 		return m.Object
 	}
@@ -140,36 +108,14 @@ func (m *Event) GetObject() *any.Any {
 }
 
 type ProfileIdKey struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	At                   int64    `protobuf:"varint,2,opt,name=at,proto3" json:"at,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Name string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	At   int64  `protobuf:"varint,2,opt,name=at" json:"at,omitempty"`
 }
 
-func (m *ProfileIdKey) Reset()         { *m = ProfileIdKey{} }
-func (m *ProfileIdKey) String() string { return proto.CompactTextString(m) }
-func (*ProfileIdKey) ProtoMessage()    {}
-func (*ProfileIdKey) Descriptor() ([]byte, []int) {
-	return fileDescriptor_events_7fc8f1e8a43494b7, []int{1}
-}
-func (m *ProfileIdKey) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ProfileIdKey.Unmarshal(m, b)
-}
-func (m *ProfileIdKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ProfileIdKey.Marshal(b, m, deterministic)
-}
-func (dst *ProfileIdKey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProfileIdKey.Merge(dst, src)
-}
-func (m *ProfileIdKey) XXX_Size() int {
-	return xxx_messageInfo_ProfileIdKey.Size(m)
-}
-func (m *ProfileIdKey) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProfileIdKey.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ProfileIdKey proto.InternalMessageInfo
+func (m *ProfileIdKey) Reset()                    { *m = ProfileIdKey{} }
+func (m *ProfileIdKey) String() string            { return proto.CompactTextString(m) }
+func (*ProfileIdKey) ProtoMessage()               {}
+func (*ProfileIdKey) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 func (m *ProfileIdKey) GetName() string {
 	if m != nil {
@@ -186,35 +132,13 @@ func (m *ProfileIdKey) GetAt() int64 {
 }
 
 type IdKey struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 }
 
-func (m *IdKey) Reset()         { *m = IdKey{} }
-func (m *IdKey) String() string { return proto.CompactTextString(m) }
-func (*IdKey) ProtoMessage()    {}
-func (*IdKey) Descriptor() ([]byte, []int) {
-	return fileDescriptor_events_7fc8f1e8a43494b7, []int{2}
-}
-func (m *IdKey) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IdKey.Unmarshal(m, b)
-}
-func (m *IdKey) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IdKey.Marshal(b, m, deterministic)
-}
-func (dst *IdKey) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdKey.Merge(dst, src)
-}
-func (m *IdKey) XXX_Size() int {
-	return xxx_messageInfo_IdKey.Size(m)
-}
-func (m *IdKey) XXX_DiscardUnknown() {
-	xxx_messageInfo_IdKey.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IdKey proto.InternalMessageInfo
+func (m *IdKey) Reset()                    { *m = IdKey{} }
+func (m *IdKey) String() string            { return proto.CompactTextString(m) }
+func (*IdKey) ProtoMessage()               {}
+func (*IdKey) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
 
 func (m *IdKey) GetId() string {
 	if m != nil {
@@ -239,11 +163,10 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// EventServiceClient is the client API for EventService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+// Client API for EventService service
+
 type EventServiceClient interface {
-	StreamEvents(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (EventService_StreamEventsClient, error)
+	StreamEvents(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (EventService_StreamEventsClient, error)
 }
 
 type eventServiceClient struct {
@@ -254,8 +177,8 @@ func NewEventServiceClient(cc *grpc.ClientConn) EventServiceClient {
 	return &eventServiceClient{cc}
 }
 
-func (c *eventServiceClient) StreamEvents(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (EventService_StreamEventsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_EventService_serviceDesc.Streams[0], "/rpc.EventService/StreamEvents", opts...)
+func (c *eventServiceClient) StreamEvents(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (EventService_StreamEventsClient, error) {
+	stream, err := grpc.NewClientStream(ctx, &_EventService_serviceDesc.Streams[0], c.cc, "/rpc.EventService/StreamEvents", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -286,9 +209,10 @@ func (x *eventServiceStreamEventsClient) Recv() (*Event, error) {
 	return m, nil
 }
 
-// EventServiceServer is the server API for EventService service.
+// Server API for EventService service
+
 type EventServiceServer interface {
-	StreamEvents(*empty.Empty, EventService_StreamEventsServer) error
+	StreamEvents(*google_protobuf1.Empty, EventService_StreamEventsServer) error
 }
 
 func RegisterEventServiceServer(s *grpc.Server, srv EventServiceServer) {
@@ -296,7 +220,7 @@ func RegisterEventServiceServer(s *grpc.Server, srv EventServiceServer) {
 }
 
 func _EventService_StreamEvents_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(empty.Empty)
+	m := new(google_protobuf1.Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -330,9 +254,9 @@ var _EventService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "events.proto",
 }
 
-func init() { proto.RegisterFile("events.proto", fileDescriptor_events_7fc8f1e8a43494b7) }
+func init() { proto.RegisterFile("events.proto", fileDescriptor1) }
 
-var fileDescriptor_events_7fc8f1e8a43494b7 = []byte{
+var fileDescriptor1 = []byte{
 	// 378 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x7c, 0x91, 0x5d, 0xcf, 0x93, 0x30,
 	0x18, 0x86, 0x05, 0xf6, 0x91, 0x3d, 0x20, 0x21, 0x8d, 0x51, 0x9c, 0x27, 0x0b, 0x07, 0x66, 0x2e,

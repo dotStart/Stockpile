@@ -17,44 +17,16 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
-// This is a compile-time assertion to ensure that this generated file
-// is compatible with the proto package it is being compiled against.
-// A compilation error at this line likely means your copy of the
-// proto package needs to be updated.
-const _ = proto.ProtoPackageIsVersion2 // please upgrade the proto package
-
 // *
 // Used to transmit Mojang or RFC formatted UUIDs as the sole parameter.
 type IdRequest struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Id string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
 }
 
-func (m *IdRequest) Reset()         { *m = IdRequest{} }
-func (m *IdRequest) String() string { return proto.CompactTextString(m) }
-func (*IdRequest) ProtoMessage()    {}
-func (*IdRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{0}
-}
-func (m *IdRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_IdRequest.Unmarshal(m, b)
-}
-func (m *IdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_IdRequest.Marshal(b, m, deterministic)
-}
-func (dst *IdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_IdRequest.Merge(dst, src)
-}
-func (m *IdRequest) XXX_Size() int {
-	return xxx_messageInfo_IdRequest.Size(m)
-}
-func (m *IdRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_IdRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_IdRequest proto.InternalMessageInfo
+func (m *IdRequest) Reset()                    { *m = IdRequest{} }
+func (m *IdRequest) String() string            { return proto.CompactTextString(m) }
+func (*IdRequest) ProtoMessage()               {}
+func (*IdRequest) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 func (m *IdRequest) GetId() string {
 	if m != nil {
@@ -66,36 +38,14 @@ func (m *IdRequest) GetId() string {
 // *
 // Stores the parameters for id requests (based on the respective display name and timestamp)
 type GetIdRequest struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Timestamp            int64    `protobuf:"varint,2,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Name      string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	Timestamp int64  `protobuf:"varint,2,opt,name=timestamp" json:"timestamp,omitempty"`
 }
 
-func (m *GetIdRequest) Reset()         { *m = GetIdRequest{} }
-func (m *GetIdRequest) String() string { return proto.CompactTextString(m) }
-func (*GetIdRequest) ProtoMessage()    {}
-func (*GetIdRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{1}
-}
-func (m *GetIdRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetIdRequest.Unmarshal(m, b)
-}
-func (m *GetIdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetIdRequest.Marshal(b, m, deterministic)
-}
-func (dst *GetIdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetIdRequest.Merge(dst, src)
-}
-func (m *GetIdRequest) XXX_Size() int {
-	return xxx_messageInfo_GetIdRequest.Size(m)
-}
-func (m *GetIdRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetIdRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetIdRequest proto.InternalMessageInfo
+func (m *GetIdRequest) Reset()                    { *m = GetIdRequest{} }
+func (m *GetIdRequest) String() string            { return proto.CompactTextString(m) }
+func (*GetIdRequest) ProtoMessage()               {}
+func (*GetIdRequest) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1} }
 
 func (m *GetIdRequest) GetName() string {
 	if m != nil {
@@ -114,39 +64,17 @@ func (m *GetIdRequest) GetTimestamp() int64 {
 // *
 // Represents a profile <-> name mapping at a specified time.
 type ProfileId struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name                 string   `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ValidUntil           int64    `protobuf:"varint,5,opt,name=validUntil,proto3" json:"validUntil,omitempty"`
-	FirstSeenAt          int64    `protobuf:"varint,6,opt,name=firstSeenAt,proto3" json:"firstSeenAt,omitempty"`
-	LastSeenAt           int64    `protobuf:"varint,7,opt,name=lastSeenAt,proto3" json:"lastSeenAt,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Id          string `protobuf:"bytes,1,opt,name=id" json:"id,omitempty"`
+	Name        string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	ValidUntil  int64  `protobuf:"varint,5,opt,name=validUntil" json:"validUntil,omitempty"`
+	FirstSeenAt int64  `protobuf:"varint,6,opt,name=firstSeenAt" json:"firstSeenAt,omitempty"`
+	LastSeenAt  int64  `protobuf:"varint,7,opt,name=lastSeenAt" json:"lastSeenAt,omitempty"`
 }
 
-func (m *ProfileId) Reset()         { *m = ProfileId{} }
-func (m *ProfileId) String() string { return proto.CompactTextString(m) }
-func (*ProfileId) ProtoMessage()    {}
-func (*ProfileId) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{2}
-}
-func (m *ProfileId) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_ProfileId.Unmarshal(m, b)
-}
-func (m *ProfileId) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_ProfileId.Marshal(b, m, deterministic)
-}
-func (dst *ProfileId) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_ProfileId.Merge(dst, src)
-}
-func (m *ProfileId) XXX_Size() int {
-	return xxx_messageInfo_ProfileId.Size(m)
-}
-func (m *ProfileId) XXX_DiscardUnknown() {
-	xxx_messageInfo_ProfileId.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_ProfileId proto.InternalMessageInfo
+func (m *ProfileId) Reset()                    { *m = ProfileId{} }
+func (m *ProfileId) String() string            { return proto.CompactTextString(m) }
+func (*ProfileId) ProtoMessage()               {}
+func (*ProfileId) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{2} }
 
 func (m *ProfileId) GetId() string {
 	if m != nil {
@@ -186,36 +114,14 @@ func (m *ProfileId) GetLastSeenAt() int64 {
 // *
 // Represents a complete name history.
 type NameHistory struct {
-	History              []*NameHistoryEntry `protobuf:"bytes,1,rep,name=history,proto3" json:"history,omitempty"`
-	ValidUntil           int64               `protobuf:"varint,2,opt,name=validUntil,proto3" json:"validUntil,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}            `json:"-"`
-	XXX_unrecognized     []byte              `json:"-"`
-	XXX_sizecache        int32               `json:"-"`
+	History    []*NameHistoryEntry `protobuf:"bytes,1,rep,name=history" json:"history,omitempty"`
+	ValidUntil int64               `protobuf:"varint,2,opt,name=validUntil" json:"validUntil,omitempty"`
 }
 
-func (m *NameHistory) Reset()         { *m = NameHistory{} }
-func (m *NameHistory) String() string { return proto.CompactTextString(m) }
-func (*NameHistory) ProtoMessage()    {}
-func (*NameHistory) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{3}
-}
-func (m *NameHistory) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_NameHistory.Unmarshal(m, b)
-}
-func (m *NameHistory) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_NameHistory.Marshal(b, m, deterministic)
-}
-func (dst *NameHistory) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NameHistory.Merge(dst, src)
-}
-func (m *NameHistory) XXX_Size() int {
-	return xxx_messageInfo_NameHistory.Size(m)
-}
-func (m *NameHistory) XXX_DiscardUnknown() {
-	xxx_messageInfo_NameHistory.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_NameHistory proto.InternalMessageInfo
+func (m *NameHistory) Reset()                    { *m = NameHistory{} }
+func (m *NameHistory) String() string            { return proto.CompactTextString(m) }
+func (*NameHistory) ProtoMessage()               {}
+func (*NameHistory) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{3} }
 
 func (m *NameHistory) GetHistory() []*NameHistoryEntry {
 	if m != nil {
@@ -234,37 +140,15 @@ func (m *NameHistory) GetValidUntil() int64 {
 // *
 // Represents a single entry in the name history.
 type NameHistoryEntry struct {
-	Name                 string   `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	ChangedToAt          int64    `protobuf:"varint,2,opt,name=changedToAt,proto3" json:"changedToAt,omitempty"`
-	ValidUntil           int64    `protobuf:"varint,3,opt,name=validUntil,proto3" json:"validUntil,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Name        string `protobuf:"bytes,1,opt,name=name" json:"name,omitempty"`
+	ChangedToAt int64  `protobuf:"varint,2,opt,name=changedToAt" json:"changedToAt,omitempty"`
+	ValidUntil  int64  `protobuf:"varint,3,opt,name=validUntil" json:"validUntil,omitempty"`
 }
 
-func (m *NameHistoryEntry) Reset()         { *m = NameHistoryEntry{} }
-func (m *NameHistoryEntry) String() string { return proto.CompactTextString(m) }
-func (*NameHistoryEntry) ProtoMessage()    {}
-func (*NameHistoryEntry) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{4}
-}
-func (m *NameHistoryEntry) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_NameHistoryEntry.Unmarshal(m, b)
-}
-func (m *NameHistoryEntry) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_NameHistoryEntry.Marshal(b, m, deterministic)
-}
-func (dst *NameHistoryEntry) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_NameHistoryEntry.Merge(dst, src)
-}
-func (m *NameHistoryEntry) XXX_Size() int {
-	return xxx_messageInfo_NameHistoryEntry.Size(m)
-}
-func (m *NameHistoryEntry) XXX_DiscardUnknown() {
-	xxx_messageInfo_NameHistoryEntry.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_NameHistoryEntry proto.InternalMessageInfo
+func (m *NameHistoryEntry) Reset()                    { *m = NameHistoryEntry{} }
+func (m *NameHistoryEntry) String() string            { return proto.CompactTextString(m) }
+func (*NameHistoryEntry) ProtoMessage()               {}
+func (*NameHistoryEntry) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{4} }
 
 func (m *NameHistoryEntry) GetName() string {
 	if m != nil {
@@ -290,35 +174,13 @@ func (m *NameHistoryEntry) GetValidUntil() int64 {
 // *
 // Stores the parameters for bulk id requests.
 type BulkIdRequest struct {
-	Names                []string `protobuf:"bytes,1,rep,name=names,proto3" json:"names,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	Names []string `protobuf:"bytes,1,rep,name=names" json:"names,omitempty"`
 }
 
-func (m *BulkIdRequest) Reset()         { *m = BulkIdRequest{} }
-func (m *BulkIdRequest) String() string { return proto.CompactTextString(m) }
-func (*BulkIdRequest) ProtoMessage()    {}
-func (*BulkIdRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{5}
-}
-func (m *BulkIdRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BulkIdRequest.Unmarshal(m, b)
-}
-func (m *BulkIdRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BulkIdRequest.Marshal(b, m, deterministic)
-}
-func (dst *BulkIdRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BulkIdRequest.Merge(dst, src)
-}
-func (m *BulkIdRequest) XXX_Size() int {
-	return xxx_messageInfo_BulkIdRequest.Size(m)
-}
-func (m *BulkIdRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_BulkIdRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_BulkIdRequest proto.InternalMessageInfo
+func (m *BulkIdRequest) Reset()                    { *m = BulkIdRequest{} }
+func (m *BulkIdRequest) String() string            { return proto.CompactTextString(m) }
+func (*BulkIdRequest) ProtoMessage()               {}
+func (*BulkIdRequest) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{5} }
 
 func (m *BulkIdRequest) GetNames() []string {
 	if m != nil {
@@ -330,35 +192,13 @@ func (m *BulkIdRequest) GetNames() []string {
 // *
 // Represents a list of bulk id responses.
 type BulkIdResponse struct {
-	Ids                  []*ProfileId `protobuf:"bytes,1,rep,name=ids,proto3" json:"ids,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
+	Ids []*ProfileId `protobuf:"bytes,1,rep,name=ids" json:"ids,omitempty"`
 }
 
-func (m *BulkIdResponse) Reset()         { *m = BulkIdResponse{} }
-func (m *BulkIdResponse) String() string { return proto.CompactTextString(m) }
-func (*BulkIdResponse) ProtoMessage()    {}
-func (*BulkIdResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_profile_f6ac44cad3454f3f, []int{6}
-}
-func (m *BulkIdResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BulkIdResponse.Unmarshal(m, b)
-}
-func (m *BulkIdResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BulkIdResponse.Marshal(b, m, deterministic)
-}
-func (dst *BulkIdResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BulkIdResponse.Merge(dst, src)
-}
-func (m *BulkIdResponse) XXX_Size() int {
-	return xxx_messageInfo_BulkIdResponse.Size(m)
-}
-func (m *BulkIdResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_BulkIdResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_BulkIdResponse proto.InternalMessageInfo
+func (m *BulkIdResponse) Reset()                    { *m = BulkIdResponse{} }
+func (m *BulkIdResponse) String() string            { return proto.CompactTextString(m) }
+func (*BulkIdResponse) ProtoMessage()               {}
+func (*BulkIdResponse) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{6} }
 
 func (m *BulkIdResponse) GetIds() []*ProfileId {
 	if m != nil {
@@ -385,9 +225,8 @@ var _ grpc.ClientConn
 // is compatible with the grpc package it is being compiled against.
 const _ = grpc.SupportPackageIsVersion4
 
-// ProfileServiceClient is the client API for ProfileService service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+// Client API for ProfileService service
+
 type ProfileServiceClient interface {
 	// *
 	// Resolves the profile identifier and correct casing of a given name.
@@ -437,7 +276,7 @@ func NewProfileServiceClient(cc *grpc.ClientConn) ProfileServiceClient {
 
 func (c *profileServiceClient) GetId(ctx context.Context, in *GetIdRequest, opts ...grpc.CallOption) (*ProfileId, error) {
 	out := new(ProfileId)
-	err := c.cc.Invoke(ctx, "/rpc.ProfileService/GetId", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ProfileService/GetId", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -446,7 +285,7 @@ func (c *profileServiceClient) GetId(ctx context.Context, in *GetIdRequest, opts
 
 func (c *profileServiceClient) GetNameHistory(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*NameHistory, error) {
 	out := new(NameHistory)
-	err := c.cc.Invoke(ctx, "/rpc.ProfileService/GetNameHistory", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ProfileService/GetNameHistory", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -455,7 +294,7 @@ func (c *profileServiceClient) GetNameHistory(ctx context.Context, in *IdRequest
 
 func (c *profileServiceClient) BulkGetId(ctx context.Context, in *BulkIdRequest, opts ...grpc.CallOption) (*BulkIdResponse, error) {
 	out := new(BulkIdResponse)
-	err := c.cc.Invoke(ctx, "/rpc.ProfileService/BulkGetId", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ProfileService/BulkGetId", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -464,14 +303,15 @@ func (c *profileServiceClient) BulkGetId(ctx context.Context, in *BulkIdRequest,
 
 func (c *profileServiceClient) GetProfile(ctx context.Context, in *IdRequest, opts ...grpc.CallOption) (*Profile, error) {
 	out := new(Profile)
-	err := c.cc.Invoke(ctx, "/rpc.ProfileService/GetProfile", in, out, opts...)
+	err := grpc.Invoke(ctx, "/rpc.ProfileService/GetProfile", in, out, c.cc, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// ProfileServiceServer is the server API for ProfileService service.
+// Server API for ProfileService service
+
 type ProfileServiceServer interface {
 	// *
 	// Resolves the profile identifier and correct casing of a given name.
@@ -612,9 +452,9 @@ var _ProfileService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "profile.proto",
 }
 
-func init() { proto.RegisterFile("profile.proto", fileDescriptor_profile_f6ac44cad3454f3f) }
+func init() { proto.RegisterFile("profile.proto", fileDescriptor2) }
 
-var fileDescriptor_profile_f6ac44cad3454f3f = []byte{
+var fileDescriptor2 = []byte{
 	// 414 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x53, 0xd1, 0x8a, 0x9b, 0x40,
 	0x14, 0x45, 0x6d, 0x76, 0xf1, 0x9a, 0x95, 0xed, 0xb4, 0x05, 0x49, 0x4b, 0x11, 0xa1, 0x10, 0xf6,
