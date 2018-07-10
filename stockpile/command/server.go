@@ -158,15 +158,19 @@ func (c *ServerCommand) Execute(_ context.Context, f *flag.FlagSet, _ ...interfa
 
   // initialize the RPC server at all times (only differ between mux policies depending on whether the legacy API or UI
   // is enabled)
-  rpcPolicy := cmux.Any()
-  if *cfg.UiEnabled {
-    rpcPolicy = cmux.HTTP2HeaderField("content-type", "application/grpc")
+  var grpcListener net.Listener
+  if *cfg.UiEnabled || *cfg.LegacyApiEnabled {
+    grpcListener = mux.MatchWithWriters(
+      cmux.HTTP2MatchHeaderFieldSendSettings("content-type", "application/grpc"),
+    )
+  } else {
+    grpcListener = mux.Match(cmux.Any())
   }
   rpcServer, err := service.NewServer(pluginManager, cacheImpl)
   if err != nil {
     log.Fatalf("failed to initialize grpc server: %s", err)
   }
-  go rpcServer.Listen(mux.Match(rpcPolicy))
+  go rpcServer.Listen(grpcListener)
   defer rpcServer.Destroy()
   log.Info("grpc server enabled")
 
